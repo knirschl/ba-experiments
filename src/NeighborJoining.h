@@ -231,7 +231,7 @@ std::array<std::shared_ptr<Node>, N - 1> copyUnjoinedTrees(std::array<std::share
 template<size_t N>
 std::shared_ptr<Node> neighborJoining(std::array<std::array<double, N>, N> distMatrix,
                                       std::array<std::shared_ptr<Node>, N> trees) {
-    printMatrix<N>(distMatrix);
+    //printMatrix<N>(distMatrix);
     if constexpr (N > 2) {
         // calculations
         std::array<double, N> r = meanDistance<N>(distMatrix);
