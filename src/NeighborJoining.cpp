@@ -4,6 +4,8 @@
 
 #include <iostream>
 #include <limits>
+#include <memory>
+#include <utility>
 #include "NeighborJoining.h"
 
 // debug func
@@ -18,7 +20,7 @@ void printMatrix(const double* distMatrix, int size) {
 }
 
 // debug func
-void printTrees(Node** trees, int size) {
+void printTrees(std::shared_ptr<Node>* trees, int size) {
     std::cout << "Printing trees:" << std::endl;
     for (int i{0}; i < size; ++i) {
         std::cout << trees[i]->toString() << std::endl;
@@ -181,8 +183,8 @@ std::pair<double, double> calculateBranchLengths(double dist, double r1, double 
  * @param bl2 
  * @return parent Tree node with branches of length bl1 and bl2 to the to Nodes
  */
-Tree* join(Node* n1, double bl1, Node* n2, double bl2) {
-    return new Tree {n1, bl1, n2, bl2};
+std::shared_ptr<Tree> join(std::shared_ptr<Node> n1, double bl1, std::shared_ptr<Node> n2, double bl2) {
+    return std::make_shared<Tree>(n1, bl1, n2, bl2);
 }
 
 /**
@@ -193,8 +195,8 @@ Tree* join(Node* n1, double bl1, Node* n2, double bl2) {
  * @param bl
  * @return parent Tree node with branches of length bl.first and bl.second to the to Nodes
  */
-Tree* join(Node* n1, Node* n2, std::pair<double, double> bl) {
-    return join(n1, bl.first, n2, bl.second);
+std::shared_ptr<Tree> join(std::shared_ptr<Node> n1, std::shared_ptr<Node> n2, std::pair<double, double> bl) {
+    return join(std::move(n1), bl.first, std::move(n2), bl.second);
 }
 
 /**
@@ -205,8 +207,8 @@ Tree* join(Node* n1, Node* n2, std::pair<double, double> bl) {
  * @param bl
  * @return parent Tree node with branches of length bl to the to Nodes
  */
-Tree* join(Node* n1, Node* n2, double bl) {
-    return join(n1, bl, n2, bl);
+std::shared_ptr<Tree> join(std::shared_ptr<Node> n1, std::shared_ptr<Node> n2, double bl) {
+    return join(std::move(n1), bl, std::move(n2), bl);
 }
 
 /**
@@ -218,8 +220,8 @@ Tree* join(Node* n1, Node* n2, double bl) {
  * @return array of size size-1 where the last entry is not set
  */
 template<std::size_t N>
-std::array<Node*, N - 1> copyUnjoinedTrees(std::array<Node*, N> trees, std::pair<std::size_t, std::size_t> minDistPos) {
-    std::array<Node*, N - 1> copy;
+std::array<std::shared_ptr<Node>, N - 1> copyUnjoinedTrees(std::array<std::shared_ptr<Node>, N> trees, std::pair<std::size_t, std::size_t> minDistPos) {
+    std::array<std::shared_ptr<Node>, N - 1> copy;
     std::size_t off{0};
     for (std::size_t i{0}; i < N; ++i) {
         // skip and add offset if this tree is one of the two that will be merged
@@ -242,7 +244,7 @@ std::array<Node*, N - 1> copyUnjoinedTrees(std::array<Node*, N> trees, std::pair
  * @return pointer to a node, in most cases this is the root of the inferred tree
  */
 template<std::size_t N>
-Node* neighborJoining(std::array<std::array<double, N>, N> distMatrix, std::array<Node*, N> trees) {
+std::shared_ptr<Node> neighborJoining(std::array<std::array<double, N>, N> distMatrix, std::array<std::shared_ptr<Node>, N> trees) {
     //printTrees(trees, size);
     //printMatrix(distMatrix, size);
     if (N > 2) {
@@ -260,7 +262,7 @@ Node* neighborJoining(std::array<std::array<double, N>, N> distMatrix, std::arra
                 distMatrix[minDistPos.first][minDistPos.second],
                 r[minDistPos.first],
                 r[minDistPos.second]);
-        std::array<Node*, N - 1> newTrees = copyUnjoinedTrees<N>(trees, minDistPos);
+        std::array<std::shared_ptr<Node>, N - 1> newTrees = copyUnjoinedTrees<N>(trees, minDistPos);
         // add joined trees (neighbors)
         newTrees[N - 2] = join(trees[minDistPos.first], trees[minDistPos.second], branchLengths);
 
