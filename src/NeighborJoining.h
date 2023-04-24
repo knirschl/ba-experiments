@@ -30,16 +30,16 @@ public:
 
 class Tree : public Node {
 private:
-    Node* m_n1 {};
+    std::shared_ptr<Node> m_n1 {};
     double m_branchLength1 {};
-    Node* m_n2 {};
+    std::shared_ptr<Node> m_n2 {};
     double m_branchLength2 {};
 
 public:
-    Tree(Node* n1, double bl1, Node* n2, double bl2) {
-        m_n1 = n1;
+    Tree(std::shared_ptr<Node> n1, double bl1, std::shared_ptr<Node> n2, double bl2) {
+        m_n1 = std::move(n1);
         m_branchLength1 = bl1;
-        m_n2 = n2;
+        m_n2 = std::move(n2);
         m_branchLength2 = bl2;
     }
 
@@ -48,7 +48,7 @@ public:
             + m_n2->toString() + "," + std::to_string(m_branchLength2) + ")]";
     }
 };
-/*
+
 template<std::size_t N>
 std::array<double, N> meanDistance(std::array<std::array<double, N>, N> distMatrix);
 
@@ -62,9 +62,8 @@ std::pair<std::size_t, std::size_t> findMin(std::array<std::array<double, N>, N>
 template<std::size_t N>
 std::array<std::array<double, N - 1>, N - 1> calculateNewMatrix(std::array<std::array<double, N>, N> distMatrix,
                                                                 std::pair<std::size_t, std::size_t> minDistPos);
-*/
 
 template<std::size_t N>
-Node* neighborJoining(std::array<std::array<double, N>, N> distMatrix, std::array<Node*, N> trees);
+Node* neighborJoining(std::array<std::array<double, N>, N> distMatrix, std::array<std::shared_ptr<Node>, N> trees);
 
 #endif //BA_NEIGHBORJOINING_H

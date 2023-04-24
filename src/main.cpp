@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <array>
+#include <memory>
 #include "NeighborJoining.h"
 
 int main() {
@@ -14,11 +15,11 @@ int main() {
             std::array<double, 4> {14, 13, 0, 4},
             std::array<double, 4> {12, 11, 4, 0}};
 
-    Leaf mensch{"mensch"};
-    Leaf maus{"maus"};
-    Leaf rose{"rose"};
-    Leaf tulpe{"tulpe"};
-    std::array<Node*, 4> treesDE{&mensch, &maus, &rose, &tulpe};
+    std::shared_ptr mensch = std::make_shared<Leaf>("mensch");
+    std::shared_ptr maus = std::make_shared<Leaf>("maus");
+    std::shared_ptr rose = std::make_shared<Leaf>("rose");
+    std::shared_ptr tulpe = std::make_shared<Leaf>("tulpe");
+    std::array<std::shared_ptr<Node>, 4> treesDE{mensch, maus, rose, tulpe};
 
     Node* treeDE = neighborJoining<4>(distMatrixDE, treesDE);
 
