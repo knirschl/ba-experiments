@@ -1,6 +1,7 @@
 #include <utility>
 #include <array>
 #include <limits>
+#include <iostream>
 
 //
 // Created by knirschl on 18.04.23.
@@ -52,6 +53,17 @@ public:
 
 std::pair<double, double> calculateBranchLengths(double dist, double r1, double r2);
 std::shared_ptr<Tree> join(const std::shared_ptr<Node>& n1, double bl1, const std::shared_ptr<Node>& n2, double bl2);
+
+// debug func
+template<size_t N>
+void printMatrix(std::array<std::array<double, N>, N> m) {
+    for (size_t i{0}; i < N; ++i) {
+        for (size_t j{0}; j < N; ++j) {
+            std::cout << m[i][j] << " ";
+        }
+        std::cout << std::endl;
+    }
+}
 
 /**
  * Calculate mean distance from every taxon to every taxon.
@@ -173,12 +185,12 @@ std::array<std::array<double, N - 1>, N - 1> calculateNewMatrix(std::array<std::
                                + distMatrix[minDistPos.second][k + off]
                                - distMatrix[minDistPos.first][minDistPos.second])
                               / 2.0;
-        newMatrix[N - 1][k] = (distMatrix[minDistPos.first][k + off]
+        newMatrix[N - 2][k] = (distMatrix[minDistPos.first][k + off]
                                + distMatrix[minDistPos.second][k + off]
                                - distMatrix[minDistPos.first][minDistPos.second])
                               / 2.0;
     }
-    newMatrix[N - 1][N - 1] = 0; // set new diagonal entry to 0
+    newMatrix[N - 2][N - 2] = 0; // set new diagonal entry to 0
 
     return newMatrix;
 }
@@ -219,16 +231,16 @@ std::array<std::shared_ptr<Node>, N - 1> copyUnjoinedTrees(std::array<std::share
 template<size_t N>
 std::shared_ptr<Node> neighborJoining(std::array<std::array<double, N>, N> distMatrix,
                                       std::array<std::shared_ptr<Node>, N> trees) {
-    //printTrees(trees, size);
-    //printMatrix(distMatrix, size);
+    printMatrix<N>(distMatrix);
     if constexpr (N > 2) {
         // calculations
         std::array<double, N> r = meanDistance<N>(distMatrix);
         //std::cout << "r = [" << r[0] << ", " << r[1] << ", " << r[2] << ", " << r[3] << "]" << std::endl;
-        //printMatrix(iM, size);
+        //printMatrix<N>(interMatrix<N>(distMatrix, r));
         std::pair<size_t, size_t> minDistPos = findMin<N>(interMatrix<N>(distMatrix, r));
-        //std::cout << "Joining " << trees[minDistPos[0]]->toString() << "(idx=" << minDistPos[0] << ",bl=" << blMin[0] << ") and "
-        //    << trees[minDistPos[1]]->toString() << "(idx=" << minDistPos[1] << ",bl=" << blMin[1]<< ")" << std::endl;
+        //std::cout << "Joining " << trees[minDistPos.first]->toString() << "(idx=" << minDistPos.first << ",bl="
+        //    << branchLengths.first << ") and " << trees[minDistPos.second]->toString() << "(idx=" << minDistPos.second
+        //    << ",bl=" << branchLengths.second<< ")" << std::endl;
         std::array<std::array<double, N - 1>, N - 1> newDistMatrix = calculateNewMatrix<N>(distMatrix, minDistPos);
 
         // tree building
