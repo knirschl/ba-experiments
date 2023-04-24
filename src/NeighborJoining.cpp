@@ -26,21 +26,22 @@ void printTrees(Node** trees, int size) {
 }
 
 /**
- * Caluclate mean distance from every taxon to every taxon.
+ * Calculate mean distance from every taxon to every taxon.
  * r_i = 1/(N-2) * sum{k=1,N}(d_i,k)
  *
- * @param distMatrix 
- * @param size 
+ * @tparam N
+ * @param distMatrix
  * @return array containing r_i at index i
  */
-double* meanDistance(const double* distMatrix, int size) {
-    double* r = new double[size];
-    for (int i{0}; i < size; ++i) {
+template<std::size_t N>
+std::array<double, N> meanDistance(std::array<std::array<double, N>, N> distMatrix) {
+    std::array<double, N> r;
+    for (std::size_t i{0}; i < N; ++i) {
         double sumK{0};
-        for (int k{0}; k < size; ++k) {
-            sumK += *(distMatrix + i * size + k);
+        for (std::size_t k{0}; k < N; ++k) {
+            sumK += distMatrix[i][k];
         }
-        r[i] = (1.0 / (size - 2)) * sumK; // 1.0 for double division
+        r[i] = (1.0 / (N - 2)) * sumK; // 1.0 for double division
     }
 
     return r;
@@ -49,17 +50,19 @@ double* meanDistance(const double* distMatrix, int size) {
 /**
  * Calculate intermediate matrix.
  * M_i,j = d_i,j - (r_i + r_j)
- * 
- * @param distMatrix 
- * @param size 
+ *
+ * @tparam N
+ * @param distMatrix
  * @param r 
- * @return intermediate matrix as 1D array
+ * @return intermediate matrix
  */
-double* interMatrix(const double* distMatrix, int size, const double* r) {
-    double* iM = new double[size * size];
-    for (int i{0}; i < size; ++i) {
-        for (int j{0}; j < size; ++j) {
-            iM[i * size + j] = distMatrix[i * size + j] - (r[i] + r[j]);
+template<std::size_t N>
+std::array<std::array<double, N>, N> interMatrix(std::array<std::array<double, N>, N> distMatrix,
+                                                 std::array<double, N> r) {
+    std::array<std::array<double, N>, N> iM;
+    for (std::size_t i{0}; i < N; ++i) {
+        for (std::size_t j{0}; j < N; ++j) {
+            iM[i][j] = distMatrix[i][j] - (r[i] + r[j]);
         }
     }
 
@@ -71,20 +74,21 @@ double* interMatrix(const double* distMatrix, int size, const double* r) {
  * 
  * @param matrix
  * @param size 
- * @return array containing the indices describing the position of the first minimum
+ * @return pair containing the indices describing the position of the first minimum
  */
-int* findMin(const double* matrix, int size) {
+template<std::size_t N>
+std::pair<std::size_t, std::size_t> findMin(std::array<std::array<double, N>, N> matrix) {
     double min = std::numeric_limits<double>::infinity();
-    int* minDistPos = new int[2];
-    for (int i{0}; i < size; ++i) {
-        for (int j{0}; j < size; ++j) {
+    std::pair<std::size_t, std::size_t> minDistPos;
+    for (std::size_t i{0}; i < N; ++i) {
+        for (std::size_t j{0}; j < N; ++j) {
             if (i == j) {
                 continue;
             }
-            if (matrix[i * size + j] < min) {
-                min = matrix[i * size + j];
-                minDistPos[0] = i;
-                minDistPos[1] = j;
+            if (matrix[i][j] < min) {
+                min = matrix[i][j];
+                minDistPos.first = i;
+                minDistPos.second = j;
             }
         }
     }
@@ -96,55 +100,57 @@ int* findMin(const double* matrix, int size) {
  * Calculate new distance matrix.
  * Removes rows/columns defined in minDistPos from distMatrix and adds new row/column at the end storing distances of the
  * newly merged neighbors/trees to everything else.
- * 
- * @param distMatrix 
- * @param size 
+ *
+ * @tparam N
+ * @param distMatrix
  * @param minDistPos 
- * @return matrix as 1D array of size size-1
+ * @return matrix of size size-1
  */
-double* calculateNewMatrix(const double* distMatrix, int size, const int minDistPos[2]) {
-    double* newMatrix = new double[(size - 1) * (size - 1)];
+template<std::size_t N>
+std::array<std::array<double, N - 1>, N - 1> calculateNewMatrix(std::array<std::array<double, N>, N> distMatrix,
+                                                        std::pair<std::size_t, std::size_t> minDistPos) {
+    std::array<std::array<double, N - 1>, N - 1> newMatrix;
     // copy old values of rows/columns that won't be changed
-    int xOff{0};
-    for (int i{ 0 }; i < size; ++i) {
+    std::size_t xOff{0};
+    for (std::size_t i{ 0 }; i < N; ++i) {
         // skip row if one of the merged ones
-        if (i == minDistPos[0] || i == minDistPos[1]) {
+        if (i == minDistPos.first || i == minDistPos.second) {
             xOff++;
         } else {
-            int yOff{0};
-            for (int j{0}; j < size; ++j) {
+            std::size_t yOff{0};
+            for (std::size_t j{0}; j < N; ++j) {
                 // skip column if one of the merged ones
-                if (j == minDistPos[0] || j == minDistPos[1]) {
+                if (j == minDistPos.first || j == minDistPos.second) {
                     yOff++;
                 } else {
                     // index at newMatrix depends on how many rows/columns were already skipped
-                    newMatrix[(i - xOff) * (size - 1) + (j - yOff)] = distMatrix[i * size + j];
+                    newMatrix[i - xOff][j - yOff] = distMatrix[i][j];
                 }
             }
         }
     }
 
     // calculate new distances from merged clusters to everything else, put in last row/column
-    int off{0};
-    for (int k{0}; k < size - 2; ++k) {
+    std::size_t off{0};
+    for (std::size_t k{0}; k < N - 2; ++k) {
         // calculate offset (how much needs to be skipped) via black magic
-        while (k + off == minDistPos[0] || k + off == minDistPos[1]) {
+        while (k + off == minDistPos.first || k + off == minDistPos.second) {
             off++;
         }
         /*
          * d_u,k = (d_i,k + d_j,k - d_i,j) / 2
          * u = (i,j) the merged clusters, k is the current cluster
          */
-        newMatrix[k * (size - 1) + size - 2] = (distMatrix[minDistPos[0] * size + k + off]
-                                                + distMatrix[minDistPos[1] * size + k + off]
-                                                - distMatrix[minDistPos[0] * size + minDistPos[1]])
-                                               / 2.0;
-        newMatrix[(size - 1) * (size - 2) + k] = (distMatrix[minDistPos[0] * size + k + off]
-                                                  + distMatrix[minDistPos[1] * size + k + off]
-                                                  - distMatrix[minDistPos[0] * size + minDistPos[1]])
-                                                 / 2.0;
+        newMatrix[k][N - 2] = (distMatrix[minDistPos.first][k + off]
+                                + distMatrix[minDistPos.second][k + off]
+                                - distMatrix[minDistPos.first][minDistPos.second])
+                                        / 2.0;
+        newMatrix[N - 1][k] = (distMatrix[minDistPos.first][k + off]
+                               + distMatrix[minDistPos.second][k + off]
+                               - distMatrix[minDistPos.first][minDistPos.second])
+                                       / 2.0;
     }
-    newMatrix[(size - 1) * (size - 1) - 1] = 0; // set new diagonal entry to 0
+    newMatrix[N - 1][N - 1] = 0; // set new diagonal entry to 0
 
     return newMatrix;
 }
@@ -157,14 +163,13 @@ double* calculateNewMatrix(const double* distMatrix, int size, const int minDist
  * @param dist 
  * @param r1 
  * @param r2 
- * @return array containging the two branch lengths, index 0 corresponds to branch of tree that belongs to r1
+ * @return pair containing the two branch lengths, first corresponds to branch of tree that belongs to r1
  */
-double* calculateBranchLengths(double dist, double r1, double r2) {
-    double* bl = new double[2];
-    bl[0] = (dist + r1 - r2) / 2.0;
-    bl[1] = dist - bl[0];
-
-    return bl;
+std::pair<double, double> calculateBranchLengths(double dist, double r1, double r2) {
+    return std::pair<double, double> {
+            (dist + r1 - r2) / 2.0,
+            dist - ((dist + r1 - r2) / 2.0)
+    };
 }
 
 /**
@@ -181,19 +186,44 @@ Tree* join(Node* n1, double bl1, Node* n2, double bl2) {
 }
 
 /**
+ * Joins two trees by adding a common parent.
+ *
+ * @param n1
+ * @param n2
+ * @param bl
+ * @return parent Tree node with branches of length bl.first and bl.second to the to Nodes
+ */
+Tree* join(Node* n1, Node* n2, std::pair<double, double> bl) {
+    return join(n1, bl.first, n2, bl.second);
+}
+
+/**
+ * Joins two trees by adding a common parent.
+ *
+ * @param n1
+ * @param n2
+ * @param bl
+ * @return parent Tree node with branches of length bl to the to Nodes
+ */
+Tree* join(Node* n1, Node* n2, double bl) {
+    return join(n1, bl, n2, bl);
+}
+
+/**
  * Copies unjoined trees as they do not get changed.
  * 
  * @param trees 
  * @param minDistPos 
  * @param size 
- * @return array of size size-1 where the last entrie is not set
+ * @return array of size size-1 where the last entry is not set
  */
-Node** copyUnjoinedTrees(Node** trees, int* minDistPos, int size) {
-    Node** copy = new Node*[size - 1];
-    int off{0};
-    for (int i{0}; i < size; ++i) {
+template<std::size_t N>
+std::array<Node*, N - 1> copyUnjoinedTrees(std::array<Node*, N> trees, std::pair<std::size_t, std::size_t> minDistPos) {
+    std::array<Node*, N - 1> copy;
+    std::size_t off{0};
+    for (std::size_t i{0}; i < N; ++i) {
         // skip and add offset if this tree is one of the two that will be merged
-        if (i == minDistPos[0] || i == minDistPos[1]) {
+        if (i == minDistPos.first || i == minDistPos.second) {
             ++off;
         } else {
             copy[i - off] = trees[i];
@@ -211,35 +241,37 @@ Node** copyUnjoinedTrees(Node** trees, int* minDistPos, int size) {
  * @param size
  * @return pointer to a node, in most cases this is the root of the inferred tree
  */
-Node* neighborJoining(double* distMatrix, Node** trees, int size) {
+template<std::size_t N>
+Node* neighborJoining(std::array<std::array<double, N>, N> distMatrix, std::array<Node*, N> trees) {
     //printTrees(trees, size);
     //printMatrix(distMatrix, size);
-    if (size > 2) {
+    if (N > 2) {
         // calculations
-        double* r = meanDistance(distMatrix, size);
+        std::array<double, N> r = meanDistance<N>(distMatrix);
         //std::cout << "r = [" << r[0] << ", " << r[1] << ", " << r[2] << ", " << r[3] << "]" << std::endl;
         //printMatrix(iM, size);
-        int* minDistPos = findMin(interMatrix(distMatrix, size, r), size);
+        std::pair<std::size_t, std::size_t> minDistPos = findMin<N>(interMatrix<N>(distMatrix, r));
         //std::cout << "Joining " << trees[minDistPos[0]]->toString() << "(idx=" << minDistPos[0] << ",bl=" << blMin[0] << ") and "
         //    << trees[minDistPos[1]]->toString() << "(idx=" << minDistPos[1] << ",bl=" << blMin[1]<< ")" << std::endl;
-        double* newDistMatrix = calculateNewMatrix(distMatrix, size, minDistPos);
+        std::array<std::array<double, N - 1>, N - 1> newDistMatrix = calculateNewMatrix<N>(distMatrix, minDistPos);
 
         // tree building
-        double* branchLengths = calculateBranchLengths(distMatrix[minDistPos[0] * size + minDistPos[1]],
-                                                       r[minDistPos[0]], r[minDistPos[1]]);
-        Node** newTrees = copyUnjoinedTrees(trees, minDistPos, size);
+        std::pair<double, double> branchLengths = calculateBranchLengths(
+                distMatrix[minDistPos.first][minDistPos.second],
+                r[minDistPos.first],
+                r[minDistPos.second]);
+        std::array<Node*, N - 1> newTrees = copyUnjoinedTrees<N>(trees, minDistPos);
         // add joined trees (neighbors)
-        newTrees[size - 2] = join(trees[minDistPos[0]], branchLengths[0],
-                                  trees[minDistPos[1]], branchLengths[1]);
+        newTrees[N - 2] = join(trees[minDistPos.first], trees[minDistPos.second], branchLengths);
 
-        return neighborJoining(newDistMatrix, newTrees, size - 1);
-    } else if (size == 2) {
+        return neighborJoining<N - 1>(newDistMatrix, newTrees);
+    } else if (N == 2) {
         // base case
         //std::cout << "Joining last two subtrees with distance " << distMatrix[1] << std::endl;
         // connecting branch defined by two branches of same length to parent -> "rooted" tree...
-        return join(trees[0], distMatrix[1], trees[1], distMatrix[1]);
+        return join(trees[0], trees[1], distMatrix[1]);
     } else {
         // edge case, only one or none clusters
-        return *trees;
+        return trees[0];
     }
 }
