@@ -1,4 +1,5 @@
 #include <utility>
+#include <array>
 
 //
 // Created by knirschl on 18.04.23.
@@ -48,6 +49,7 @@ public:
     }
 };
 
-Node* neighborJoining(double* distMatrix, Node** trees, int size);
+template<std::size_t N>
+Node* neighborJoining(std::array<std::array<double, N>, N> distMatrix, std::array<Node*, N> trees);
 
 #endif //BA_NEIGHBORJOINING_H
