@@ -48,6 +48,21 @@ public:
             + m_n2->toString() + "," + std::to_string(m_branchLength2) + ")]";
     }
 };
+/*
+template<std::size_t N>
+std::array<double, N> meanDistance(std::array<std::array<double, N>, N> distMatrix);
+
+template<std::size_t N>
+std::array<std::array<double, N>, N> interMatrix(std::array<std::array<double, N>, N> distMatrix,
+                                                 std::array<double, N> r);
+
+template<std::size_t N>
+std::pair<std::size_t, std::size_t> findMin(std::array<std::array<double, N>, N> matrix);
+
+template<std::size_t N>
+std::array<std::array<double, N - 1>, N - 1> calculateNewMatrix(std::array<std::array<double, N>, N> distMatrix,
+                                                                std::pair<std::size_t, std::size_t> minDistPos);
+*/
 
 template<std::size_t N>
 Node* neighborJoining(std::array<std::array<double, N>, N> distMatrix, std::array<Node*, N> trees);

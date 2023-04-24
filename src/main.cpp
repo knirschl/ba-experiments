@@ -22,7 +22,7 @@ int main() {
 
     Node* treeDE = neighborJoining<4>(distMatrixDE, treesDE);
 
-
+/*
     // example from en.wiki
     std::array<std::array<double, 5>, 5> distMatrixEN {
             std::array<double, 5> {0, 5, 9, 9, 8}, // why is std::array<> only needed in first line?
@@ -39,9 +39,9 @@ int main() {
     std::array<Node*, 5> treesEN{&a, &b, &c, &d, &e};
 
     Node* treeEN = neighborJoining<5>(distMatrixEN, treesEN);
-    
+    */
     // output
     std::cout << "Neighbor-joined treeDE: " << treeDE->toString() << std::endl;
-    std::cout << "Neighbor-joined treeEN: " << treeEN->toString() << std::endl;
+    //std::cout << "Neighbor-joined treeEN: " << treeEN->toString() << std::endl;
     return 0;
 }
