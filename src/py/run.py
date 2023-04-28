@@ -1,0 +1,5 @@
+import benoitmorel.scripts.experiments as exp
+import benoitmorel.tools.families.generate_families_with_simphy as generate_families_with_simphy
+
+parameters = generate_families_with_simphy.SimphyParameters()
+generate_families_with_simphy.generate_from_parameters(parameters, exp.families_datasets_root)
