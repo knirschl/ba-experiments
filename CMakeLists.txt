@@ -3,4 +3,4 @@ project(BA)
 
 set(CMAKE_CXX_STANDARD 23)
 
-add_executable(BA src/main.cpp src/NeighborJoining.cpp)
+add_executable(BA src/cpp/*)
