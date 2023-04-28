@@ -1,0 +1,1 @@
+/data/morelbt/github/phd_experiments/../SimPhy_1.0.2/bin/simphy -I /data/morelbt/github/phd_experiments/../BenoitDatasets/families/ssim_dl_s25_f100_sites100_GTR_bl1.0_d1.0_l1.0_t0.0_gc0.0_p0.0_pop10_ms0.0_mf0.0_seed3000/simphy_config.txt 
