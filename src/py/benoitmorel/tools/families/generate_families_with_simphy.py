@@ -284,8 +284,8 @@ def generate_from_parameters(parameters, root_output):
   rescale_gene_tree_bl(output_dir, parameters.bl)
   indelible_config_file = build_indelible_config_file(parameters, output_dir)
   run_indelible(output_dir, indelible_config_file, cores)
-  #export_to_family(output_dir)
-  #compute_and_write_discordance_rate(parameters, output_dir)
+  export_to_family(output_dir)
+  compute_and_write_discordance_rate(parameters, output_dir)
   print("Done! output in " + output_dir) 
   return output_dir
 

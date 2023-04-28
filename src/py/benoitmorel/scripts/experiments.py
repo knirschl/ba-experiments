@@ -46,7 +46,7 @@ historic = os.path.join(root, "historic.txt")
 github_root = os.path.join(root, "..")
 #benoit_datasets_root = os.path.join(fast_github_root, "BenoitDatasets")
 #benoit_datasets_root = os.path.join(github_root, "BenoitDatasets")
-fast_github_root = "/home/fili/Documents/KIT/2023/BA/Code"
+fast_github_root = "/home/fili/Documents/KIT/2023/BA/code"
 fast_dataset_archive = os.path.join(fast_github_root, "output", "families")
 benoit_datasets_root = os.path.join(fast_github_root, "output")
 families_datasets_root  = os.path.join(benoit_datasets_root, "families")
@@ -129,8 +129,10 @@ guenomu_exec = os.path.join(github_root, "guenomu", "src", "guenomu")
 eccetera_root = os.path.join(github_root, "ecceTERA")
 eccetera_exec = os.path.join(eccetera_root, "build", "bin", "ecceTERA")
 lensim_exec = os.path.join(github_root, "lenard", "dtl_simulator.py")
+#
 simphy_exec = "/home/fili/Documents/Programming/bioinformatics/SimPhy/simphy"
 simphy_indelible_wrapper = "/home/fili/Documents/Programming/bioinformatics/SimPhy/INDELIble_wrapper.pl"
+#
 njstm_script = os.path.join(github_root, "NJstM", "njstm.r")
 duptree_exec = os.path.join(github_root, "duptree", "duptree")
 stride_script = os.path.join(github_root, "STRIDE", "stride", "stride.py")
