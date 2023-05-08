@@ -275,8 +275,8 @@ def compute_and_write_discordance_rate(parameters, output_dir):
   print("Discordance rate: " + str(d))
   fam.write_discordance_rate(output_dir, d)
 
-def generate_from_parameters(parameters, root_output):
-  cores = 1
+def generate_from_parameters(parameters, root_output, cores = 1):
+  cores = cores
   output_dir = get_output_dir(parameters, root_output)
   exp.reset_dir(output_dir)
   config_file = build_config_file(parameters, output_dir)
@@ -289,7 +289,7 @@ def generate_from_parameters(parameters, root_output):
   print("Done! output in " + output_dir) 
   return output_dir
 
-def generate_simphy(tag, species, families, sites, model, bl_factor, dup_rate, loss_rate, transfer_rate, gene_conversion_rate, perturbation, population, miss_species, miss_fam, root_output, seed):
+def generate_simphy(tag, species, families, sites, model, bl_factor, dup_rate, loss_rate, transfer_rate, gene_conversion_rate, perturbation, population, miss_species, miss_fam, root_output, seed, cores):
   p = SimphyParameters()
   p.tag = tag
   p.species_taxa = int(species)
@@ -317,7 +317,7 @@ def generate_simphy(tag, species, families, sites, model, bl_factor, dup_rate, l
     sample_missing_data.sample_missing_data(temp_output_dir, output_dir, p.miss_species, p.miss_fam)
     #shutil.rmtree(temp_output_dir)
   else:
-    generate_from_parameters(p, root_output)
+    return generate_from_parameters(p, root_output, cores)
    
 
 if (__name__ == "__main__"):
