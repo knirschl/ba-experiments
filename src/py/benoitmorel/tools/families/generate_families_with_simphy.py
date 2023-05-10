@@ -289,7 +289,7 @@ def generate_from_parameters(parameters, root_output, cores = 1):
   print("Done! output in " + output_dir) 
   return output_dir
 
-def generate_simphy(tag, species, families, sites, model, bl_factor, dup_rate, loss_rate, transfer_rate, gene_conversion_rate, perturbation, population, miss_species, miss_fam, root_output, seed, cores):
+def generate_simphy(tag, species, families, sites, model, bl_factor, dup_rate, loss_rate, transfer_rate, gene_conversion_rate, population, miss_species, miss_fam, root_output, seed, cores):
   p = SimphyParameters()
   p.tag = tag
   p.species_taxa = int(species)
@@ -306,8 +306,8 @@ def generate_simphy(tag, species, families, sites, model, bl_factor, dup_rate, l
   p.miss_species = float(miss_species)
   print(miss_fam)
   p.miss_fam = float(miss_fam)
-  print(perturbation)
-  assert(float(perturbation) == 0.0)
+  #print(perturbation)
+  #assert(float(perturbation) == 0.0)
   if (p.miss_species != 0.0 or p.miss_fam != 0.0):
     p.prefix = p.prefix + "temp"
     temp_output_dir = generate_from_parameters(p, root_output)
