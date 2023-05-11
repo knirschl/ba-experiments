@@ -7,8 +7,8 @@ import saved_metrics
 sys.path.insert(0, 'scripts')
 sys.path.insert(0, os.path.join("tools", "families"))
 sys.path.insert(0, os.path.join("tools", "msa_edition"))
-import experiments as exp
-import fam
+import benoitmorel.scripts.experiments as exp
+import benoitmorel.tools.families.fam as fam
 import ete3
 import msa_converter
 

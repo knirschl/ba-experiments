@@ -1,6 +1,7 @@
 import os
 import benoitmorel.scripts.experiments as exp
 import benoitmorel.scripts.generax.launch_generax as  launch_generax
+import benoitmorel.tools.families.run_fastme as run_fastme
 import benoitmorel.tools.families.generate_families_with_simphy as generate_families_with_simphy
 import benoitmorel.tools.families.fam as fam
 import knirschl.scripts.launch_raxmlng as launch_raxmlng
@@ -32,6 +33,7 @@ launch_raxmlng.run_raxml_all(datadir, "GTR+G")
 output = "misc/fastme-test.newick"
 launch_fastme.run_fastme_all(fam.get_families_dir(datadir), output)
 # maybe use benoitmorel/tools/families/run_fastme.py ?
+run_fastme.run_fastme_on_families(datadir, "GTR+G", 1, 1)
 
 # create families file
 generax_families_file = os.path.join(datadir, "families.txt")
