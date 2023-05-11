@@ -1,16 +1,15 @@
 import sys
 import os
 import subprocess
-sys.path.insert(0, 'scripts')
-sys.path.insert(0, 'tools/families')
-sys.path.insert(0, 'tools/generax')
-#import saved_metrics
-#import rf_cells
-import benoitmorel.scripts.experiments as exp
 #import shutil
 #import time
-import benoitmorel.tools.families.fam as fam
-import benoitmorel.tools.families.sequence_model as sequence_model
+sys.path.insert(0, 'scripts')
+sys.path.insert(0, 'tools/families')
+import paths
+import fam
+import sequence_model
+#import saved_metrics
+#import rf_cells
 #import fast_rf_cells
 #import extract_event_number
 #import events
@@ -23,15 +22,10 @@ def check_inputs(strategy):
     print("Unknown search strategy " + strategy)
     exit(1)
 
-
-
 def has_multiple_sample(starting_tree):
   return "ale" in starting_tree.lower() or "multiple" in starting_tree.lower()
 
 def get_starting_tree_path(datadir, subst_model, family, starting_tree):
-  #if (has_multiple_sample(starting_tree)):
-  #  return os.path.join(fam.get_family_misc_dir(datadir, family), starting_tree + "." + subst_model + "_onesample.geneTree")
-  #else:
     return fam.build_gene_tree_path(datadir, subst_model, family, starting_tree)
 
 # GeneRax does not accept tree files with multiple trees

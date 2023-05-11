@@ -1,18 +1,21 @@
 import subprocess
 import os
-import benoitmorel.tools.families.fam as fam
-import benoitmorel.scripts.experiments as exp
-
+import sys
+import time
+sys.path.insert(0, 'scripts')
+sys.path.insert(0, 'tools/families')
+import paths
+import fam
 
 # raxml-ng --msa output/families/ssim_.../families/family_XXX/alignment.msa --model GTR+G
 def get_raxml_command(alignment, model, with_mpi = False, cores = 1):
     command = []
     if (with_mpi):
-        command.append(exp.raxml_exec)
+        command.append(paths.raxml_mpi_exec)
         command.append("-np")
         command.append(str(cores))
     else:
-        command.append(exp.raxml_nompi_exec)
+        command.append(paths.raxml_exec)
     command.append("--msa")
     command.append(alignment)
     command.append("--model")
@@ -35,8 +38,8 @@ def run_raxml(datadir, alignment, model, with_mpi = False, cores = 1):
     command = get_raxml_command(alignment, model, with_mpi, cores)
     run_name = get_run_specs(command)
     start = time.time()
-    subprocess.check_call(command)
+    #subprocess.check_call(command)
     end = time.time() - start
-    #saved_metrics.sa
-    metrics.save_metrics(datadir, run_name, end, "runtimes")
+    #saved_metrics.save_metrics
+    #metrics.save_metrics(datadir, run_name, end, "runtimes")
     
