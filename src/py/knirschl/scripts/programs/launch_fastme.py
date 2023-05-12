@@ -1,46 +1,108 @@
-import subprocess
 import os
 import sys
+import subprocess
+import shutil
 import time
+import ete3
 sys.path.insert(0, 'scripts')
+sys.path.insert(0, os.path.join("tools", "families"))
+sys.path.insert(0, os.path.join("tools", "msa"))
 import paths
+import utils
 import fam
-from fasta_to_phy import fasta_to_phy_file
+import metrics
+import msa_converter
 
+def generate_scheduler_commands_file(datadir, subst_model, is_dna, cores, output_dir):
+  results_dir = os.path.join(output_dir, "results")
+  scheduler_commands_file = os.path.join(output_dir, "commands.txt")
+  gamma = False
+  sp = subst_model.split("+")
+  fastme_model = subst_model
+  if (len(sp) > 1 and sp[1] == "G"):
+    fastme_model = sp[0]
+    gamma = True
+  with open(scheduler_commands_file, "w") as writer:
+    for family in fam.get_families_list(datadir):
+      #family_dir = fam.get_family_path(datadir, family)
+      fastme_dir = fam.get_family_misc_dir(datadir, family)
+      try:
+        os.mkdir(fastme_dir)
+      except:
+        pass
+      fastme_output = os.path.join(fastme_dir, "fastme_output." + subst_model + ".newick")
+      fastme_matrix = fam.get_fastme_distances(datadir, family, subst_model)
+      command = []
+      command.append(family)
+      command.append("1")
+      command.append("1")
+      command.append("-i")
+      phylip = fam.get_alignment_phylip(datadir, family)
+      if (not os.path.isfile(phylip)):
+        ali = fam.get_alignment(datadir, family)
+        msa_converter.msa_convert(ali, phylip, None, "iphylip_relaxed")
+      command.append(phylip)
+      
+      if (is_dna):
+        command.append("-d" + fastme_model)
+      else:
+        command.append("-p" + fastme_model)
+      if (gamma):
+        command.append("1.0")
+      command.append("-o")
+      command.append(fastme_output)
+      command.append("-O")
+      command.append(fastme_matrix)
+      command.append("--seed")
+      command.append("40")
+      command.append("--spr")
+      writer.write(" ".join(command) + "\n")
+  return scheduler_commands_file
 
-# fastme -i alignment.phylip -d -o <output-file>
-def get_fastme_command(alignment, output_file):
-    command = []
-    command.append(paths.fastme_exec)
-    command.append("-i")
-    command.append(alignment)
-    command.append("-d") # DNA data
-    command.append("-o")
-    command.append(output_file)
-    return command
+def extract_fastme_trees(datadir, subst_model):
+  families_dir = os.path.join(datadir, "families")
+  valid = 0
+  invalid = 0
+  for family in os.listdir(families_dir):
+    fastmetree = os.path.join(families_dir, family, "misc", "fastme_output." + subst_model + ".newick")
+    tree = fam.build_gene_tree_path(datadir, subst_model, family, "fastme")
+    fastme_matrix = fam.get_fastme_distances(datadir, family, subst_model)
+    if (os.path.isfile(fastmetree) and os.stat(fastmetree).st_size > 0):
+      valid += 1
+      shutil.copyfile(fastmetree, tree)
+    else:
+      invalid += 1
+      try:
+        os.remove(tree)
+        os.remove(fastme_matrix)
+      except:
+        pass
+    os.remove(fastmetree) 
+  print("Extracted " + str(valid) + " trees")
+  if (invalid > 0):
+    print("WARNING! " + str(invalid) + " trees were skipped")
 
-def get_run_specs(command):
-    specs = []
-    specs.append("FastME")
-    specs.append(time.strftime("%d.%m.%Y-%H:%M:%S"))
-    specs.append(command)
-    return specs
+def run_fastme_on_families(datadir, subst_model, is_dna, cores):
+  output_dir = fam.get_run_dir(datadir, subst_model, "fastme_run")
+  shutil.rmtree(output_dir, True)
+  os.makedirs(output_dir)
+  scheduler_commands_file = generate_scheduler_commands_file(datadir, subst_model, is_dna, cores, output_dir)
+  start = time.time()
+  utils.run_with_scheduler(paths.fastme_exec, scheduler_commands_file, "fork", cores, output_dir, "logs.txt")   
+  metrics.save_metrics(datadir, fam.get_run_name("fastme", subst_model), (time.time() - start), "runtimes") 
+  lb = fam.get_lb_from_run(output_dir)
+  metrics.save_metrics(datadir, fam.get_run_name("fastme", subst_model), (time.time() - start) * lb, "seqtimes") 
+  extract_fastme_trees(datadir, subst_model)
+ 
 
-def run_fastme_all(datadir, output_file):
-    print(datadir)
-    families_dir = fam.get_families_dir(datadir)
-    print(families_dir)
-    for family in os.listdir(families_dir):
-        # convert alignment.msa to alignment.phylip
-        input_fasta = fam.get_alignment(datadir, family)
-        output_phy = input_fasta[:input_fasta.rfind(".") + 1] + "phy" # changes file ending
-        fasta_to_phy_file(input_fasta, output_phy) 
-        run_fastme(datadir, output_phy, os.path.join(families_dir, family, output_file))
-
-def run_fastme(datadir, alignment, output_file):
-    command = get_fastme_command(alignment, output_file)
-    run_name = get_run_specs(command)
-    start = time.time()
-    subprocess.check_call(command)
-    end = time.time() - start
-    #metrics.save_metrics(datadir, run_name, end, "runtimes")
+if (__name__== "__main__"):
+  max_args_number = 5
+  if len(sys.argv) < max_args_number:
+    print("Syntax error: python " + os.path.basename(__file__) + "  datadir subst_model is_dna cores.")
+    print("Cluster can be either normal, haswell or magny")
+    sys.exit(0)
+  datadir = sys.argv[1]
+  subst_model = sys.argv[2]
+  is_dna = sys.argv[3] != "0"
+  cores = int(sys.argv[4])
+  run_fastme_on_families(datadir, subst_model, is_dna, cores)

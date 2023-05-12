@@ -51,7 +51,6 @@ def build_generax_families_file(datadir, starting_tree, subst_model, output):
     plop = 0
     print("starting gene tree " + starting_tree)
     for family in os.listdir(families_dir):
-      
       family_path = os.path.join(families_dir, family)
       writer.write("- " + family + "\n")
       gene_tree = get_starting_tree_path(datadir, subst_model, family, starting_tree)
@@ -101,7 +100,7 @@ def run_generax(datadir,  subst_model,  strategy, species_tree, generax_families
   species_tree = fam.get_species_tree(datadir, subst_model, species_tree)
   
   command = get_generax_command(generax_families_file, species_tree, strategy, additional_arguments, resultsdir, mode, cores)
-  print(command)
+  #print(command)
   subprocess.check_call(command.split(" "), stdout = sys.stdout)
 
 
