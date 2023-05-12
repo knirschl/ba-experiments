@@ -42,6 +42,6 @@ generax_exec = os.path.join(programs_root, "GeneRax", "build", "bin", "generax")
 # FastME
 fastme_exec = os.path.join(programs_root, "FastME", "fastme-2.1.6.4", "binaries", "fastme-2.1.6.2-linux64")
 # MPI
-mpischeduler_exec = ""
+mpischeduler_exec = os.path.join(programs_root, "MPIScheduler", "build", "mpi-scheduler")
 # constants
 mpi_scheduler_heuristic = "--split-scheduler"

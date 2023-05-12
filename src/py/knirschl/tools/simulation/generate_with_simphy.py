@@ -7,7 +7,6 @@ import copy
 sys.path.insert(0, 'scripts')
 sys.path.insert(0, 'tools/families')
 sys.path.insert(0, 'tools/trees')
-print(sys.path)
 import paths
 import utils
 import fam
@@ -296,7 +295,7 @@ def generate_from_parameters(parameters, root_output, cores = 1):
   print("Done! output in " + output_dir) 
   return output_dir
 
-def generate_simphy(tag, species, families, sites, model, bl_factor, dup_rate, loss_rate, transfer_rate, gene_conversion_rate, population, miss_species, miss_fam, root_output, seed, cores):
+def generate_simphy(tag, species, families, sites, model, bl_factor, dup_rate, loss_rate, transfer_rate, gene_conversion_rate, perturbation, population, miss_species, miss_fam, root_output, seed, cores):
   p = SimphyParameters()
   p.tag = tag
   p.species_taxa = int(species)
@@ -393,7 +392,7 @@ def get_param_from_dataset_name(parameter, dataset):
   else:
     return "invalid"
    
-def generate_simphy(dataset):
+def generate_dataset(dataset, cores):
   if (not dataset.startswith("ssim")):
     print("Unknown simulator tag for dataset " + dataset)
     sys.exit(1)
@@ -403,16 +402,18 @@ def generate_simphy(dataset):
   sites = int(get_param_from_dataset_name("sites", dataset))
   model = get_param_from_dataset_name("model", dataset)
   bl_factor = float(get_param_from_dataset_name("bl", dataset))
-  d = float(get_param_from_dataset_name("dup_rate", dataset))
-  l = float(get_param_from_dataset_name("loss_rate", dataset))
-  t = float(get_param_from_dataset_name("transfer_rate", dataset))
-  gc = float(get_param_from_dataset_name("gene_conversion_rate", dataset))
-  p = float(get_param_from_dataset_name("perturbation", dataset))
+  dup_rate = float(get_param_from_dataset_name("dup_rate", dataset))
+  loss_rate = float(get_param_from_dataset_name("loss_rate", dataset))
+  transfer_rate = float(get_param_from_dataset_name("transfer_rate", dataset))
+  gene_conversion_rate = float(get_param_from_dataset_name("gene_conversion_rate", dataset))
+  perturbation = float(get_param_from_dataset_name("perturbation", dataset))
   seed = int(get_param_from_dataset_name("seed", dataset))
   population = get_param_from_dataset_name("population", dataset)
   miss_species = get_param_from_dataset_name("ms", dataset)
   miss_fam = get_param_from_dataset_name("mf", dataset)
-  generate_simphy(tag, species, families, sites, model, bl_factor, d, l, t, gc, p, population, miss_species, miss_fam, output,  seed) 
+  output = fam.get_datasets_family_path()
+  generate_simphy(tag, species, families, sites, model, bl_factor, dup_rate, loss_rate, transfer_rate,
+                  gene_conversion_rate, perturbation, population, miss_species, miss_fam, output, seed, cores)
   
 if (__name__ == "__main__"):
   parameters = SimphyParameters()

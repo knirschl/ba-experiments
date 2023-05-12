@@ -25,7 +25,7 @@ def get_datasets_family_path():
   return paths.families_datasets_root
 
 def get_datadir(dataset):
-  return os.path.abspath(get_datasets_family_path(), dataset)
+  return os.path.join(get_datasets_family_path(), dataset)
 
 def get_first_dataset_starting_with(dataset):
   datadir = get_datadir(dataset)
