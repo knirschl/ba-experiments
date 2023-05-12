@@ -353,12 +353,12 @@
 						<clade>
 							<name>NULL</name>
 							<eventsRec>
-								<speciation speciesLocation="Node_8_18_0"/>
+								<branchingOut speciesLocation="Node_8_18_0"/>
 							</eventsRec>
 							<clade>
 								<name>NULL</name>
 								<eventsRec>
-									<branchingOut speciesLocation="8"/>
+									<speciation speciesLocation="Node_8_18_0"/>
 								</eventsRec>
 								<clade>
 									<name>8_0_0</name>
@@ -367,17 +367,17 @@
 									</eventsRec>
 								</clade>
 								<clade>
-									<name>6_0_0</name>
+									<name>18_0_0</name>
 									<eventsRec>
-										<transferBack destinationSpecies="6"/>
-										<leaf speciesLocation="6"/>
+										<leaf speciesLocation="18"/>
 									</eventsRec>
 								</clade>
 							</clade>
 							<clade>
-								<name>18_0_0</name>
+								<name>6_0_0</name>
 								<eventsRec>
-									<leaf speciesLocation="18"/>
+									<transferBack destinationSpecies="6"/>
+									<leaf speciesLocation="6"/>
 								</eventsRec>
 							</clade>
 						</clade>

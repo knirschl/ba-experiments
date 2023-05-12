@@ -1,2 +1,2 @@
--718.621 -19.9077
-Reconciliation rates = 1e-07 0.036556 0.0542755 
+-476.072 -27.906
+Reconciliation rates = 1e-07 0.0383686 0.054311 

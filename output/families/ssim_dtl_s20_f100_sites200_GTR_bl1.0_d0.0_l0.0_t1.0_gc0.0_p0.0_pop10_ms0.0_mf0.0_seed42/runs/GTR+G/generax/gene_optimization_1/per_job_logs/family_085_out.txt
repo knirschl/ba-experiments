@@ -2,51 +2,39 @@ Starting optimizeGeneTreesSlave
 LibpllModel /home/fili/Documents/KIT/2023/BA/code/output/families/ssim_dtl_s20_f100_sites200_GTR_bl1.0_d0.0_l0.0_t1.0_gc0.0_p0.0_pop10_ms0.0_mf0.0_seed42/runs/GTR+G/generax/results/family_085/libpllModel.txt
 Starting optimizing gene tree
 Number of ranks 1
-(1e-07, 0.0901922, 0.148987, score = 0)
+(1e-07, 0.0882333, 0.145164, score = 0)
 Taxa number: 20
-joint: -502.308  libpll: -450.349  reconciliation: -51.9591  
-Initial ll = -502.308
+joint: -534.288  libpll: -479.01  reconciliation: -55.2779  
+Initial ll = -534.288
 
 SPR Search with radius 1: trying 54 prune nodes
-Found 12 potential better moves
-	GeneRax will now test and apply all the 12 potential good moves one after each other
-	Applying move, ll = -495.164, 21 63
-	Applying move, ll = -494.154, 30 36
-	Applying move, ll = -493.551, 40 46
-
-SPR Search with radius 1: trying 54 prune nodes
-Found 8 potential better moves
-	GeneRax will now test and apply all the 8 potential good moves one after each other
-	Applying move, ll = -489.161, 27 36
-	Applying move, ll = -483.053, 39 4
-
-SPR Search with radius 1: trying 54 prune nodes
-Found 4 potential better moves
-	GeneRax will now test and apply all the 4 potential good moves one after each other
-	Applying move, ll = -481.422, 45 57
-
-SPR Search with radius 1: trying 54 prune nodes
-Found 8 potential better moves
-	GeneRax will now test and apply all the 8 potential good moves one after each other
-	Applying move, ll = -481.253, 45 11
-	Worse likelihood, Move rejected
+Found 19 potential better moves
+	GeneRax will now test and apply all the 19 potential good moves one after each other
+	Applying move, ll = -533.933, 21 3
+	Applying move, ll = -533.698, 24 4
+	Applying move, ll = -531.547, 51 58
+	Applying move, ll = -528.322, 60 17
 	Worse likelihood, Move rejected
 
 SPR Search with radius 1: trying 54 prune nodes
-Found 4 potential better moves
-	GeneRax will now test and apply all the 4 potential good moves one after each other
-	Applying move, ll = -480.705, 45 57
+Found 20 potential better moves
+	GeneRax will now test and apply all the 20 potential good moves one after each other
+	Applying move, ll = -522.284, 21 23
+	Worse likelihood, Move rejected
+	Worse likelihood, Move rejected
+	Applying move, ll = -522.013, 39 54
+	Applying move, ll = -521.657, 56 7
 
 SPR Search with radius 1: trying 54 prune nodes
 Found 4 potential better moves
 	GeneRax will now test and apply all the 4 potential good moves one after each other
 	Worse likelihood, Move rejected
-	Applying move, ll = -478.337, 59 46
+	Applying move, ll = -520.906, 65 36
 
 SPR Search with radius 1: trying 54 prune nodes
 Found 0 potential better moves
 	GeneRax will now test and apply all the 0 potential good moves one after each other
-joint: -478.337  libpll: -453.453  reconciliation: -24.8841  
+joint: -520.906  libpll: -488.938  reconciliation: -31.9679  
 Saving tree in /home/fili/Documents/KIT/2023/BA/code/output/families/ssim_dtl_s20_f100_sites200_GTR_bl1.0_d0.0_l0.0_t1.0_gc0.0_p0.0_pop10_ms0.0_mf0.0_seed42/runs/GTR+G/generax/results/family_085/geneTree.newick
 Finished saving  /home/fili/Documents/KIT/2023/BA/code/output/families/ssim_dtl_s20_f100_sites200_GTR_bl1.0_d0.0_l0.0_t1.0_gc0.0_p0.0_pop10_ms0.0_mf0.0_seed42/runs/GTR+G/generax/results/family_085/geneTree.newick
 End of optimizing gene tree after 0s

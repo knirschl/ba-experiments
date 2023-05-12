@@ -348,20 +348,14 @@
 								<speciation speciesLocation="Node_8_18_0"/>
 							</eventsRec>
 							<clade>
-								<name>8_0_0</name>
-								<eventsRec>
-									<leaf speciesLocation="8"/>
-								</eventsRec>
-							</clade>
-							<clade>
 								<name>NULL</name>
 								<eventsRec>
-									<branchingOut speciesLocation="18"/>
+									<branchingOut speciesLocation="8"/>
 								</eventsRec>
 								<clade>
-									<name>18_0_0</name>
+									<name>8_0_0</name>
 									<eventsRec>
-										<leaf speciesLocation="18"/>
+										<leaf speciesLocation="8"/>
 									</eventsRec>
 								</clade>
 								<clade>
@@ -371,6 +365,12 @@
 										<leaf speciesLocation="15"/>
 									</eventsRec>
 								</clade>
+							</clade>
+							<clade>
+								<name>18_0_0</name>
+								<eventsRec>
+									<leaf speciesLocation="18"/>
+								</eventsRec>
 							</clade>
 						</clade>
 						<clade>
