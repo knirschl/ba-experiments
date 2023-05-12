@@ -18,12 +18,16 @@ Settings for this run:
   E                                   evolutionary model  F84             
   G                    Gamma rate variation across sites  no              
   R                              Remove sites whith gaps  no              
-  O                    Output calculated distance matrix  no              
+  O                    Output calculated distance matrix  yes             
 
   D                                   Number of datasets  1               
   M                         Initial tree building method  BIONJ           
   N                                   NNI postprocessing  no              
-  S                                   SPR postprocessing  no              
+  S                                   SPR postprocessing  yes             
 
 -------------------------------------------------------------------------------
 Dataset 1
+	Tree length is 1.19396247
+	Performed 0 SPR(s).
+
+	Explained variance : 0.94605091

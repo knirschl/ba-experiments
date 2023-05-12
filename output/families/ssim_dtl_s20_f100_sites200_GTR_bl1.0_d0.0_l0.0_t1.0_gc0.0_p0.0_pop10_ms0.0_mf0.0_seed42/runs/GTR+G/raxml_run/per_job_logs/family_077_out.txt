@@ -1,0 +1,11 @@
+WARNING: Running in REDO mode: existing checkpoints are ignored, and all result files will be overwritten!
+
+
+WARNING: Sequences 10_0_0 and 12_0_0 are exactly identical!
+WARNING: Sequences 10_0_0 and 5_0_0 are exactly identical!
+WARNING: Sequences 7_0_0 and 13_0_0 are exactly identical!
+WARNING: Sequences 7_0_0 and 9_0_0 are exactly identical!
+WARNING: Sequences 3_0_0 and 2_0_0 are exactly identical!
+WARNING: Duplicate sequences found: 5
+WARNING: Best ML tree contains 6 near-zero branches!
+

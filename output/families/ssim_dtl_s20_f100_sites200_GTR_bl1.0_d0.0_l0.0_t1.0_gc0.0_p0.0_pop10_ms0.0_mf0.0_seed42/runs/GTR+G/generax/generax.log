@@ -1,0 +1,79 @@
+GeneRax was called as follow:
+/home/fili/Documents/KIT/2023/BA/resources/tools/GeneRax/build/bin/generax -f /home/fili/Documents/KIT/2023/BA/code/output/families/ssim_dtl_s20_f100_sites200_GTR_bl1.0_d0.0_l0.0_t1.0_gc0.0_p0.0_pop10_ms0.0_mf0.0_seed42/families.txt -s /home/fili/Documents/KIT/2023/BA/code/output/families/ssim_dtl_s20_f100_sites200_GTR_bl1.0_d0.0_l0.0_t1.0_gc0.0_p0.0_pop10_ms0.0_mf0.0_seed42/species_trees/speciesTree.newick --strategy SPR -p /home/fili/Documents/KIT/2023/BA/code/output/families/ssim_dtl_s20_f100_sites200_GTR_bl1.0_d0.0_l0.0_t1.0_gc0.0_p0.0_pop10_ms0.0_mf0.0_seed42/runs/GTR+G/generax 
+
+General information:
+- Output prefix: /home/fili/Documents/KIT/2023/BA/code/output/families/ssim_dtl_s20_f100_sites200_GTR_bl1.0_d0.0_l0.0_t1.0_gc0.0_p0.0_pop10_ms0.0_mf0.0_seed42/runs/GTR+G/generax
+- Families information: /home/fili/Documents/KIT/2023/BA/code/output/families/ssim_dtl_s20_f100_sites200_GTR_bl1.0_d0.0_l0.0_t1.0_gc0.0_p0.0_pop10_ms0.0_mf0.0_seed42/families.txt
+- Species tree: /home/fili/Documents/KIT/2023/BA/code/output/families/ssim_dtl_s20_f100_sites200_GTR_bl1.0_d0.0_l0.0_t1.0_gc0.0_p0.0_pop10_ms0.0_mf0.0_seed42/species_trees/speciesTree.newick
+- MPI Ranks: 1
+- Random seed: 123
+- Reconciliation model: UndatedDTL
+- DTL rates: global rates
+- Infer ML reconciliation: ON
+- Unrooted reconciliation likelihood: OFF
+- Prune species tree mode: OFF
+
+Gene tree correction information:
+- Gene tree search strategy: SPR
+- Max gene SPR radius: 5
+
+[00:00:00] Filtering invalid families...
+
+End of instance initialization
+
+[00:00:00] [Initialization] Initial optimization of the starting random gene trees from the MSAs only
+[00:00:08] [Initialization] Finished optimizing the gene trees from the MSAs
+
+[00:00:08] Starting species tree initialization...
+[00:00:08] End of species tree initialization
+[00:00:08] Filtering invalid families based on the starting species tree...
+
+[00:00:08] Gathering statistics about the families...
+[00:00:08] Input data information:
+- Number of gene families: 100
+- Number of species: 20
+- Total number of genes: 2000
+- Average number of genes per family: 20
+- Maximum number of genes per family: 20
+- Species covered with the smallest family coverage: "8" (covered by 100/100 families)
+- Average (over species) species family coverage: 100
+
+[00:00:08] Reconciliation rates optimization... 
+	D=1e-07, L=0.0901922, T=0.148987, RecLL= -4172.46
+
+[00:00:09] Optimizing gene trees with radius=1... 
+[00:00:13] JointLL=-106243 RecLL=-2594.18 LibpllLL=-103649
+
+[00:00:13] Reconciliation rates optimization... 
+	D=1e-07, L=0.0475562, T=0.0698273, RecLL= -2485.92
+
+[00:00:14] Optimizing gene trees with radius=2... 
+[00:00:21] JointLL=-105879 RecLL=-2146.12 LibpllLL=-103733
+
+[00:00:21] Reconciliation rates optimization... 
+	D=1e-07, L=0.0397182, T=0.057634, RecLL= -2146.22
+
+[00:00:22] Optimizing gene trees with radius=3... 
+[00:00:29] JointLL=-105820 RecLL=-2093.73 LibpllLL=-103726
+
+[00:00:29] Reconciliation rates optimization... 
+	D=1e-07, L=0.037934, T=0.0549507, RecLL= -2099.18
+
+[00:00:30] Optimizing gene trees with radius=4... 
+[00:00:37] JointLL=-105801 RecLL=-2064.44 LibpllLL=-103737
+
+[00:00:37] Reconciliation rates optimization... 
+	D=1e-07, L=0.036556, T=0.0542755, RecLL= -2069.28
+
+[00:00:38] Optimizing gene trees with radius=5... 
+[00:00:46] JointLL=-105790 RecLL=-2033.15 LibpllLL=-103757
+
+[00:00:46] Reconciling gene trees with the species tree...
+[00:00:46] Terminating the instance..
+
+[00:00:46] DTL rates: D=1e-07 L= 0.036556 T=0.0542755
+[00:00:46] Reconciliation likelihood: -2033.15
+[00:00:46] Phylogenetic likelihood: -103757
+[00:00:46] Joint likelihood: -105790
+[00:00:46] Results directory: /home/fili/Documents/KIT/2023/BA/code/output/families/ssim_dtl_s20_f100_sites200_GTR_bl1.0_d0.0_l0.0_t1.0_gc0.0_p0.0_pop10_ms0.0_mf0.0_seed42/runs/GTR+G/generax
+[00:00:46] End of GeneRax execution
