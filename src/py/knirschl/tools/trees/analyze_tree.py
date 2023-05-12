@@ -15,7 +15,6 @@ def analyze_dimensions(tree):
 def get_nodes_number(tree_file):
   return len(read_tree(tree_file).get_leaves())
 
-
 def analyze_polytomies(tree):
   print("Polytomies:")
   for node in tree.traverse("postorder"):
@@ -85,8 +84,6 @@ def check_ultrametric_and_get_length(tree_file, epsilon = 0.001):
       else:
         assert(abs(ref - node.get_distance(tree)) < epsilon)
   return ref
-
-
 
 def count_monophylies(tree_file):
   tree = read_tree(tree_file)

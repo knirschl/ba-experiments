@@ -40,12 +40,7 @@ def generate_scheduler_commands_file(datadir, subst_model, cores, output_dir):
             command.append(subst_model)
             command.append("--prefix")
             command.append(raxml_output)
-            command.append("--log") # rem later
-            command.append("WARNING") # rem later
-            command.append("--redo") # rem later
             writer.write(" ".join(command) + "\n")
-            #print("running fam " + family)
-            #subprocess.check_call(command)
     return scheduler_commands_file
 
 def extract_raxml_trees(datadir, subst_model):
@@ -81,7 +76,7 @@ def run_raxmlng_on_families(datadir, subst_model, cores, mpi = False):
     start = time.time()
     utils.run_with_scheduler(paths.raxml_exec, scheduler_commands_file, "fork", cores, output_dir, "logs.txt")   
     metrics.save_metrics(datadir, fam.get_run_name("raxml", subst_model), (time.time() - start), "runtimes") 
-    lb = fam.get_lb_from_run(output_dir) # needs .svg
+    lb = fam.get_lb_from_run(output_dir)
     metrics.save_metrics(datadir, fam.get_run_name("raxml", subst_model), (time.time() - start) * lb, "seqtimes") 
     extract_raxml_trees(datadir, subst_model)
     

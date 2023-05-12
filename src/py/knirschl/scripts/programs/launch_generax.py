@@ -1,16 +1,16 @@
 import sys
 import os
 import subprocess
+import shutil
+import time
 sys.path.insert(0, 'scripts')
 sys.path.insert(0, 'tools/families')
-#import saved_metrics
-#import rf_cells
 import paths
 import utils
-#import shutil
-#import time
 import fam
+import metrics
 import sequence_model
+#import rf_cells
 #import fast_rf_cells
 #import extract_event_number
 #import events
@@ -97,10 +97,10 @@ def get_generax_command(generax_families_file, species_tree, strategy, additiona
     return " ".join(command)
 
 def run_generax(datadir,  subst_model,  strategy, species_tree, generax_families_file, mode, cores, resultsdir, additional_arguments = ""):
-  species_tree = fam.get_species_tree(datadir, subst_model, species_tree)
+  #species_tree = fam.get_species_tree(datadir, subst_model, species_tree)
   
   command = get_generax_command(generax_families_file, species_tree, strategy, additional_arguments, resultsdir, mode, cores)
-  #print(command)
+  print(command)
   subprocess.check_call(command.split(" "), stdout = sys.stdout)
 
 
@@ -154,7 +154,7 @@ def extract_events(datadir, results_family_dir, additional_arguments):
     event_counts = extract_event_number.extract(results_family_dir)
     events.update_event_counts(datadir, rec_model, radius, event_counts)
 
-def run(datadir, subst_model, strategy, species_tree, starting_tree, cores, additional_arguments, resultsdir, do_analyze = True, do_extract = True):
+def run(datadir, subst_model, strategy, species_tree, starting_tree, cores, additional_arguments, resultsdir, do_extract = True, do_analyze = False):
   run_name = utils.getAndDelete("--run", additional_arguments, None) 
   if (None == run_name):
       run_name = get_run_name(species_tree, starting_tree, subst_model, strategy, additional_arguments)
@@ -166,9 +166,9 @@ def run(datadir, subst_model, strategy, species_tree, starting_tree, cores, addi
   generax_families_file = os.path.join(resultsdir, "families.txt")
   build_generax_families_file(datadir, starting_tree, subst_model, generax_families_file)
   start = time.time()
-  run_generax(datadir, subst_model, strategy, species_tree, generax_families_file, mode, cores, additional_arguments, resultsdir)
-  saved_metrics.save_metrics(datadir, run_name, (time.time() - start), "runtimes") 
-  saved_metrics.save_metrics(datadir, run_name, (time.time() - start), "seqtimes") 
+  run_generax(datadir, subst_model, strategy, species_tree, generax_families_file, mode, cores, resultsdir, additional_arguments)
+  metrics.save_metrics(datadir, run_name, (time.time() - start), "runtimes") 
+  metrics.save_metrics(datadir, run_name, (time.time() - start), "seqtimes") 
   radius = int(utils.getArg("--max-spr-radius", additional_arguments, "5"))
   #if (radius == 0):
   #  print("Warning, not extracting trees when --max-spr-radius 0 is set")
@@ -176,12 +176,12 @@ def run(datadir, subst_model, strategy, species_tree, starting_tree, cores, addi
   #  do_analyze = False
   if (do_extract):
     extract_trees(datadir, os.path.join(resultsdir, "generax"), run_name, subst_model)
-  try:
-    if (do_analyze):
-      fast_rf_cells.analyze(datadir, "all", cores, run_name)
-  except:
-    print("Analyze failed!!!!")
-  extract_events(datadir, os.path.join(resultsdir, "generax"), additional_arguments)
+  #try:
+  #  if (do_analyze):
+  #    fast_rf_cells.analyze(datadir, "all", cores, run_name)
+  #except:
+  #  print("Analyze failed!!!!")
+  #extract_events(datadir, os.path.join(resultsdir, "generax"), additional_arguments)
   print("Output in " + resultsdir)
   return resultsdir
 

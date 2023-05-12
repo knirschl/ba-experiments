@@ -5,14 +5,16 @@ sys.path.insert(0, 'scripts')
 sys.path.insert(0, 'scripts/programs')
 sys.path.insert(0, 'tools/families')
 sys.path.insert(0, 'tools/simulation')
+sys.path.insert(0, 'tools/trees')
 import utils
 import paths
 import fam
 import generate_with_simphy as simphy
-#import launch_raxmlng__MY as launch_raxmlng
 import launch_raxml
 import launch_generax
 import launch_fastme
+import compare_trees
+import metrics
 
 class RunFilter():
     def __init__(self, generate = True):
@@ -24,7 +26,7 @@ class RunFilter():
         self.ba = True
 
         self.force_overwrite = True
-        self.analyze = False # TODO implement
+        self.compare = True
         #self.debug = False
     
     def disable_all(self):
@@ -67,7 +69,10 @@ class RunFilter():
                 generax_families_file = os.path.join(datadir, "families.txt")
                 launch_generax.build_generax_families_file(datadir, "random", subst_model, generax_families_file)
                 resultsdir = os.path.join(datadir, "runs", subst_model)
-                launch_generax.run_generax(datadir, None, "SPR", "true", generax_families_file, "false", 1, resultsdir)
+                #launch_generax.run_generax(datadir, None, "SPR", "true", generax_families_file, "false", 1, resultsdir)
+                species_tree = fam.get_species_tree(datadir)
+                print("Species tree :=", species_tree)
+                launch_generax.run(datadir, subst_model, "SPR", species_tree, "random", cores, "", resultsdir)#, do_analyze=False)
             except Exception as exc:
                 utils.printFlush("Failed running GeneRax\n" + str(exc))
         if (self.fastme):
@@ -79,28 +84,27 @@ class RunFilter():
         if (self.ba):
             utils.printFlush("Run ba...")
             # TODO
-        # ANALYZE
-        if (self.analyze):
-            utils.printFlush("Run analyze...")
+        # COMPARE INFERRED TREES WITH TRUE TREE
+        if (self.compare):
+            utils.printFlush("Run compare...")
             try:
-                # TODO
-                tmp = 0
-                #rf_distance.compute(...) for all
+                compare_trees.compare_all(datadir)
             except Exception as exc:
-                utils.printFlush("Failed running analyze\n" + str(exc))
+                utils.printFlush("Failed running compare\n" + str(exc))
 
 
 root_output = paths.families_datasets_root # output/families/
 simphy_parameters = simphy.SimphyParameters()
 datadir = simphy.get_output_dir(simphy_parameters, root_output)
 run_filter = RunFilter()
-run_filter.force_overwrite = False
-run_filter.raxml = False
+#run_filter.force_overwrite = False
+#run_filter.raxml = False
 #run_filter.generax = False
-run_filter.fastme = False
+#run_filter.fastme = False
 start = time.time()
 try:
     run_filter.run_methods(datadir, "GTR+G", 1)
 finally:
     elapsed = time.time() - start
     print("End of single experiment. Elapsed time: " + str(elapsed) + "s")
+    metrics.save_metrics(datadir, "pipeline", elapsed, "runtimes")
