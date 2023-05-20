@@ -16,17 +16,20 @@ def from_newick(file, norm = True):
         for e in r:
             if (len(str(e)) > max_len):
                 max_len = len(str(e))
-    with open(os.path.join(os.path.dirname(file), "speciesTree" + ".phy"), "w") as writer:
-        writer.write(str(len(labels)) + '\n')
-        for i in range(len(labels)):
-            writer.write(labels[i] + " " * (10 - len(labels[i])))
-            for e in dist_matrix[i]:
-                writer.write(str(e))
+    with open(os.path.join(os.path.dirname(file), "speciesTree" + ".matrix" + ".phy"), "w") as writer:
+        seq_count = len(labels)
+        writer.write(str(seq_count) + '\n')
+        for i in range(seq_count):
+            line = labels[i] + " " * (10 - len(labels[i]))
+            for j in range(seq_count):
+                e = dist_matrix[i][j]
+                line += str(e)
                 diff = max_len - len(str(e)) 
                 if (diff > 0):
-                    writer.write("0" * diff)
-                writer.write('\t')
-            writer.write('\n')
+                    line += "0" * diff
+                if (j < seq_count - 1):
+                    line += '\t'
+            writer.write(line + '\n')    
 
 def format_phylip(dm, handle):
     """
