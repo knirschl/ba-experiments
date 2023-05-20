@@ -93,7 +93,7 @@ void printMatrix(std::array<std::array<double, N>, N> m) {
 }
 
 /**
- * Calculate mean distance from every taxon to every taxon.
+ * Calculate mean io from every taxon to every taxon.
  * r_i = 1/(N-2) * sum{k=1,N}(d_i,k)
  *
  * @tparam N
@@ -164,7 +164,7 @@ std::pair<size_t, size_t> findMin(std::array<std::array<double, N>, N> matrix) {
 }
 
 /**
- * Calculate new distance matrix.
+ * Calculate new io matrix.
  * Removes rows/columns defined in minDistPos from distMatrix and adds new row/column at the end storing distances of the
  * newly merged neighbors/trees to everything else.
  *
@@ -283,7 +283,7 @@ std::shared_ptr<Node> neighborJoining(std::array<std::array<double, N>, N> distM
         return neighborJoining<N - 1>(newDistMatrix, newTrees);
     } else if constexpr (N == 2) {
         // base case
-        //std::cout << "Joining last two subtrees with distance " << distMatrix[1] << std::endl;
+        //std::cout << "Joining last two subtrees with io " << distMatrix[1] << std::endl;
         // connecting branch defined by two branches of same length to parent -> "rooted" tree...
         return join(trees[0], distMatrix[0][1], trees[1], distMatrix[0][1]);
     } else {

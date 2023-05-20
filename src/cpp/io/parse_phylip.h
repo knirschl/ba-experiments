@@ -11,6 +11,7 @@
 #include <regex>
 #include <iostream>
 #include <string>
+#include "../common_types.h"
 
 // non-catching outer group, then one catching group for X.XXXXXX and one for X.XXXXe-XX
 static const std::string DOUBLE_REGEX= "(?:(0.[0-9]+)|([1-9].[0-9]+e-[0-9]{2}))";
@@ -18,9 +19,9 @@ static const std::string WHITESPACE_DOUBLE_REGEX = "\\s*" + DOUBLE_REGEX;
 static const std::string IDENT_REGEX = "([0-9]+)";
 
 template<typename T>
-std::vector<std::vector<T>> parse(std::ifstream& stream) {
-    std::vector<std::vector<T>> matrix {};
-    std::vector<std::string> ids {};
+matrix_t<T> parse(std::ifstream& stream) {
+    matrix_t<T> matrix {};
+    vector_t<std::string> ids {};
     std::string line {};
     int seq_count {};
     // first line := size
@@ -62,7 +63,7 @@ std::vector<std::vector<T>> parse(std::ifstream& stream) {
 }
 
 template<typename T>
-std::vector<std::vector<T>> parse_from_file(std::string const& file) {
+matrix_t<T> parse_from_file(std::string const& file) {
     std::ifstream streamed_file {file};
     return parse<T>(streamed_file);
 }
