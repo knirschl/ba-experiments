@@ -273,7 +273,6 @@ def get_treerecs_mappings(datadir, family):
   return os.path.join(get_mappings_dir(datadir, family), "treerecs_mapping.link")
 
 def get_fastme_distances(datadir, family, subst_model):
-  
   return os.path.join(get_family_misc_dir(datadir, family), "fastme_matrix." + subst_model + ".txt")
 
 def get_pythia_score_path(datadir, family):

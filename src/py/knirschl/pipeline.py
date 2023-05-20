@@ -13,6 +13,7 @@ import generate_with_simphy as simphy
 import launch_raxml
 import launch_generax
 import launch_fastme
+import dist_matrix_converter
 import compare_trees
 import metrics
 
@@ -84,6 +85,7 @@ class RunFilter():
         if (self.ba):
             utils.printFlush("Run ba...")
             # TODO
+            dist_matrix_converter.convert_input(datadir)
         # COMPARE INFERRED TREES WITH TRUE TREE
         if (self.compare):
             utils.printFlush("Run compare...")
@@ -96,11 +98,14 @@ class RunFilter():
 root_output = paths.families_datasets_root # output/families/
 simphy_parameters = simphy.SimphyParameters()
 datadir = simphy.get_output_dir(simphy_parameters, root_output)
+print(datadir)
 run_filter = RunFilter()
-#run_filter.force_overwrite = False
-#run_filter.raxml = False
-#run_filter.generax = False
-#run_filter.fastme = False
+run_filter.generate = False
+run_filter.force_overwrite = False
+run_filter.raxml = False
+run_filter.generax = False
+run_filter.fastme = False
+run_filter.compare = False
 start = time.time()
 try:
     run_filter.run_methods(datadir, "GTR+G", 1)
