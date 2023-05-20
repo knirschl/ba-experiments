@@ -6,44 +6,29 @@
 #include <array>
 #include <memory>
 #include <format>
-#include "NeighborJoining.h"
+#include "common_types.h"
+#include "io/parse_phylip.h"
+#include "nj/NeighborJoining.h"
+#include "nj/matrix.h"
 
-//using dist_t = double;
-//using dist_columns_t = std::vector<dist_t>;
-//using dist_matrix_t = std::vector<dist_columns_t>;
-//
-//dist_matrix_t make_dist_matrix(size_t rows, size_t columns) {
-//    dist_matrix_t result{ rows };
-//    std::for_each(result.begin(), result.end(), [&](auto&& row) {
-//        row.resize(columns);
-//        });
-//
-//    return result;
-//}
-//
-//template <size_t N>
-//dist_matrix_t make_dist_matrix_from_array(std::array<std::array<dist_t, N>, N> const& arr) {
-//    auto result = make_dist_matrix(N, N);
-//
-//}
-
-#include "distance/parse_phylip.h"
 
 int main() {
     {
-        //parse_from_file<double>("/home/balin/Documents/KIT/2023/BA/code/output/families/ssim_dtl_s20_f100_sites200_GTR_bl1.0_d0.0_l0.0_t1.0_gc0.0_p0.0_pop10_ms0.0_mf0.0_seed42/species_trees/speciesTree.matrix.phy");
-
-        auto m = parse_from_file<long double>("/home/balin/Documents/KIT/2023/BA/code/testmatrix.phy");
-
-        std::cout << "[";
-        for (auto r : m) {
-            std::cout << "[";
-            for (auto c : r) {
-                std::cout << c << ", ";
-            }
-            std::cout << "]\n";
-        }
-        std::cout << "]\n";
+        auto m = parse_from_file<double>("/home/balin/Documents/KIT/2023/BA/code/testmatrix.phy");
+        std::cout << matstr<double>(m) << "\n";
+        matscale(m, 2);
+        std::cout << matstr(m) << "\n\n";
+        vector_t<double> v{0.0, 0.5, 3.25};
+        vector_t<double> u{-1.0, 0.5, 0.75};
+        std::cout << vecstr<double>(vecscale(v, 2)) << "\n";
+        std::cout << vecstr<double>(vecscale(v, 0.5)) << "\n";
+        vector_t<double> result;
+        vecadd(v, u, result);
+        std::cout << vecstr<double>(result) << "\n";
+        std::cout << vecstr<double>(vecadd(v, u)) << "\n";
+    }
+    /*
+    {
 
         if (__cplusplus == 202101L) std::cout << "C++23";
         else if (__cplusplus == 202002L) std::cout << "C++20";
