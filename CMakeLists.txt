@@ -3,4 +3,4 @@ project(BA)
 
 set(CMAKE_CXX_STANDARD 23)
 
-add_executable(BA src/cpp/main.cpp src/cpp/tree.h src/cpp/matrix.h)
+add_executable(BA src/cpp/main.cpp src/cpp/tree.h src/cpp/matrix.h src/cpp/distance/parse_phylip.h)
