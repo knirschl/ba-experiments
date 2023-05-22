@@ -1,58 +1,69 @@
 import os
 import itertools
-import sys
+import numpy as np
 from phylodm import PhyloDM
 from Bio.Phylo.TreeConstruction import DistanceCalculator
 from Bio import AlignIO
+import sys
 sys.path.insert(0, 'tools/families')
 import fam
 
-def from_newick(file, norm = True):
-    pdm = PhyloDM.load_from_newick_path(file)
-    dist_matrix = pdm.dm(norm)
-    labels = pdm.taxa()
-    max_len = -1
-    for r in dist_matrix:
-        for e in r:
-            if (len(str(e)) > max_len):
-                max_len = len(str(e))
-    with open(os.path.join(os.path.dirname(file), "speciesTree" + ".matrix" + ".phy"), "w") as writer:
-        seq_count = len(labels)
-        writer.write(str(seq_count) + '\n')
-        for i in range(seq_count):
-            line = labels[i] + " " * (10 - len(labels[i]))
-            for j in range(seq_count):
-                e = dist_matrix[i][j]
-                line += str(e)
-                diff = max_len - len(str(e)) 
-                if (diff > 0):
-                    line += "0" * diff
-                if (j < seq_count - 1):
-                    line += '\t'
-            writer.write(line + '\n')    
+def get_key_order(keys):
+    """
+    [4, 2, 3, 1] -> [3, 1, 2, 0]
+    """
+    return np.argsort(keys)
 
-def format_phylip(dm, handle):
-    """
-    Slightly modified version from Bio.Phylo.TreeConstruction.py to fit the strict phylip format
-    """
-    handle.write(f"{len(dm.names)}\n")
-    # Phylip needs space-separated, vertically aligned columns
-    name_width = max(10, max(map(len, dm.names)) + 1)
-    value_fmts = ("{" + str(x) + ":.19f}" for x in range(1, len(dm.matrix) + 1))
-    row_fmt = "{0:" + str(name_width) + "s}" + "  ".join(value_fmts) + "\n"
-    for i, (name, values) in enumerate(zip(dm.names, dm.matrix)):
-        # Mirror the matrix values across the diagonal
-        mirror_values = (dm.matrix[j][i] for j in range(i + 1, len(dm.matrix)))
-        fields = itertools.chain([name], values, mirror_values)
-        handle.write(row_fmt.format(*fields))
+def sparse_triu_to_sym(triu):
+    # [[0], [1, 0]] -> [[0, 0], [1, 0]]
+    triu =  np.array([np.pad(np.array(triu[i]), (0, len(triu) - len(triu[i])), 'constant') for i in range(len(triu))])
+    # add upper triangle to lower 0s
+    # `- np.diag(...)` not necessary in this case as biopython always sets diagonal to 0
+    return triu + triu.T - np.diag(np.diag(triu))
+
+def sort(matrix, order):
+    # arr[order] reorders array, doing it twice reorders columns and rows
+    return np.array([matrix[order][i][order] for i in range(len(order))])
+
+def from_newick(file, norm = True):
+    # calculate distance matrix
+    pdm = PhyloDM.load_from_newick_path(file)
+    # make labels same as in alignments (map function?)
+    labels = [s + "_0_0" for s in pdm.taxa()]
+    # sort distance matrix and labels to add the correct values in later steps (standardized output)
+    dist_matrix = sort(pdm.dm(norm), get_key_order(labels))
+    labels = np.sort(labels)
+    # write to file
+    write_phylip(dist_matrix, labels, open(os.path.join(os.path.dirname(file), "speciesTree" + ".matrix-sorted" + ".phy"), "w"))
 
 def from_fasta(file):
+    # calculate distance matrix
     msa = AlignIO.read(file, 'fasta')
     calculator = DistanceCalculator('identity')
     dm = calculator.get_distance(msa)
-    format_phylip(dm, open(os.path.join(file + ".matrix" + ".phy"), "w"))
+    # sort distance matrix and labels to add the correct values in later steps (standardized output)
+    dist_matrix = sort(sparse_triu_to_sym(dm.matrix), get_key_order(dm.names))
+    labels = np.sort(dm.names)
+    # write to file
+    write_phylip(dist_matrix, labels, open(os.path.join(file + ".matrix-sorted" + ".phy"), "w"))
+
+def write_phylip(dist_matrix, labels, handle):
+    """
+    Modified version from Bio.Phylo.TreeConstruction.py to fit my needs
+    (= strict phylip format and generalized to not only work with biopython)
+    """
+    handle.write(f"{len(labels)}\n")
+    # Phylip needs space-separated, vertically aligned columns
+    name_width = max(10, max(map(len, labels)) + 1)
+    value_fmts = ("{" + str(x) + ":.19f}" for x in range(1, len(dist_matrix) + 1))
+    row_fmt = "{0:" + str(name_width) + "s}" + "  ".join(value_fmts) + "\n"
+    for i, (label, values) in enumerate(zip(labels, dist_matrix)):
+        fields = itertools.chain([label], values)
+        handle.write(row_fmt.format(*fields))
 
 def convert_input(datadir):
+     # species tree
     from_newick(fam.get_true_species_tree(datadir))
+    # gene alignments
     for family in fam.get_families_list(datadir):
         from_fasta(fam.get_alignment(datadir, family))
