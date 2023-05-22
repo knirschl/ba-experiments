@@ -7,8 +7,8 @@ import paths
 import fam
 import metrics
 
-def make_key(family, tree, d):
-    return family+ '\t' + tree + '\t' + d 
+def make_key(family, tree):
+    return family + '\t' + tree 
 
 def compare(tree1, tree2):
     command = []
@@ -37,5 +37,5 @@ def compare_all(datadir):
             if (abs_tree == true_tree):
                 continue
             dist = compare(abs_tree, true_tree)
-            metrics.save_metrics(datadir, make_key(family, tree, "abs"), dist[0], "tree_distance")
-            metrics.save_metrics(datadir, make_key(family, tree, "rel"), dist[1], "tree_distance")
+            metrics.save_metrics(datadir, make_key(family, tree), dist[0], "tree_distance-abs")
+            metrics.save_metrics(datadir, make_key(family, tree), dist[1], "tree_distance-rel")
