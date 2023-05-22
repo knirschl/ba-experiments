@@ -16,16 +16,15 @@ auto convert(vector_t<std::string> string_ids, vector_t<std::shared_ptr<NTree>>&
 }
 
 int main() {
-
-    {
+   {
         // read species tree
-        auto species_tree_pair = parse_from_file<double>("output/families/ssim_dtl_s20_f100_sites200_GTR_bl1.0_d0.0_l0.0_t1.0_gc0.0_p0.0_pop10_ms0.0_mf0.0_seed42/species_trees/speciesTree.matrix.phy");
+        auto species_tree_pair = parse_from_file<double>("/home/fili/Documents/KIT/2023/BA/code/output/families/ssim_dtl_s20_f100_sites200_GTR_bl1.0_d0.0_l0.0_t1.0_gc0.0_p0.0_pop10_ms0.0_mf0.0_seed42/species_trees/speciesTree.matrix.phy");
         auto species_tree_mat = species_tree_pair.first;
         vector_t<std::shared_ptr<NTree>> species_tree_start_leafs;
         convert(species_tree_pair.second, species_tree_start_leafs);
         std::cout << "Read species tree:\n" << matstr(species_tree_mat) << "\n\n";
         // read alignment
-        std::string family_path = "output/families/ssim_dtl_s20_f100_sites200_GTR_bl1.0_d0.0_l0.0_t1.0_gc0.0_p0.0_pop10_ms0.0_mf0.0_seed42/families/family_";
+        std::string family_path = "/home/fili/Documents/KIT/2023/BA/code/output/families/ssim_dtl_s20_f100_sites200_GTR_bl1.0_d0.0_l0.0_t1.0_gc0.0_p0.0_pop10_ms0.0_mf0.0_seed42/families/family_";
         std::string alignment_file = "alignment.msa.matrix.phy";
         std::string alignment_path = family_path + "100/" + alignment_file;
         auto alignment_pair = parse_from_file<double>(alignment_path);
@@ -37,13 +36,12 @@ int main() {
         matrix_t<double> distMatrix;
         for (double scale{}; scale <= 1.0; scale += 0.1) {
             matscale(species_tree_mat, scale, distMatrix);
-            matadd(alignment_mat, distMatrix, distMatrix); // add needs to respect the order!!
+            matadd(alignment_mat, distMatrix, distMatrix);
             std::cout << "Calculated distance matrix:\n" << matstr(distMatrix) << "\n\n";
             std::shared_ptr<NTree> tree = neighborJoining<>(distMatrix, alignment_start_leafs);
             std::cout << "Neighbor-joined tree: " << to_fasta(*tree) << std::endl;
         }
     }
-
     /*
     {
         // example from de.wiki
