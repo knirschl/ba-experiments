@@ -3,77 +3,72 @@
 //
 
 #include <iostream>
-#include <array>
 #include <memory>
-#include <format>
 #include "common_types.h"
 #include "io/parse_phylip.h"
-#include "nj/NeighborJoining.h"
 #include "nj/matrix.h"
+#include "nj/tree.h"
+#include "nj/NJSimple.h"
 
+auto convert(vector_t<std::string> string_ids, vector_t<std::shared_ptr<NTree>>& trees) { 
+    std::transform(string_ids.begin(), string_ids.end(), std::back_inserter(trees),
+                   [](auto id) { return std::make_shared<NLeaf>(id); });
+}
 
 int main() {
-    {
-        auto m = parse_from_file<double>("/home/balin/Documents/KIT/2023/BA/code/testmatrix.phy");
-        std::cout << matstr<double>(m) << "\n";
-        matscale(m, 2);
-        std::cout << matstr(m) << "\n\n";
-        vector_t<double> v{0.0, 0.5, 3.25};
-        vector_t<double> u{-1.0, 0.5, 0.75};
-        std::cout << vecstr<double>(vecscale(v, 2)) << "\n";
-        std::cout << vecstr<double>(vecscale(v, 0.5)) << "\n";
-        vector_t<double> result;
-        vecadd(v, u, result);
-        std::cout << vecstr<double>(result) << "\n";
-        std::cout << vecstr<double>(vecadd(v, u)) << "\n";
-    }
-    /*
-    {
 
-        if (__cplusplus == 202101L) std::cout << "C++23";
-        else if (__cplusplus == 202002L) std::cout << "C++20";
-        else if (__cplusplus == 201703L) std::cout << "C++17";
-        else if (__cplusplus == 201402L) std::cout << "C++14";
-        else if (__cplusplus == 201103L) std::cout << "C++11";
-        else if (__cplusplus == 199711L) std::cout << "C++98";
-        else std::cout << "pre-standard C++." << __cplusplus;
-        std::cout << "\n";
+    {
+        // read species tree
+        auto species_tree_pair = parse_from_file<double>("output/families/ssim_dtl_s20_f100_sites200_GTR_bl1.0_d0.0_l0.0_t1.0_gc0.0_p0.0_pop10_ms0.0_mf0.0_seed42/species_trees/speciesTree.matrix.phy");
+        auto species_tree_mat = species_tree_pair.first;
+        vector_t<std::shared_ptr<NTree>> species_tree_start_leafs;
+        convert(species_tree_pair.second, species_tree_start_leafs);
+        std::cout << "Read species tree:\n" << matstr(species_tree_mat) << "\n\n";
+        // read alignment
+        std::string family_path = "output/families/ssim_dtl_s20_f100_sites200_GTR_bl1.0_d0.0_l0.0_t1.0_gc0.0_p0.0_pop10_ms0.0_mf0.0_seed42/families/family_";
+        std::string alignment_file = "alignment.msa.matrix.phy";
+        std::string alignment_path = family_path + "100/" + alignment_file;
+        auto alignment_pair = parse_from_file<double>(alignment_path);
+        auto alignment_mat = alignment_pair.first;
+        vector_t<std::shared_ptr<NTree>> alignment_start_leafs;
+        convert(alignment_pair.second, alignment_start_leafs);
+        std::cout << "Read alignment:\n" << matstr(alignment_mat) << "\n\n";
+        // calculate
+        matrix_t<double> distMatrix;
+        for (double scale{}; scale <= 1.0; scale += 0.1) {
+            matscale(species_tree_mat, scale, distMatrix);
+            matadd(alignment_mat, distMatrix, distMatrix); // add needs to respect the order!!
+            std::cout << "Calculated distance matrix:\n" << matstr(distMatrix) << "\n\n";
+            std::shared_ptr<NTree> tree = neighborJoining<>(distMatrix, alignment_start_leafs);
+            std::cout << "Neighbor-joined tree: " << to_fasta(*tree) << std::endl;
+        }
     }
-    */
+
     /*
     {
         // example from de.wiki
-        std::array<std::array<double, 4>, 4> distMatrixDE{
-                std::array<double, 4>{0, 3, 14, 12},
-                std::array<double, 4>{3, 0, 13, 11},
-                std::array<double, 4>{14, 13, 0, 4},
-                std::array<double, 4>{12, 11, 4, 0}};
-        std::array<std::shared_ptr<Node>, 4> treesDE{std::make_shared<Leaf>("mensch"),
-                                                     std::make_shared<Leaf>("maus"),
-                                                     std::make_shared<Leaf>("rose"),
-                                                     std::make_shared<Leaf>("tulpe")};
+        auto dm_id_pair = parse_from_file<double>("/home/fili/Documents/KIT/2023/BA/code/src/cpp/nj/de.wiki.phy");
+        auto distMatrix = dm_id_pair.first;
+        vector_t<std::shared_ptr<NTree>> trees{};
+        std::transform(dm_id_pair.second.begin(), dm_id_pair.second.end(), std::back_inserter(trees),
+                       [](auto str_id) { return std::make_shared<NLeaf>(str_id); });
 
-        std::shared_ptr<Node> treeDE = neighborJoining<4>(distMatrixDE, treesDE);
-
-        // example from en.wiki
-        std::array<std::array<double, 5>, 5> distMatrixEN{
-                std::array<double, 5>{0, 5, 9, 9, 8},
-                std::array<double, 5>{5, 0, 10, 10, 9},
-                std::array<double, 5>{9, 10, 0, 8, 7},
-                std::array<double, 5>{9, 10, 8, 0, 3},
-                std::array<double, 5>{8, 9, 7, 3, 0}};
-        std::array<std::shared_ptr<Node>, 5> treesEN{std::make_shared<Leaf>("a"),
-                                                     std::make_shared<Leaf>("b"),
-                                                     std::make_shared<Leaf>("c"),
-                                                     std::make_shared<Leaf>("d"),
-                                                     std::make_shared<Leaf>("e")};
-
-        std::shared_ptr<Node> treeEN = neighborJoining<5>(distMatrixEN, treesEN);
-
-        // output
-        std::cout << "Neighbor-joined treeDE: " << treeDE->toString() << std::endl;
-        std::cout << "Neighbor-joined treeEN: " << treeEN->toString() << std::endl;
+        std::shared_ptr<NTree> tree = neighborJoining(distMatrix, trees);
+        std::cout << "Neighbor-joined de-tree: " << to_fasta(*tree) << std::endl;
     }
-    */
+     */
+    /*
+    {
+        // example from en.wiki
+        auto dm_id_pair = parse_from_file<double>("/home/fili/Documents/KIT/2023/BA/code/src/cpp/nj/en.wiki.phy");
+        auto distMatrix = dm_id_pair.first;
+        vector_t<std::shared_ptr<NTree>> trees{};
+        std::transform(dm_id_pair.second.begin(), dm_id_pair.second.end(), std::back_inserter(trees),
+                       [](auto str_id) { return std::make_shared<NLeaf>(str_id); });
+
+        std::shared_ptr<NTree> tree = neighborJoining(distMatrix, trees);
+        std::cout << "Neighbor-joined en-tree: " << to_fasta(*tree) << std::endl;
+    }
+     */
     return 0;
 }
