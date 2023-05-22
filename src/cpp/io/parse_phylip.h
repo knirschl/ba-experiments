@@ -16,10 +16,10 @@
 // non-catching outer group, then one catching group for X.XXXXXX and one for X.XXXXe-XX
 static const std::string DOUBLE_REGEX= "(?:(0.[0-9]+)|([1-9].[0-9]+e-[0-9]{2}))";
 static const std::string WHITESPACE_DOUBLE_REGEX = "\\s*" + DOUBLE_REGEX;
-static const std::string IDENT_REGEX = "([0-9]+)";
+static const std::string IDENT_REGEX = "(\\S+)";
 
 template<typename T>
-matrix_t<T> parse(std::ifstream& stream) {
+std::pair<matrix_t<T>, vector_t<std::string>> parse(std::ifstream& stream) {
     matrix_t<T> matrix {};
     vector_t<std::string> ids {};
     std::string line {};
@@ -59,13 +59,15 @@ matrix_t<T> parse(std::ifstream& stream) {
         outer_counter++;
     }
 
-    return matrix;
+    return std::pair<matrix_t<T>, vector_t<std::string>>{matrix, ids};
 }
 
 template<typename T>
-matrix_t<T> parse_from_file(std::string const& file) {
+std::pair<matrix_t<T>, vector_t<std::string>> parse_from_file(std::string const& file) {
     std::ifstream streamed_file {file};
-    return parse<T>(streamed_file);
+    auto read = parse<T>(streamed_file);
+    streamed_file.close();
+    return read;
 }
 
 #endif //BA_PARSE_PHYLIP_H
