@@ -12,11 +12,23 @@
 #include <iostream>
 #include <string>
 #include "../common_types.h"
+#include <sstream>
 
-// non-catching outer group, then one catching group for X.XXXXXX and one for X.XXXXe-XX
-static const std::string DOUBLE_REGEX= "(?:(0.[0-9]+)|([1-9].[0-9]+e-[0-9]{2}))";
-static const std::string WHITESPACE_DOUBLE_REGEX = "\\s*" + DOUBLE_REGEX;
-static const std::string IDENT_REGEX = "(\\S+)";
+using namespace std::literals;
+
+// anything but whitespace, capturing
+static const std::string IDENT_REGEX_STR{R"((\S+))"};
+// 0, -0.00000, 0.12312
+static const std::string ZERO_POINT_DBL_REGEX_STR{R"(([+\-]?0(?:\.\d+)?))"};
+// e00, e12, e+01, e-99, non-capturing
+static const std::string POWER10_REGEX_STR{R"((?:e[+\-]?\d{2}))"};
+// 1, 213123, -12, capturing
+static const std::string NON_ZERO_INT_REGEX_STR{R"([+\-]?[1-9]\d*)"};
+// 12321, 12321.3213, 3123.213e-23
+static const std::string INT_FLP_SCI_REGEX_STR{"(" + NON_ZERO_INT_REGEX_STR + "(?:\\.\\d+" + POWER10_REGEX_STR + "?)?)"};
+// non-capturing outer group, then one catching group for X.XXXXXX and one for X.XXXXe+-XX
+static const std::string MATRIX_ELEMENT_REGEX_STR{"(?:" + ZERO_POINT_DBL_REGEX_STR + "|" + INT_FLP_SCI_REGEX_STR + ")"};
+static const std::string WHITESPACE_MAT_ELEMENT_REGEX_STR{R"(\s*)" + MATRIX_ELEMENT_REGEX_STR};
 
 template<typename T>
 std::pair<matrix_t<T>, vector_t<std::string>> parse(std::ifstream& stream) {
@@ -35,11 +47,10 @@ std::pair<matrix_t<T>, vector_t<std::string>> parse(std::ifstream& stream) {
         ids.resize(seq_count);
     }
     // build regex depending on seq_count
-    std::string dist_regex_str {};
-    for (int i{}; i < seq_count; i++) {
-        dist_regex_str += WHITESPACE_DOUBLE_REGEX;
-    }
-    std::regex line_regex{IDENT_REGEX + dist_regex_str};
+    std::stringstream line_regex_stream;
+    line_regex_stream << IDENT_REGEX_STR << "(?:"s << WHITESPACE_MAT_ELEMENT_REGEX_STR << ")"s << "{"s << seq_count << "}"s;
+    std::regex line_regex{line_regex_stream.str()};
+    std::regex whitespace_mat_element_regex{WHITESPACE_MAT_ELEMENT_REGEX_STR};
     std::smatch results;
 
     size_t outer_counter{};
@@ -49,11 +60,16 @@ std::pair<matrix_t<T>, vector_t<std::string>> parse(std::ifstream& stream) {
         // match regex
         if (std::regex_match(line, results, line_regex)) {
             ids[outer_counter] = results[1]; // first group := id
-            for (int i{2}; i < results.size(); i++) {
-                if (results[i].matched) {
-                    // check to convert only matched groups (either X.XXX or X.XXe-XX)
-                    matrix[outer_counter][inner_counter++] = std::stold(results[i]);
+            line.erase(line.begin(), line.begin() + 10); // remove id
+            while (std::regex_search(line, results, whitespace_mat_element_regex)) {
+                for (int i{1}; i < results.size(); i++) {
+                    if (results[i].matched) {
+                        // check to convert only matched group (either X.XXX or X.XXe-XX)
+                        matrix[outer_counter][inner_counter++] = std::stold(results[i]);
+                        break;
+                    }
                 }
+                line = results.suffix();
             }
         }
         outer_counter++;
