@@ -1,5 +1,5 @@
 //
-// Created by balin on 20.05.23.
+// Created by knirschl on 20.05.23.
 //
 
 #ifndef BA_COMMON_TYPES_H
