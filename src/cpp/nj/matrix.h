@@ -21,14 +21,17 @@ matrix_t<T> make_zero_matrix(size_t rows, size_t columns) {
 }
 
 /**
- * Adds two vectors. Writes the result to the given vector (param 3).
- * @tparam T 
- * @param left 
+ * Adds two vectors. Writes the result to the given vector (param 3). The type parameter of the new vector is the
+ * resulting type of (T + S).
+ * @tparam T
+ * @tparam S
+ * @param left
  * @param right 
  * @param result 
  */
 template<typename T>
-void vecadd(vector_t<T> const& left, vector_t<T> const& right, vector_t<T> const& result) {
+void vecadd(vector_t<T> const& left, vector_t<T> const& right,
+            vector_t<decltype(std::declval<T>() + std::declval<S>())> const& result) {
     std::transform(left.begin(), left.end(), right.begin(),
                    std::back_inserter(result), // no overwrite
                    //result.begin(), // overwrite
@@ -36,15 +39,17 @@ void vecadd(vector_t<T> const& left, vector_t<T> const& right, vector_t<T> const
 }
 
 /**
- * Adds two vectors. Writes the result to a new vector and returns that one.
+ * Adds two vectors. Writes the result to a new vector and returns that one. The type parameter of the new vector is the
+ * resulting type of (T + S).
  * @tparam T
+ * @tparam S
  * @param left 
  * @param right 
  * @return 
  */
 template<typename T>
-vector_t<T> vecadd(vector_t<T> const& left, vector_t<T> const& right) {
-    vector_t<T> result;
+vector_t<decltype(std::declval<T>() + std::declval<S>())> vecadd(vector_t<T> const& left, vector_t<S> const& right) {
+    vector_t<decltype(std::declval<T>() + std::declval<S>())> result;
     std::transform(left.begin(), left.end(), right.begin(),
                    std::back_inserter(result),
                    [](T a, T b) { return a + b; });
@@ -52,14 +57,17 @@ vector_t<T> vecadd(vector_t<T> const& left, vector_t<T> const& right) {
 }
 
 /**
- * Adds two matrices. Writes the result to the given matrix (param 3).
+ * Adds two matrices. Writes the result to the given matrix (param 3). The type parameter of the new matrix is the
+ * resulting type of (T + S).
  * @tparam T
+ * @tparam S
  * @param left
  * @param right
  * @param result
  */
-template<typename T>
-void matadd(matrix_t<T> const& left, matrix_t<T> const& right, matrix_t<T> const& result) {
+template<typename T, typename S>
+void matadd(matrix_t<T> const& left, matrix_t<S> const& right,
+            matrix_t<decltype(std::declval<T>() + std::declval<S>())>& result) {
     result.resize(left.size());
     for (int i{}; i < left.size(); i++) {
         result[i].resize(left[i].size());
@@ -69,16 +77,19 @@ void matadd(matrix_t<T> const& left, matrix_t<T> const& right, matrix_t<T> const
     }
 }
 
+
  /**
-  * Adds two matrices. Writes the result to a new matrix and returns that one.
+  * Adds two matrices. Writes the result to a new matrix and returns that one. The type parameter of the new matrix is
+  * the resulting type of (T + S).
   * @tparam T
+  * @tparam S
   * @param left
   * @param right
   * @return
   */
-template<typename T>
-matrix_t<T> matadd(matrix_t<T> const& left, matrix_t<T> const& right) {
-    matrix_t<T> result;
+template<typename T, typename S>
+matrix_t<decltype(std::declval<T>() + std::declval<S>())> matadd(matrix_t<T> const& left, matrix_t<S> const& right) {
+    matrix_t<decltype(std::declval<T>() + std::declval<S>())> result;
     result.resize(left.size());
     for (int i{}; i < left.size(); i++) {
         result[i].resize(left[i].size());
