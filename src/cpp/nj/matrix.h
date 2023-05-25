@@ -29,9 +29,9 @@ matrix_t<T> make_zero_matrix(size_t rows, size_t columns) {
  * @param right 
  * @param result 
  */
-template<typename T>
+template<typename T, typename S>
 void vecadd(vector_t<T> const& left, vector_t<T> const& right,
-            vector_t<decltype(std::declval<T>() + std::declval<S>())> const& result) {
+            vector_t<decltype(std::declval<T>() + std::declval<S>())>& result) {
     std::transform(left.begin(), left.end(), right.begin(),
                    std::back_inserter(result), // no overwrite
                    //result.begin(), // overwrite
@@ -47,7 +47,7 @@ void vecadd(vector_t<T> const& left, vector_t<T> const& right,
  * @param right 
  * @return 
  */
-template<typename T>
+template<typename T, typename S>
 vector_t<decltype(std::declval<T>() + std::declval<S>())> vecadd(vector_t<T> const& left, vector_t<S> const& right) {
     vector_t<decltype(std::declval<T>() + std::declval<S>())> result;
     std::transform(left.begin(), left.end(), right.begin(),
@@ -110,7 +110,7 @@ matrix_t<decltype(std::declval<T>() + std::declval<S>())> matadd(matrix_t<T> con
  * @param result
  */
 template<typename R, typename S>
-void vecscale(vector_t<R> const& vec, const S scalar, vector_t<R> const& result) {
+void vecscale(vector_t<R> const& vec, const S scalar, vector_t<R>& result) {
     std::transform(vec.begin(), vec.end(),
                    std::back_inserter(result), // no overwrite
                    //result.begin(), // overwrite
@@ -134,7 +134,7 @@ vector_t<R> vecscale(vector_t<R> const& vec, const S scalar) {
  * @param scalar
  */
 template<typename R, typename S>
-void matscale(matrix_t<R> const& mat, const S scalar, matrix_t<R> const& result) {
+void matscale(matrix_t<R> const& mat, const S scalar, matrix_t<R>& result) {
     std::transform(mat.begin(), mat.end(),
                    std::back_inserter(result), // no overwrite
                    //result.begin(), //overwrite
