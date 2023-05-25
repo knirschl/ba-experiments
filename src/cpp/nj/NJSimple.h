@@ -64,16 +64,19 @@ matrix_t<T> calculateNewMatrix(matrix_t<T> const& distMatrix, std::pair<size_t, 
     const size_t n = distMatrix.size();
     matrix_t<T> newMatrix{};
     newMatrix.resize(n - 1);
-    // copy old values of rows/columns that won't be changed
-    size_t xOff{0};
-    for (size_t i{ 0 }; i < n; ++i) {
+    // pre-initialize to prevent creating one too many
+    for (size_t i{ 0 }; i < n - 1; ++i) {
         newMatrix[i].resize(n - 1);
+    }
+    // copy old values of rows/columns that won't be changed
+    size_t xOff{ 0 };
+    for (size_t i{ 0 }; i < n; ++i) {
         // skip row if one of the merged ones
         if (i == minDistPos.first || i == minDistPos.second) {
             xOff++;
         } else {
-            size_t yOff{0};
-            for (size_t j{0}; j < n; ++j) {
+            size_t yOff{ 0 };
+            for (size_t j{ 0 }; j < n; ++j) {
                 // skip column if one of the merged ones
                 if (j == minDistPos.first || j == minDistPos.second) {
                     yOff++;
