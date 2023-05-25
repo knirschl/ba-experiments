@@ -30,8 +30,8 @@ matrix_t<T> make_zero_matrix(size_t rows, size_t columns) {
 template<typename T>
 void vecadd(vector_t<T> const& left, vector_t<T> const& right, vector_t<T> const& result) {
     std::transform(left.begin(), left.end(), right.begin(),
-                   //std::back_inserter(result), // no overwrite
-                   result.begin(), // overwrite
+                   std::back_inserter(result), // no overwrite
+                   //result.begin(), // overwrite
                    [](T a, T b) { return a + b; });
 }
 
@@ -101,8 +101,8 @@ matrix_t<T> matadd(matrix_t<T> const& left, matrix_t<T> const& right) {
 template<typename R, typename S>
 void vecscale(vector_t<R> const& vec, const S scalar, vector_t<R> const& result) {
     std::transform(vec.begin(), vec.end(),
-                   //std::back_inserter(result), // no overwrite
-                   result.begin(), // overwrite
+                   std::back_inserter(result), // no overwrite
+                   //result.begin(), // overwrite
                    [scalar](R e) { return e * scalar; });
 }
 
