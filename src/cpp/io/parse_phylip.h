@@ -75,7 +75,7 @@ std::pair<matrix_t<T>, vector_t<std::string>> parse(std::ifstream& stream) {
         outer_counter++;
     }
 
-    return std::pair<matrix_t<T>, vector_t<std::string>>{matrix, ids};
+    return std::pair<matrix_t<T>, vector_t<std::string>>{std::move(matrix), std::move(ids)};
 }
 
 template<typename T>

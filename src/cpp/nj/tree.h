@@ -12,7 +12,7 @@
 #include "../common_types.h"
 
 struct NTree {
-    virtual std::string to_string() = 0;
+    virtual std::string to_string() const = 0;
 };
 
 struct NLeaf : NTree {
@@ -22,7 +22,7 @@ struct NLeaf : NTree {
         this->id = std::move(id);
     }
 
-    std::string to_string() override {
+    std::string to_string() const override {
         return id;
     }
 };
@@ -41,7 +41,7 @@ struct NNode : NTree {
         branch_length_right = bl_right;
     }
 
-    std::string to_string() override {
+    std::string to_string() const override {
         return std::format("({}:{},{}:{})",
                            left->to_string(),
                            branch_length_left,
@@ -51,13 +51,13 @@ struct NNode : NTree {
 };
 
 template<typename T>
-std::shared_ptr<NTree> join(std::shared_ptr<NTree>& n_left, T bl_left,
-                            std::shared_ptr<NTree>& n_right, T bl_right) {
+std::shared_ptr<NTree> join(std::shared_ptr<NTree> const& n_left, T const& bl_left,
+                            std::shared_ptr<NTree> const& n_right, T const& bl_right) {
     NNode<T> parent{n_left, bl_left, n_right, bl_right};
     return std::make_shared<NNode<T>>(parent);
 }
 
-std::string to_fasta(NTree& tree) {
+std::string to_fasta(NTree const& tree) {
     return std::format("({});", tree.to_string());
 }
 

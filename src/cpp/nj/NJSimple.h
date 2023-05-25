@@ -9,7 +9,7 @@
 #include "../common_types.h"
 
 template<typename T>
-vector_t<T> meanDistance(matrix_t<T> distMatrix) {
+vector_t<T> meanDistance(matrix_t<T> const& distMatrix) {
     const size_t n = distMatrix.size();
     vector_t<T> r;
     for (size_t i{0}; i < n; ++i) {
@@ -24,7 +24,7 @@ vector_t<T> meanDistance(matrix_t<T> distMatrix) {
 }
 
 template<typename T>
-matrix_t<T> interMatrix(matrix_t<T> distMatrix, vector_t<T> r) {
+matrix_t<T> interMatrix(matrix_t<T> const& distMatrix, vector_t<T> const& r) {
     matrix_t<T> iM;
     const size_t n = distMatrix.size();
     for (size_t i{0}; i < n; ++i) {
@@ -39,7 +39,7 @@ matrix_t<T> interMatrix(matrix_t<T> distMatrix, vector_t<T> r) {
 }
 
 template<typename T>
-std::pair<size_t, size_t> findMin(matrix_t<T> matrix) {
+std::pair<size_t, size_t> findMin(matrix_t<T> const& matrix) {
     T min = std::numeric_limits<T>::infinity();
     const size_t n = matrix.size();
     std::pair<size_t, size_t> minDistPos;
@@ -60,7 +60,7 @@ std::pair<size_t, size_t> findMin(matrix_t<T> matrix) {
 }
 
 template<typename T>
-matrix_t<T> calculateNewMatrix(matrix_t<T> distMatrix, std::pair<size_t, size_t> minDistPos) {
+matrix_t<T> calculateNewMatrix(matrix_t<T> const& distMatrix, std::pair<size_t, size_t> const& minDistPos) {
     const size_t n = distMatrix.size();
     matrix_t<T> newMatrix{};
     newMatrix.resize(n - 1);
@@ -110,16 +110,17 @@ matrix_t<T> calculateNewMatrix(matrix_t<T> distMatrix, std::pair<size_t, size_t>
     return newMatrix;
 }
 
+// const& to be sdure if bigger datatypes than simple numbers are used
 template<typename T>
-std::pair<T, T> calculateBranchLengths(T dist, T r1, T r2) {
+std::pair<T, T> calculateBranchLengths(T const& dist, T const& r1, T const& r2) {
     return std::pair<T, T> {
             (dist + r1 - r2) / 2.0,
             dist - ((dist + r1 - r2) / 2.0)
     };
 }
 
-vector_t<std::shared_ptr<NTree>> copyUnjoinedTrees(vector_t<std::shared_ptr<NTree>> trees,
-                                                   std::pair<size_t, size_t> minDistPos) {
+vector_t<std::shared_ptr<NTree>> copyUnjoinedTrees(vector_t<std::shared_ptr<NTree>> const& trees,
+                                                   std::pair<size_t, size_t> const& minDistPos) {
     vector_t<std::shared_ptr<NTree>> copy;
     const size_t n = trees.size();
     for (size_t i{0}; i < n; ++i) {
@@ -134,7 +135,7 @@ vector_t<std::shared_ptr<NTree>> copyUnjoinedTrees(vector_t<std::shared_ptr<NTre
 }
 
 template<typename T>
-std::shared_ptr<NTree> neighborJoining(matrix_t<T> distMatrix, vector_t<std::shared_ptr<NTree>> trees) {
+std::shared_ptr<NTree> neighborJoining(matrix_t<T> const& distMatrix, vector_t<std::shared_ptr<NTree>> const& trees) {
     const size_t n = distMatrix.size();
     /*static_assert([n, distMatrix]() {
         bool quadratic = true;
