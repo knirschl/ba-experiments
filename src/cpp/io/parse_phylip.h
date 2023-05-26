@@ -31,14 +31,14 @@ static const std::string MATRIX_ELEMENT_REGEX_STR{"(?:" + ZERO_POINT_DBL_REGEX_S
 static const std::string WHITESPACE_MAT_ELEMENT_REGEX_STR{R"(\s*)" + MATRIX_ELEMENT_REGEX_STR};
 
 template<typename T>
-std::pair<matrix_t<T>, vector_t<std::string>> parse(std::ifstream& stream) {
+std::pair<matrix_t<T>, vector_t<std::string>> parse(std::ifstream& reader) {
     matrix_t<T> matrix {};
     vector_t<std::string> ids {};
     std::string line {};
     int seq_count {};
     // first line := size
-    if (stream.is_open() && stream.good()) {
-        std::getline(stream, line);
+    if (reader.is_open() && reader.good()) {
+        std::getline(reader, line);
         seq_count = std::stoi(line);
         matrix.resize(seq_count);
         for (auto& c : matrix) { // ref needed to update actually column and not a copy
@@ -54,9 +54,9 @@ std::pair<matrix_t<T>, vector_t<std::string>> parse(std::ifstream& stream) {
     std::smatch results;
 
     size_t outer_counter{};
-    while (stream) {
+    while (reader) {
         size_t inner_counter{};
-        std::getline(stream, line);
+        std::getline(reader, line);
         // match regex
         if (std::regex_match(line, results, line_regex)) {
             ids[outer_counter] = results[1]; // first group := id
@@ -80,7 +80,7 @@ std::pair<matrix_t<T>, vector_t<std::string>> parse(std::ifstream& stream) {
 
 template<typename T>
 std::pair<matrix_t<T>, vector_t<std::string>> parse_from_file(std::string const& file) {
-    std::ifstream streamed_file {file};
+    std::ifstream streamed_file{file};
     auto read = parse<T>(streamed_file);
     streamed_file.close();
     return read;
