@@ -97,8 +97,6 @@ def get_generax_command(generax_families_file, species_tree, strategy, additiona
     return " ".join(command)
 
 def run_generax(datadir,  subst_model,  strategy, species_tree, generax_families_file, mode, cores, resultsdir, additional_arguments = ""):
-  #species_tree = fam.get_species_tree(datadir, subst_model, species_tree)
-  
   command = get_generax_command(generax_families_file, species_tree, strategy, additional_arguments, resultsdir, mode, cores)
   print(command)
   subprocess.check_call(command.split(" "), stdout = sys.stdout)
@@ -163,7 +161,7 @@ def run(datadir, subst_model, strategy, species_tree, starting_tree, cores, addi
   print("Run name " + run_name)
   sys.stdout.flush()
   mode = get_mode_from_additional_arguments(additional_arguments)
-  generax_families_file = os.path.join(resultsdir, "families.txt")
+  generax_families_file = os.path.join(resultsdir, "families-generax.txt")
   build_generax_families_file(datadir, starting_tree, subst_model, generax_families_file)
   start = time.time()
   run_generax(datadir, subst_model, strategy, species_tree, generax_families_file, mode, cores, resultsdir, additional_arguments)

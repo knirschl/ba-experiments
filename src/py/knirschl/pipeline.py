@@ -55,24 +55,16 @@ class RunFilter():
         # RUN
         if(self.raxml):
             utils.printFlush("Run raxml-ng...")
-            #try:
-                # -- my version --
-                #launch_raxmlng.run_raxml_all(datadir, subst_model)
-            launch_raxml.run_raxmlng_on_families(datadir, subst_model, cores)
-            #except Exception as exc:
-             #   utils.printFlush("Failed running RAxML-NG\n" + str(exc))
-
-            # TODO launch_raxmlng like fastme 
+            try:
+                launch_raxml.run_raxmlng_on_families(datadir, subst_model, cores)
+            except Exception as exc:
+                utils.printFlush("Failed running RAxML-NG\n" + str(exc))
         if (self.generax):
             utils.printFlush("Run generax...")
             try:
                 # create families file
-                generax_families_file = os.path.join(datadir, "families.txt")
-                launch_generax.build_generax_families_file(datadir, "random", subst_model, generax_families_file)
-                resultsdir = os.path.join(datadir, "runs", subst_model)
-                #launch_generax.run_generax(datadir, None, "SPR", "true", generax_families_file, "false", 1, resultsdir)
                 species_tree = fam.get_species_tree(datadir)
-                print("Species tree :=", species_tree)
+                resultsdir = os.path.join(datadir, "runs", subst_model)
                 launch_generax.run(datadir, subst_model, "SPR", species_tree, "random", cores, "", resultsdir)#, do_analyze=False)
             except Exception as exc:
                 utils.printFlush("Failed running GeneRax\n" + str(exc))
