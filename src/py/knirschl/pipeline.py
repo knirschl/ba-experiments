@@ -105,7 +105,7 @@ run_filter.force_overwrite = False
 run_filter.raxml = False
 run_filter.generax = False
 run_filter.fastme = False
-run_filter.compare = False
+#run_filter.compare = False
 start = time.time()
 try:
     run_filter.run_methods(datadir, "GTR+G", 1)

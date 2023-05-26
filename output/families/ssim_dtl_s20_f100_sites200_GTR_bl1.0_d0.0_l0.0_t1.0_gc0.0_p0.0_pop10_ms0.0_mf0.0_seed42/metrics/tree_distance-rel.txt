@@ -121,6 +121,17 @@ family_068	fastme.f84.genetree.newick : 0.117647
 family_017	generax-spr-undateddtl-r5.gtr+g.genetree.newick : 0.117647
 family_061	fastme.f84.genetree.newick : 0.117647
 family_061	raxml.gtr+g.genetree.newick : 0.117647
+family_100	ba.0.800000s+g.genetree.newick : 0.117647
+family_100	ba.0.600000s+g.genetree.newick : 0.117647
+family_100	ba.0.300000s+g.genetree.newick : 0.117647
+family_100	ba.0.200000s+g.genetree.newick : 0.117647
+family_100	ba.0.900000s+g.genetree.newick : 0.117647
+family_100	ba.0.700000s+g.genetree.newick : 0.117647
+family_100	ba.0.100000s+g.genetree.newick : 0.117647
+family_100	ba.1.000000s+g.genetree.newick : 0.117647
+family_100	ba.0.400000s+g.genetree.newick : 0.117647
+family_100	ba.0.500000s+g.genetree.newick : 0.117647
+family_100	ba.0.000000s+g.genetree.newick : 0.117647
 family_047	raxml.gtr+g.genetree.newick : 0.176471
 family_012	raxml.gtr+g.genetree.newick : 0.176471
 family_090	raxml.gtr+g.genetree.newick : 0.176471
@@ -223,6 +234,7 @@ family_017	fastme.f84.genetree.newick : 0.235294
 family_008	raxml.gtr+g.genetree.newick : 0.235294
 family_028	fastme.f84.genetree.newick : 0.235294
 family_061	generax-spr-undateddtl-r5.gtr+g.genetree.newick : 0.235294
+family_100	trex-test.genetree.newick : 0.235294
 family_042	fastme.f84.genetree.newick : 0.294118
 family_085	fastme.f84.genetree.newick : 0.294118
 family_085	raxml.gtr+g.genetree.newick : 0.294118
