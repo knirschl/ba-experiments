@@ -6,6 +6,7 @@
 #include <memory>
 #include "common_types.h"
 #include "io/parse_phylip.h"
+#include "io/write_tree.h"
 #include "nj/matrix.h"
 #include "nj/tree.h"
 #include "nj/NJSimple.h"
@@ -25,8 +26,9 @@ int main() {
         //std::cout << "Read species tree:\n" << matstr(species_tree_mat) << "\n\n";
         // read alignment
         std::string family_path = "/home/fili/Documents/KIT/2023/BA/code/output/families/ssim_dtl_s20_f100_sites200_GTR_bl1.0_d0.0_l0.0_t1.0_gc0.0_p0.0_pop10_ms0.0_mf0.0_seed42/families/family_";
+        std::string family = "100/";
         std::string alignment_file = "alignment.msa.matrix-sorted.phy";
-        std::string alignment_path = family_path + "100/" + alignment_file;
+        std::string alignment_path = family_path + family + alignment_file;
         auto alignment_pair = parse_from_file<double>(alignment_path);
         auto alignment_mat = alignment_pair.first;
         vector_t<std::shared_ptr<NTree>> alignment_start_leafs;
@@ -38,9 +40,10 @@ int main() {
         for (double scale{}; scale <= 1.0; scale += 0.1) {
             matscale(species_tree_mat, scale, distMatrix);
             matadd(alignment_mat, distMatrix, distMatrix);
-            std::cout << "Scaled Species-Tree-Matrix + Alignment-Matrix =\n" << matstr(distMatrix) << "\n\n";
+            //std::cout << "Scaled Species-Tree-Matrix + Alignment-Matrix =\n" << matstr(distMatrix) << "\n\n";
             std::shared_ptr<NTree> tree = neighborJoining<>(distMatrix, alignment_start_leafs);
-            std::cout << "Neighbor-joined tree: " << to_fasta(*tree) << std::endl;
+            std::cout << "Neighbor-joined tree: " << to_newick(*tree) << std::endl;
+            write_newick(*tree, family_path + family + "gene_trees/ba." + std::to_string(scale) + "S+G.geneTree.newick");
         }
     }
     /*
@@ -53,7 +56,7 @@ int main() {
                        [](auto str_id) { return std::make_shared<NLeaf>(str_id); });
 
         std::shared_ptr<NTree> tree = neighborJoining(distMatrix, trees);
-        std::cout << "Neighbor-joined de-tree: " << to_fasta(*tree) << std::endl;
+        std::cout << "Neighbor-joined de-tree: " << to_newick(*tree) << std::endl;
     }
      */
     /*
@@ -66,7 +69,7 @@ int main() {
                        [](auto str_id) { return std::make_shared<NLeaf>(str_id); });
 
         std::shared_ptr<NTree> tree = neighborJoining(distMatrix, trees);
-        std::cout << "Neighbor-joined en-tree: " << to_fasta(*tree) << std::endl;
+        std::cout << "Neighbor-joined en-tree: " << to_newick(*tree) << std::endl;
     }
      */
     return 0;
