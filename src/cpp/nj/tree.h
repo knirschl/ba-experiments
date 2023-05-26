@@ -57,8 +57,8 @@ std::shared_ptr<NTree> join(std::shared_ptr<NTree> const& n_left, T const& bl_le
     return std::make_shared<NNode<T>>(parent);
 }
 
-std::string to_fasta(NTree const& tree) {
-    return std::format("({});", tree.to_string());
+std::string to_newick(NTree const& tree) {
+    return std::format("{};", tree.to_string());
 }
 
 #endif //BA_TREE_H
