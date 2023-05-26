@@ -122,9 +122,9 @@ std::pair<T, T> calculateBranchLengths(T const& dist, T const& r1, T const& r2) 
     };
 }
 
-vector_t<std::shared_ptr<NTree>> copyUnjoinedTrees(vector_t<std::shared_ptr<NTree>> const& trees,
+vector_t<std::shared_ptr<Tree>> copyUnjoinedTrees(vector_t<std::shared_ptr<Tree>> const& trees,
                                                    std::pair<size_t, size_t> const& minDistPos) {
-    vector_t<std::shared_ptr<NTree>> copy;
+    vector_t<std::shared_ptr<Tree>> copy;
     const size_t n = trees.size();
     for (size_t i{0}; i < n; ++i) {
         // skip and add offset if this tree is one of the two that will be merged
@@ -138,7 +138,7 @@ vector_t<std::shared_ptr<NTree>> copyUnjoinedTrees(vector_t<std::shared_ptr<NTre
 }
 
 template<typename T>
-std::shared_ptr<NTree> neighborJoining(matrix_t<T> const& distMatrix, vector_t<std::shared_ptr<NTree>> const& trees) {
+std::shared_ptr<Tree> neighborJoining(matrix_t<T> const& distMatrix, vector_t<std::shared_ptr<Tree>> const& trees) {
     const size_t n = distMatrix.size();
     /*static_assert([n, distMatrix]() {
         bool quadratic = true;
@@ -159,7 +159,7 @@ std::shared_ptr<NTree> neighborJoining(matrix_t<T> const& distMatrix, vector_t<s
                 distMatrix[minDistPos.first][minDistPos.second],
                 r[minDistPos.first],
                 r[minDistPos.second]);
-        vector_t<std::shared_ptr<NTree>> newTrees = copyUnjoinedTrees(trees, minDistPos);
+        vector_t<std::shared_ptr<Tree>> newTrees = copyUnjoinedTrees(trees, minDistPos);
         // add joined trees (neighbors)
         newTrees.push_back(join(trees[minDistPos.first], branchLengths.first,
                                              trees[minDistPos.second], branchLengths.second));

@@ -8,14 +8,14 @@
 #include <fstream>
 #include "../nj/tree.h"
 
-bool write_newick(NTree const& tree, std::ofstream& writer) {
+bool write_newick(Tree const& tree, std::ofstream& writer) {
     if (writer.is_open() && writer.good()) {
         writer << to_newick(tree) << '\n';
     }
     return !writer.fail();
 }
 
-bool write_newick(NTree const& tree, std::string const& out_file) {
+bool write_newick(Tree const& tree, std::string const& out_file) {
     std::ofstream streamed_file{out_file};
     bool is_written = write_newick(tree, streamed_file);
     streamed_file.close();
