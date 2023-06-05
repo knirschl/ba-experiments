@@ -1,6 +1,5 @@
 import os
 import sys
-import subprocess
 import shutil
 import time
 import ete3
@@ -24,7 +23,6 @@ def generate_scheduler_commands_file(datadir, subst_model, is_dna, cores, output
     gamma = True
   with open(scheduler_commands_file, "w") as writer:
     for family in fam.get_families_list(datadir):
-      #family_dir = fam.get_family_path(datadir, family)
       fastme_dir = fam.get_family_misc_dir(datadir, family)
       try:
         os.mkdir(fastme_dir)
@@ -88,7 +86,7 @@ def run_fastme_on_families(datadir, subst_model, is_dna, cores):
   os.makedirs(output_dir)
   scheduler_commands_file = generate_scheduler_commands_file(datadir, subst_model, is_dna, cores, output_dir)
   start = time.time()
-  utils.run_with_scheduler(paths.fastme_exec, scheduler_commands_file, "fork", cores, output_dir, "logs.txt")   
+  utils.run_with_scheduler(paths.fastme_exec, scheduler_commands_file, "fork", cores, output_dir, "logs.txt")
   metrics.save_metrics(datadir, fam.get_run_name("fastme", subst_model), (time.time() - start), "runtimes") 
   lb = fam.get_lb_from_run(output_dir)
   metrics.save_metrics(datadir, fam.get_run_name("fastme", subst_model), (time.time() - start) * lb, "seqtimes") 

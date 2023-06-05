@@ -21,16 +21,14 @@ def generate_scheduler_commands_file(datadir, subst_model, cores, output_dir):
         #gamma = True
     with open(scheduler_commands_file, "w") as writer:
         for family in fam.get_families_list(datadir):
-            #family_dir = fam.get_family_path(datadir, family)
             raxml_dir = fam.get_family_misc_dir(datadir, family)
             alignment = fam.get_alignment(datadir, family)
             try:
                 os.mkdir(raxml_dir)
             except:
                 pass
-            raxml_output = os.path.join(raxml_dir, "raxml_output." + subst_model)
+            raxml_output_prefix = os.path.join(raxml_dir, "raxml_output." + subst_model)
             command = []
-            #command.append(paths.raxml_exec)
             command.append(family)
             command.append("1")
             command.append("1")
@@ -39,7 +37,7 @@ def generate_scheduler_commands_file(datadir, subst_model, cores, output_dir):
             command.append("--model")
             command.append(subst_model)
             command.append("--prefix")
-            command.append(raxml_output)
+            command.append(raxml_output_prefix)
             writer.write(" ".join(command) + "\n")
     return scheduler_commands_file
 
