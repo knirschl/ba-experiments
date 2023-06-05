@@ -10,7 +10,7 @@ import metrics
 def make_key(family, tree):
     return family + '\t' + tree 
 
-def compare(tree1, tree2):
+def rf_compare(tree1, tree2):
     command = []
     command.append(paths.raxml_exec)
     command.append("--rf")
@@ -36,6 +36,6 @@ def compare_all(datadir):
             abs_tree = os.path.join(fam.get_gene_tree_dir(datadir, family), tree)
             if (abs_tree == true_tree):
                 continue
-            dist = compare(abs_tree, true_tree)
-            metrics.save_metrics(datadir, make_key(family, tree), dist[0], "tree_distance-abs")
-            metrics.save_metrics(datadir, make_key(family, tree), dist[1], "tree_distance-rel")
+            dist = rf_compare(abs_tree, true_tree)
+            metrics.save_metrics(datadir, make_key(family, tree), dist[0], "rf_distance-abs")
+            metrics.save_metrics(datadir, make_key(family, tree), dist[1], "rf_distance-rel")
