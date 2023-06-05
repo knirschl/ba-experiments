@@ -79,7 +79,7 @@ class RunFilter():
             # TODO
             try:
                 dist_matrix_converter.convert_input(datadir)
-                species_tree = fam.get_species_tree(datadir)
+                species_tree = fam.get_true_species_tree_matrix_sorted(datadir)
                 launch_ba.run_ba_on_families(datadir, "experimental", species_tree, cores)
             except Exception as exc:
                 utils.printFlush("Failed running bachelor thesis script\n" + str(exc))
@@ -97,11 +97,12 @@ simphy_parameters = simphy.SimphyParameters()
 datadir = simphy.get_output_dir(simphy_parameters, root_output)
 print(datadir)
 run_filter = RunFilter()
-run_filter.generate = False
-run_filter.force_overwrite = False
-run_filter.raxml = False
-run_filter.generax = False
-run_filter.fastme = False
+#run_filter.generate = False
+#run_filter.force_overwrite = False
+#run_filter.raxml = False
+#run_filter.generax = False
+#run_filter.fastme = False
+#run_filter.ba = False
 #run_filter.compare = False
 start = time.time()
 try:

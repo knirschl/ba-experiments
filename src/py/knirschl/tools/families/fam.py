@@ -88,7 +88,7 @@ def get_species_tree(datadir, subst_model = None, method = "true"):
 #   elif (method == "Clades"):
 #     return "Clades"
   if (method == "true"):
-    return os.path.join(get_species_dir(datadir), "speciesTree.newick")
+    return get_true_species_tree(datadir)
   if (subst_model != None):
     return os.path.join(get_species_dir(datadir), method + "." + subst_model + ".speciesTree.newick")
   else:
@@ -96,6 +96,9 @@ def get_species_tree(datadir, subst_model = None, method = "true"):
 
 def get_true_species_tree(datadir):
   return os.path.join(get_species_dir(datadir), "speciesTree.newick")
+
+def get_true_species_tree_matrix_sorted(datadir):
+  return os.path.join(get_species_dir(datadir), "speciesTree.matrix-sorted.phy")
 
 def get_phyldog_species_tree(datadir):
   return os.path.join(get_species_dir(datadir), "phyldogSpeciesTree.newick")
@@ -199,7 +202,7 @@ def get_alignment_phylip(datadir, family):
   return os.path.join(get_family_path(datadir, family), "alignment.phy")
 
 def get_alignment_matrix_sorted(datadir, family):
-  return os.path.join(get_family_path(datadir, family), "alignment.msa.matrix.sorted.phy")
+  return os.path.join(get_family_path(datadir, family), "alignment.msa.matrix-sorted.phy")
 
 def get_true_tree(datadir, family):
   return build_gene_tree_path(datadir, "true", family, "true")
@@ -286,6 +289,9 @@ def get_pythia_score(datadir, family):
 
 def get_alignment_file(datadir):
   return os.path.join(datadir, "alignment.msa")
+
+def get_alignment_matrix_sorted_file(datadir):
+  return os.path.join(datadir, "alignment.msa.matrix-sorted.phy")
 
 def get_raxml_best_model(datadir, subst_model, family):
   return build_misc_file_path(datadir, subst_model, family, "raxmlBestModel")
