@@ -144,12 +144,12 @@
 		<clade>
 			<name>NULL</name>
 			<eventsRec>
-				<branchingOut speciesLocation="Node_15_16_0"/>
+				<speciation speciesLocation="Node_15_16_0"/>
 			</eventsRec>
 			<clade>
 				<name>NULL</name>
 				<eventsRec>
-					<speciation speciesLocation="Node_15_16_0"/>
+					<branchingOut speciesLocation="Node_15_14_0"/>
 				</eventsRec>
 				<clade>
 					<name>NULL</name>
@@ -182,42 +182,42 @@
 					</clade>
 				</clade>
 				<clade>
-					<name>16_0_0</name>
+					<name>NULL</name>
 					<eventsRec>
-						<leaf speciesLocation="16"/>
+						<transferBack destinationSpecies="Node_1_2_0"/>
+						<speciation speciesLocation="Node_1_2_0"/>
 					</eventsRec>
+					<clade>
+						<name>1_0_0</name>
+						<eventsRec>
+							<leaf speciesLocation="1"/>
+						</eventsRec>
+					</clade>
+					<clade>
+						<name>NULL</name>
+						<eventsRec>
+							<speciation speciesLocation="Node_2_3_0"/>
+						</eventsRec>
+						<clade>
+							<name>2_0_0</name>
+							<eventsRec>
+								<leaf speciesLocation="2"/>
+							</eventsRec>
+						</clade>
+						<clade>
+							<name>3_0_0</name>
+							<eventsRec>
+								<leaf speciesLocation="3"/>
+							</eventsRec>
+						</clade>
+					</clade>
 				</clade>
 			</clade>
 			<clade>
-				<name>NULL</name>
+				<name>16_0_0</name>
 				<eventsRec>
-					<transferBack destinationSpecies="Node_1_2_0"/>
-					<speciation speciesLocation="Node_1_2_0"/>
+					<leaf speciesLocation="16"/>
 				</eventsRec>
-				<clade>
-					<name>1_0_0</name>
-					<eventsRec>
-						<leaf speciesLocation="1"/>
-					</eventsRec>
-				</clade>
-				<clade>
-					<name>NULL</name>
-					<eventsRec>
-						<speciation speciesLocation="Node_2_3_0"/>
-					</eventsRec>
-					<clade>
-						<name>2_0_0</name>
-						<eventsRec>
-							<leaf speciesLocation="2"/>
-						</eventsRec>
-					</clade>
-					<clade>
-						<name>3_0_0</name>
-						<eventsRec>
-							<leaf speciesLocation="3"/>
-						</eventsRec>
-					</clade>
-				</clade>
 			</clade>
 		</clade>
 		<clade>

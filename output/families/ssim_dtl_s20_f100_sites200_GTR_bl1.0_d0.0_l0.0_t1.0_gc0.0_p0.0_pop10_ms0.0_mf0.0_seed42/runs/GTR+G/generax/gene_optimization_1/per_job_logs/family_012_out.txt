@@ -2,23 +2,31 @@ Starting optimizeGeneTreesSlave
 LibpllModel /home/fili/Documents/KIT/2023/BA/code/output/families/ssim_dtl_s20_f100_sites200_GTR_bl1.0_d0.0_l0.0_t1.0_gc0.0_p0.0_pop10_ms0.0_mf0.0_seed42/runs/GTR+G/generax/results/family_012/libpllModel.txt
 Starting optimizing gene tree
 Number of ranks 1
-(1e-07, 0.0882333, 0.145164, score = 0)
+(1e-07, 0.0794609, 0.152702, score = 0)
 Taxa number: 20
-joint: -1464.94  libpll: -1425.45  reconciliation: -39.4867  
-Initial ll = -1464.94
+joint: -1506.18  libpll: -1481.88  reconciliation: -24.2982  
+Initial ll = -1506.18
 
 SPR Search with radius 1: trying 54 prune nodes
-Found 16 potential better moves
-	GeneRax will now test and apply all the 16 potential good moves one after each other
-	Applying move, ll = -1462.01, 21 1
-	Applying move, ll = -1454.75, 54 60
+Found 7 potential better moves
+	GeneRax will now test and apply all the 7 potential good moves one after each other
+	Applying move, ll = -1505.37, 45 66
 	Worse likelihood, Move rejected
-	Applying move, ll = -1448.77, 66 73
+
+SPR Search with radius 1: trying 54 prune nodes
+Found 4 potential better moves
+	GeneRax will now test and apply all the 4 potential good moves one after each other
+	Applying move, ll = -1503.86, 44 62
+
+SPR Search with radius 1: trying 54 prune nodes
+Found 4 potential better moves
+	GeneRax will now test and apply all the 4 potential good moves one after each other
+	Applying move, ll = -1500.61, 45 41
 
 SPR Search with radius 1: trying 54 prune nodes
 Found 0 potential better moves
 	GeneRax will now test and apply all the 0 potential good moves one after each other
-joint: -1448.77  libpll: -1427.66  reconciliation: -21.1166  
+joint: -1500.61  libpll: -1484.16  reconciliation: -16.4515  
 Saving tree in /home/fili/Documents/KIT/2023/BA/code/output/families/ssim_dtl_s20_f100_sites200_GTR_bl1.0_d0.0_l0.0_t1.0_gc0.0_p0.0_pop10_ms0.0_mf0.0_seed42/runs/GTR+G/generax/results/family_012/geneTree.newick
 Finished saving  /home/fili/Documents/KIT/2023/BA/code/output/families/ssim_dtl_s20_f100_sites200_GTR_bl1.0_d0.0_l0.0_t1.0_gc0.0_p0.0_pop10_ms0.0_mf0.0_seed42/runs/GTR+G/generax/results/family_012/geneTree.newick
 End of optimizing gene tree after 0s

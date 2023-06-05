@@ -1,509 +1,509 @@
 ********************************************************************************
-INDELible V1.03 by Will Fletcher : Simulation began at: Fri May 12 20:59:59 2023
+INDELible V1.03 by Will Fletcher : Simulation began at: Mon Jun  5 13:01:39 2023
 ********************************************************************************
 
-  * Block 1 was completed in 0.005406 seconds.
+  * Block 1 was completed in 0.005537 seconds.
 
 ********************************************************************************
 
 
-  * Block 2 was completed in 0.006983 seconds.
+  * Block 2 was completed in 0.007246 seconds.
 
 ********************************************************************************
 
 
-  * Block 3 was completed in 0.004158 seconds.
+  * Block 3 was completed in 0.004261 seconds.
 
 ********************************************************************************
 
 
-  * Block 4 was completed in 0.008246 seconds.
+  * Block 4 was completed in 0.008556 seconds.
 
 ********************************************************************************
 
 
-  * Block 5 was completed in 0.003207 seconds.
+  * Block 5 was completed in 0.00331 seconds.
 
 ********************************************************************************
 
 
-  * Block 6 was completed in 0.005441 seconds.
+  * Block 6 was completed in 0.005879 seconds.
 
 ********************************************************************************
 
 
-  * Block 7 was completed in 0.005471 seconds.
+  * Block 7 was completed in 0.007364 seconds.
 
 ********************************************************************************
 
 
-  * Block 8 was completed in 0.005679 seconds.
+  * Block 8 was completed in 0.005819 seconds.
 
 ********************************************************************************
 
 
-  * Block 9 was completed in 0.003719 seconds.
+  * Block 9 was completed in 0.003779 seconds.
 
 ********************************************************************************
 
 
-  * Block 10 was completed in 0.003495 seconds.
+  * Block 10 was completed in 0.003549 seconds.
 
 ********************************************************************************
 
 
-  * Block 11 was completed in 0.005791 seconds.
+  * Block 11 was completed in 0.006034 seconds.
 
 ********************************************************************************
 
 
-  * Block 12 was completed in 0.007814 seconds.
+  * Block 12 was completed in 0.008052 seconds.
 
 ********************************************************************************
 
 
-  * Block 13 was completed in 0.004694 seconds.
+  * Block 13 was completed in 0.004962 seconds.
 
 ********************************************************************************
 
 
-  * Block 14 was completed in 0.013128 seconds.
+  * Block 14 was completed in 0.013568 seconds.
 
 ********************************************************************************
 
 
-  * Block 15 was completed in 0.00641 seconds.
+  * Block 15 was completed in 0.006668 seconds.
 
 ********************************************************************************
 
 
-  * Block 16 was completed in 0.00422 seconds.
+  * Block 16 was completed in 0.004346 seconds.
 
 ********************************************************************************
 
 
-  * Block 17 was completed in 0.006391 seconds.
+  * Block 17 was completed in 0.006761 seconds.
 
 ********************************************************************************
 
 
-  * Block 18 was completed in 0.006767 seconds.
+  * Block 18 was completed in 0.006952 seconds.
 
 ********************************************************************************
 
 
-  * Block 19 was completed in 0.005473 seconds.
+  * Block 19 was completed in 0.005662 seconds.
 
 ********************************************************************************
 
 
-  * Block 20 was completed in 0.003317 seconds.
+  * Block 20 was completed in 0.003457 seconds.
 
 ********************************************************************************
 
 
-  * Block 21 was completed in 0.006029 seconds.
+  * Block 21 was completed in 0.00621 seconds.
 
 ********************************************************************************
 
 
-  * Block 22 was completed in 0.00719 seconds.
+  * Block 22 was completed in 0.007453 seconds.
 
 ********************************************************************************
 
 
-  * Block 23 was completed in 0.003283 seconds.
+  * Block 23 was completed in 0.003375 seconds.
 
 ********************************************************************************
 
 
-  * Block 24 was completed in 0.006131 seconds.
+  * Block 24 was completed in 0.006313 seconds.
 
 ********************************************************************************
 
 
-  * Block 25 was completed in 0.004482 seconds.
+  * Block 25 was completed in 0.004657 seconds.
 
 ********************************************************************************
 
 
-  * Block 26 was completed in 0.010354 seconds.
+  * Block 26 was completed in 0.01071 seconds.
 
 ********************************************************************************
 
 
-  * Block 27 was completed in 0.006321 seconds.
+  * Block 27 was completed in 0.006557 seconds.
 
 ********************************************************************************
 
 
-  * Block 28 was completed in 0.004014 seconds.
+  * Block 28 was completed in 0.004124 seconds.
 
 ********************************************************************************
 
 
-  * Block 29 was completed in 0.00551 seconds.
+  * Block 29 was completed in 0.005652 seconds.
 
 ********************************************************************************
 
 
-  * Block 30 was completed in 0.006299 seconds.
+  * Block 30 was completed in 0.006491 seconds.
 
 ********************************************************************************
 
 
-  * Block 31 was completed in 0.004759 seconds.
+  * Block 31 was completed in 0.004869 seconds.
 
 ********************************************************************************
 
 
-  * Block 32 was completed in 0.00823 seconds.
+  * Block 32 was completed in 0.008493 seconds.
 
 ********************************************************************************
 
 
-  * Block 33 was completed in 0.005625 seconds.
+  * Block 33 was completed in 0.005791 seconds.
 
 ********************************************************************************
 
 
-  * Block 34 was completed in 0.00514 seconds.
+  * Block 34 was completed in 0.005332 seconds.
 
 ********************************************************************************
 
 
-  * Block 35 was completed in 0.004671 seconds.
+  * Block 35 was completed in 0.004819 seconds.
 
 ********************************************************************************
 
 
-  * Block 36 was completed in 0.00641 seconds.
+  * Block 36 was completed in 0.006631 seconds.
 
 ********************************************************************************
 
 
-  * Block 37 was completed in 0.005229 seconds.
+  * Block 37 was completed in 0.005389 seconds.
 
 ********************************************************************************
 
 
-  * Block 38 was completed in 0.00636 seconds.
+  * Block 38 was completed in 0.006574 seconds.
 
 ********************************************************************************
 
 
-  * Block 39 was completed in 0.006263 seconds.
+  * Block 39 was completed in 0.006455 seconds.
 
 ********************************************************************************
 
 
-  * Block 40 was completed in 0.006787 seconds.
+  * Block 40 was completed in 0.006956 seconds.
 
 ********************************************************************************
 
 
-  * Block 41 was completed in 0.009139 seconds.
+  * Block 41 was completed in 0.009424 seconds.
 
 ********************************************************************************
 
 
-  * Block 42 was completed in 0.005199 seconds.
+  * Block 42 was completed in 0.005364 seconds.
 
 ********************************************************************************
 
 
-  * Block 43 was completed in 0.005284 seconds.
+  * Block 43 was completed in 0.005381 seconds.
 
 ********************************************************************************
 
 
-  * Block 44 was completed in 0.006966 seconds.
+  * Block 44 was completed in 0.007693 seconds.
 
 ********************************************************************************
 
 
-  * Block 45 was completed in 0.008493 seconds.
+  * Block 45 was completed in 0.008652 seconds.
 
 ********************************************************************************
 
 
-  * Block 46 was completed in 0.005435 seconds.
+  * Block 46 was completed in 0.005618 seconds.
 
 ********************************************************************************
 
 
-  * Block 47 was completed in 0.004661 seconds.
+  * Block 47 was completed in 0.004751 seconds.
 
 ********************************************************************************
 
 
-  * Block 48 was completed in 0.008085 seconds.
+  * Block 48 was completed in 0.008249 seconds.
 
 ********************************************************************************
 
 
-  * Block 49 was completed in 0.006017 seconds.
+  * Block 49 was completed in 0.006447 seconds.
 
 ********************************************************************************
 
 
-  * Block 50 was completed in 0.005353 seconds.
+  * Block 50 was completed in 0.006827 seconds.
 
 ********************************************************************************
 
 
-  * Block 51 was completed in 0.004971 seconds.
+  * Block 51 was completed in 0.006071 seconds.
 
 ********************************************************************************
 
 
-  * Block 52 was completed in 0.007178 seconds.
+  * Block 52 was completed in 0.007467 seconds.
 
 ********************************************************************************
 
 
-  * Block 53 was completed in 0.00539 seconds.
+  * Block 53 was completed in 0.005581 seconds.
 
 ********************************************************************************
 
 
-  * Block 54 was completed in 0.007133 seconds.
+  * Block 54 was completed in 0.007385 seconds.
 
 ********************************************************************************
 
 
-  * Block 55 was completed in 0.010053 seconds.
+  * Block 55 was completed in 0.010453 seconds.
 
 ********************************************************************************
 
 
-  * Block 56 was completed in 0.005439 seconds.
+  * Block 56 was completed in 0.005695 seconds.
 
 ********************************************************************************
 
 
-  * Block 57 was completed in 0.00389 seconds.
+  * Block 57 was completed in 0.003979 seconds.
 
 ********************************************************************************
 
 
-  * Block 58 was completed in 0.005317 seconds.
+  * Block 58 was completed in 0.005521 seconds.
 
 ********************************************************************************
 
 
-  * Block 59 was completed in 0.00539 seconds.
+  * Block 59 was completed in 0.00557 seconds.
 
 ********************************************************************************
 
 
-  * Block 60 was completed in 0.005467 seconds.
+  * Block 60 was completed in 0.005647 seconds.
 
 ********************************************************************************
 
 
-  * Block 61 was completed in 0.006106 seconds.
+  * Block 61 was completed in 0.006302 seconds.
 
 ********************************************************************************
 
 
-  * Block 62 was completed in 0.008373 seconds.
+  * Block 62 was completed in 0.008603 seconds.
 
 ********************************************************************************
 
 
-  * Block 63 was completed in 0.004431 seconds.
+  * Block 63 was completed in 0.004517 seconds.
 
 ********************************************************************************
 
 
-  * Block 64 was completed in 0.00519 seconds.
+  * Block 64 was completed in 0.005366 seconds.
 
 ********************************************************************************
 
 
-  * Block 65 was completed in 0.005848 seconds.
+  * Block 65 was completed in 0.00599 seconds.
 
 ********************************************************************************
 
 
-  * Block 66 was completed in 0.0053 seconds.
+  * Block 66 was completed in 0.005312 seconds.
 
 ********************************************************************************
 
 
-  * Block 67 was completed in 0.006727 seconds.
+  * Block 67 was completed in 0.006913 seconds.
 
 ********************************************************************************
 
 
-  * Block 68 was completed in 0.005852 seconds.
+  * Block 68 was completed in 0.006014 seconds.
 
 ********************************************************************************
 
 
-  * Block 69 was completed in 0.007787 seconds.
+  * Block 69 was completed in 0.007997 seconds.
 
 ********************************************************************************
 
 
-  * Block 70 was completed in 0.004524 seconds.
+  * Block 70 was completed in 0.004613 seconds.
 
 ********************************************************************************
 
 
-  * Block 71 was completed in 0.008547 seconds.
+  * Block 71 was completed in 0.008758 seconds.
 
 ********************************************************************************
 
 
-  * Block 72 was completed in 0.005131 seconds.
+  * Block 72 was completed in 0.005242 seconds.
 
 ********************************************************************************
 
 
-  * Block 73 was completed in 0.005497 seconds.
+  * Block 73 was completed in 0.005602 seconds.
 
 ********************************************************************************
 
 
-  * Block 74 was completed in 0.004978 seconds.
+  * Block 74 was completed in 0.005068 seconds.
 
 ********************************************************************************
 
 
-  * Block 75 was completed in 0.006566 seconds.
+  * Block 75 was completed in 0.006682 seconds.
 
 ********************************************************************************
 
 
-  * Block 76 was completed in 0.005847 seconds.
+  * Block 76 was completed in 0.005992 seconds.
 
 ********************************************************************************
 
 
-  * Block 77 was completed in 0.003753 seconds.
+  * Block 77 was completed in 0.003846 seconds.
 
 ********************************************************************************
 
 
-  * Block 78 was completed in 0.004914 seconds.
+  * Block 78 was completed in 0.005016 seconds.
 
 ********************************************************************************
 
 
-  * Block 79 was completed in 0.005779 seconds.
+  * Block 79 was completed in 0.005923 seconds.
 
 ********************************************************************************
 
 
-  * Block 80 was completed in 0.004318 seconds.
+  * Block 80 was completed in 0.004413 seconds.
 
 ********************************************************************************
 
 
-  * Block 81 was completed in 0.00689 seconds.
+  * Block 81 was completed in 0.007061 seconds.
 
 ********************************************************************************
 
 
-  * Block 82 was completed in 0.005983 seconds.
+  * Block 82 was completed in 0.006107 seconds.
 
 ********************************************************************************
 
 
-  * Block 83 was completed in 0.008963 seconds.
+  * Block 83 was completed in 0.009212 seconds.
 
 ********************************************************************************
 
 
-  * Block 84 was completed in 0.009443 seconds.
+  * Block 84 was completed in 0.009701 seconds.
 
 ********************************************************************************
 
 
-  * Block 85 was completed in 0.004795 seconds.
+  * Block 85 was completed in 0.004911 seconds.
 
 ********************************************************************************
 
 
-  * Block 86 was completed in 0.006835 seconds.
+  * Block 86 was completed in 0.006936 seconds.
 
 ********************************************************************************
 
 
-  * Block 87 was completed in 0.007167 seconds.
+  * Block 87 was completed in 0.007336 seconds.
 
 ********************************************************************************
 
 
-  * Block 88 was completed in 0.004228 seconds.
+  * Block 88 was completed in 0.004359 seconds.
 
 ********************************************************************************
 
 
-  * Block 89 was completed in 0.003413 seconds.
+  * Block 89 was completed in 0.003485 seconds.
 
 ********************************************************************************
 
 
-  * Block 90 was completed in 0.007649 seconds.
+  * Block 90 was completed in 0.007472 seconds.
 
 ********************************************************************************
 
 
-  * Block 91 was completed in 0.004959 seconds.
+  * Block 91 was completed in 0.004972 seconds.
 
 ********************************************************************************
 
 
-  * Block 92 was completed in 0.006169 seconds.
+  * Block 92 was completed in 0.006297 seconds.
 
 ********************************************************************************
 
 
-  * Block 93 was completed in 0.006281 seconds.
+  * Block 93 was completed in 0.006422 seconds.
 
 ********************************************************************************
 
 
-  * Block 94 was completed in 0.004865 seconds.
+  * Block 94 was completed in 0.005003 seconds.
 
 ********************************************************************************
 
 
-  * Block 95 was completed in 0.007615 seconds.
+  * Block 95 was completed in 0.007801 seconds.
 
 ********************************************************************************
 
 
-  * Block 96 was completed in 0.004492 seconds.
+  * Block 96 was completed in 0.004602 seconds.
 
 ********************************************************************************
 
 
-  * Block 97 was completed in 0.006312 seconds.
+  * Block 97 was completed in 0.006466 seconds.
 
 ********************************************************************************
 
 
-  * Block 98 was completed in 0.007628 seconds.
+  * Block 98 was completed in 0.00783 seconds.
 
 ********************************************************************************
 
 
-  * Block 99 was completed in 0.004967 seconds.
+  * Block 99 was completed in 0.005075 seconds.
 
 ********************************************************************************
 
 
-  * Block 100 was completed in 0.007315 seconds.
+  * Block 100 was completed in 0.007448 seconds.
 
 ********************************************************************************
 
-  * Simulation completed. Whole batch took: 0.612726 seconds.
+  * Simulation completed. Whole batch took: 0.635843 seconds.
 
-INDELible V1.03 Simulations completed at: Fri May 12 21:00:00 2023
+INDELible V1.03 Simulations completed at: Mon Jun  5 13:01:40 2023
 
 ********************************************************************************
 

@@ -10,7 +10,7 @@
 
  . Computing tree...
 
- . Tree length is 1.501733.
+ . Tree length is 1.162772.
 
  . Performing SPR...
 

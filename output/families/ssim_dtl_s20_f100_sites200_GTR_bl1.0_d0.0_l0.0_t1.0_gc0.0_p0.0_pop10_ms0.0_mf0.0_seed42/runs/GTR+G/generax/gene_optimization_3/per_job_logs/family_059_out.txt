@@ -2,25 +2,15 @@ Starting optimizeGeneTreesSlave
 LibpllModel /home/fili/Documents/KIT/2023/BA/code/output/families/ssim_dtl_s20_f100_sites200_GTR_bl1.0_d0.0_l0.0_t1.0_gc0.0_p0.0_pop10_ms0.0_mf0.0_seed42/runs/GTR+G/generax/results/family_059/libpllModel.txt
 Starting optimizing gene tree
 Number of ranks 1
-(1e-07, 0.039929, 0.060624, score = 0)
+(1e-07, 0.0429646, 0.0589741, score = 0)
 Taxa number: 20
-joint: -738.588  libpll: -705.812  reconciliation: -32.7769  
-Initial ll = -738.588
-
-SPR Search with radius 3: trying 54 prune nodes
-Found 1 potential better moves
-	GeneRax will now test and apply all the 1 potential good moves one after each other
-	Applying move, ll = -733.579, 64 29
-
-SPR Search with radius 3: trying 54 prune nodes
-Found 4 potential better moves
-	GeneRax will now test and apply all the 4 potential good moves one after each other
-	Applying move, ll = -731.804, 57 64
+joint: -740.469  libpll: -717.348  reconciliation: -23.1211  
+Initial ll = -740.469
 
 SPR Search with radius 3: trying 54 prune nodes
 Found 0 potential better moves
 	GeneRax will now test and apply all the 0 potential good moves one after each other
-joint: -731.804  libpll: -708.661  reconciliation: -23.1428  
+joint: -740.469  libpll: -717.348  reconciliation: -23.1211  
 Saving tree in /home/fili/Documents/KIT/2023/BA/code/output/families/ssim_dtl_s20_f100_sites200_GTR_bl1.0_d0.0_l0.0_t1.0_gc0.0_p0.0_pop10_ms0.0_mf0.0_seed42/runs/GTR+G/generax/results/family_059/geneTree.newick
 Finished saving  /home/fili/Documents/KIT/2023/BA/code/output/families/ssim_dtl_s20_f100_sites200_GTR_bl1.0_d0.0_l0.0_t1.0_gc0.0_p0.0_pop10_ms0.0_mf0.0_seed42/runs/GTR+G/generax/results/family_059/geneTree.newick
 End of optimizing gene tree after 0s

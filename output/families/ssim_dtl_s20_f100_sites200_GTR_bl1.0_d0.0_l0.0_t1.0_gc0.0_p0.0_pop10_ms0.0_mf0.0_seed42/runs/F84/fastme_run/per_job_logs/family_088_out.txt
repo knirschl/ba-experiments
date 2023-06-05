@@ -10,12 +10,8 @@
 
  . Computing tree...
 
- . Tree length is 0.389196.
+ . Tree length is 0.271669.
 
  . Performing SPR...
-
- . Warning: 
-	Explained variance = 0.897 (<0.90).
-	Check your input data.
 
  . Time used 0h00m00s

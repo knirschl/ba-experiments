@@ -10,10 +10,8 @@
 
  . Computing tree...
 
- . Tree length is 1.415061.
+ . Tree length is 1.195656.
 
  . Performing SPR...
-
- . SPR did not improve tree length.
 
  . Time used 0h00m00s

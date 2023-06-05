@@ -1,4 +1,5 @@
-fastme.f84 : 0.3510439395904541
-pipeline : 0.9191875457763672
-generax-spr-undateddtl-r5.gtr+g : 46.54605770111084
-raxml.gtr+g : 49.32999587059021
+fastme.f84 : 0.35535430908203125
+ba.experimental : 1.7435669898986816
+generax-spr-undateddtl-r5.gtr+g : 48.2025249004364
+raxml.gtr+g : 51.868457317352295
+pipeline : 105.62646484375
