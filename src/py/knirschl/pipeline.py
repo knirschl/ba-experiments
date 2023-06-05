@@ -13,6 +13,7 @@ import generate_with_simphy as simphy
 import launch_raxml
 import launch_generax
 import launch_fastme
+import launch_ba
 import dist_matrix_converter
 import compare_trees
 import metrics
@@ -62,7 +63,6 @@ class RunFilter():
         if (self.generax):
             utils.printFlush("Run generax...")
             try:
-                # create families file
                 species_tree = fam.get_species_tree(datadir)
                 resultsdir = os.path.join(datadir, "runs", subst_model)
                 launch_generax.run(datadir, subst_model, "SPR", species_tree, "random", cores, "", resultsdir)#, do_analyze=False)
@@ -77,7 +77,12 @@ class RunFilter():
         if (self.ba):
             utils.printFlush("Run ba...")
             # TODO
-            dist_matrix_converter.convert_input(datadir)
+            try:
+                dist_matrix_converter.convert_input(datadir)
+                species_tree = fam.get_species_tree(datadir)
+                launch_ba.run_ba_on_families(datadir, "experimental", species_tree, cores)
+            except Exception as exc:
+                utils.printFlush("Failed running bachelor thesis script\n" + str(exc))
         # COMPARE INFERRED TREES WITH TRUE TREE
         if (self.compare):
             utils.printFlush("Run compare...")
