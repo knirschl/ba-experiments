@@ -198,6 +198,9 @@ def get_alignment(datadir, family):
 def get_alignment_phylip(datadir, family):
   return os.path.join(get_family_path(datadir, family), "alignment.phy")
 
+def get_alignment_matrix_sorted(datadir, family):
+  return os.path.join(get_family_path(datadir, family), "alignment.msa.matrix.sorted.phy")
+
 def get_true_tree(datadir, family):
   return build_gene_tree_path(datadir, "true", family, "true")
 

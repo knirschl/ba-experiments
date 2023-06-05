@@ -41,6 +41,9 @@ raxml_mpi_exec = ""
 generax_exec = os.path.join(programs_root, "GeneRax", "build", "bin", "generax")
 # FastME
 fastme_exec = os.path.join(programs_root, "FastME", "fastme-2.1.6.4", "binaries", "fastme-2.1.6.2-linux64")
+# Bachelor thesis
+# TODO this is a temporary path
+ba_exec = os.path.join(code_github_root, "cmake-build-debug", "BA")
 # MPI
 mpischeduler_exec = os.path.join(programs_root, "MPIScheduler", "build", "mpi-scheduler")
 # constants
