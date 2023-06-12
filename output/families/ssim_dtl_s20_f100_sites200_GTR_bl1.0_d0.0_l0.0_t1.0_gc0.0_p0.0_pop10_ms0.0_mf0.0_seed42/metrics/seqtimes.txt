@@ -1,3 +1,6 @@
 fastme.f81 : 0.2659379083328247
+fastme.f84 : 0.309133030632019
 raxml.f81 : 28.121425674948693
 generax-spr-undateddtl-r5.f81 : 31.900800466537476
+generax-spr-undateddtl-r5.gtr+g : 47.86899971961975
+raxml.gtr+g : 64.7898178411026

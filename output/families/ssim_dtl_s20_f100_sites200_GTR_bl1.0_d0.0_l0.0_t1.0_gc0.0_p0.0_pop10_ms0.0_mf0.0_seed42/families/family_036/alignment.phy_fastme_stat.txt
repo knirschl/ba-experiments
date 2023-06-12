@@ -15,7 +15,7 @@ BIONJ algorithm:
 Settings for this run:
 
   I                                      Input data type  DNA             
-  E                                   evolutionary model  F81             
+  E                                   evolutionary model  F84             
   G                    Gamma rate variation across sites  no              
   R                              Remove sites whith gaps  no              
   O                    Output calculated distance matrix  yes             
@@ -27,9 +27,8 @@ Settings for this run:
 
 -------------------------------------------------------------------------------
 Dataset 1
-	Tree length is 1.49954693	Before SPR:     tree length is 1.50250110
-	SPR      1: new tree length is 1.49828959
-	SPR      2: new tree length is 1.49774551
-	Performed 2 SPR(s).
+	Tree length is 1.60342099	Before SPR:     tree length is 1.59265079
+	SPR      1: new tree length is 1.59220044
+	Performed 1 SPR(s).
 
-	Explained variance : 0.97635987
+	Explained variance : 0.96978466

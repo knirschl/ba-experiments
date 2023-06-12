@@ -71,7 +71,7 @@ class RunFilter():
         if (self.fastme):
             utils.printFlush("Run fastme...")
             try:
-                launch_fastme.run_fastme_on_families(datadir, subst_model, 1, 1)
+                launch_fastme.run_fastme_on_families(datadir, "F84", 1, 1)
             except Exception as exc:
                 utils.printFlush("Failed running FastME\n" + str(exc))
         if (self.ba):
@@ -105,7 +105,7 @@ run_filter.ba = False
 run_filter.compare = False
 start = time.time()
 try:
-    run_filter.run_methods(datadir, "F81", 1)
+    run_filter.run_methods(datadir, "GTR+G", 1)
 finally:
     elapsed = time.time() - start
     print("End of single experiment. Elapsed time: " + str(elapsed) + "s")
