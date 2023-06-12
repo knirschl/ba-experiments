@@ -1,0 +1,17 @@
+generax-spr-undateddtl-r5.gtr+g.genetree.newick : 0.0
+fastme.f81.genetree.newick : 2.0
+raxml.gtr+g.genetree.newick : 2.0
+ba_output.experimental0.600000s+g.genetree.newick : 4.0
+ba_output.experimental0.400000s+g.genetree.newick : 4.0
+ba_output.experimental1.000000s+g.genetree.newick : 4.0
+ba_output.experimental0.000000s+g.genetree.newick : 4.0
+generax-spr-undateddtl-r5.f81.genetree.newick : 4.0
+ba_output.experimental0.800000s+g.genetree.newick : 4.0
+ba_output.experimental0.700000s+g.genetree.newick : 4.0
+fastme.f84.genetree.newick : 4.0
+ba_output.experimental0.200000s+g.genetree.newick : 4.0
+ba_output.experimental0.500000s+g.genetree.newick : 4.0
+ba_output.experimental0.900000s+g.genetree.newick : 4.0
+ba_output.experimental0.300000s+g.genetree.newick : 4.0
+ba_output.experimental0.100000s+g.genetree.newick : 4.0
+raxml.f81.genetree.newick : 6.0

@@ -24,18 +24,43 @@ def rf_compare(tree1, tree2):
     return [float(rf_abs), float(rf_rel)]
 
 def compare_all(datadir):
+    method_avg_abs_dico = {}
+    method_avg_rel_dico = {}
+    fam_counter = 0
     for family in fam.get_families_list(datadir):
-        raxml_dir = fam.get_family_misc_dir(datadir, family)
-        try:
-            os.mkdir(raxml_dir)
-        except:
-            pass
-        raxml_output = os.path.join(raxml_dir, "distances.")
+        fam_min_abs = float("inf")
+        fam_max_abs = float("-inf")
+        fam_min_rel = float("inf")
+        fam_max_rel = float("-inf")
         true_tree = fam.get_true_tree(datadir, family)
         for tree in os.listdir(fam.get_gene_tree_dir(datadir, family)):
-            abs_tree = os.path.join(fam.get_gene_tree_dir(datadir, family), tree)
-            if (abs_tree == true_tree):
+            abs_path_tree = os.path.join(fam.get_gene_tree_dir(datadir, family), tree)
+            if (abs_path_tree == true_tree):
                 continue
-            dist = rf_compare(abs_tree, true_tree)
-            metrics.save_metrics(datadir, make_key(family, tree), dist[0], "rf_distance-abs")
-            metrics.save_metrics(datadir, make_key(family, tree), dist[1], "rf_distance-rel")
+            # CALCULATIONS
+            dist_abs, dist_rel = rf_compare(abs_path_tree, true_tree)
+            # family min/max
+            fam_min_abs = (fam_min_abs, dist_abs)[dist_abs < fam_min_abs]
+            fam_max_abs = (fam_max_abs, dist_abs)[dist_abs > fam_max_abs]
+            fam_min_rel = (fam_min_rel, dist_rel)[dist_rel < fam_min_rel]
+            fam_max_rel = (fam_max_rel, dist_rel)[dist_rel > fam_max_rel]
+            # method average
+            if not tree in method_avg_abs_dico:
+                # if tree (= method) not in dico, add
+                method_avg_abs_dico[tree] = 0
+                method_avg_rel_dico[tree] = 0
+            method_avg_abs_dico[tree] = (method_avg_abs_dico[tree] * fam_counter + dist_abs) / (fam_counter + 1)
+            method_avg_rel_dico[tree] = (method_avg_rel_dico[tree] * fam_counter + dist_rel) / (fam_counter + 1)
+
+            # SAVING TO FILE
+            # save single distance
+            metrics.save_metrics(datadir, make_key(family, tree), dist_abs, "rf_distance-abs")
+            metrics.save_metrics(datadir, make_key(family, tree), dist_rel, "rf_distance-rel")
+        # save family min/max distance
+        metrics.save_metrics(datadir, family, fam_min_abs, "rf_distance-family_min-abs")
+        metrics.save_metrics(datadir, family, fam_max_abs, "rf_distance-family_max-abs")
+        metrics.save_metrics(datadir, family, fam_min_rel, "rf_distance-family_min-rel")
+        metrics.save_metrics(datadir, family, fam_max_rel, "rf_distance-family_max-rel")
+    # save method average distance
+    metrics.save_dico(datadir, method_avg_abs_dico, "rf_distance-method_avg-abs")
+    metrics.save_dico(datadir, method_avg_rel_dico, "rf_distance-method_avg-rel")
