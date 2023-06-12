@@ -103,7 +103,7 @@ run_filter.raxml = False
 run_filter.generax = False
 run_filter.fastme = False
 #run_filter.ba = False
-run_filter.compare = False
+#run_filter.compare = False
 # ****** NO NEED TO CHANGE ******
 start = time.time()
 try:
