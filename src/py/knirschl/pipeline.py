@@ -71,7 +71,7 @@ class RunFilter():
         if (self.fastme):
             utils.printFlush("Run fastme...")
             try:
-                launch_fastme.run_fastme_on_families(datadir, "F84", 1, 1)
+                launch_fastme.run_fastme_on_families(datadir, subst_model, 1, 1)
             except Exception as exc:
                 utils.printFlush("Failed running FastME\n" + str(exc))
         if (self.ba):
@@ -91,7 +91,6 @@ class RunFilter():
             except Exception as exc:
                 utils.printFlush("Failed running compare\n" + str(exc))
 
-
 root_output = paths.families_datasets_root # output/families/
 simphy_parameters = simphy.SimphyParameters()
 datadir = simphy.get_output_dir(simphy_parameters, root_output)
@@ -99,14 +98,14 @@ print(datadir)
 run_filter = RunFilter()
 #run_filter.generate = False
 #run_filter.force_overwrite = False
-#run_filter.raxml = False
-#run_filter.generax = False
-#run_filter.fastme = False
-#run_filter.ba = False
-#run_filter.compare = False
+run_filter.raxml = False
+run_filter.generax = False
+run_filter.fastme = False
+run_filter.ba = False
+run_filter.compare = False
 start = time.time()
 try:
-    run_filter.run_methods(datadir, "GTR+G", 1)
+    run_filter.run_methods(datadir, "F81", 1)
 finally:
     elapsed = time.time() - start
     print("End of single experiment. Elapsed time: " + str(elapsed) + "s")
