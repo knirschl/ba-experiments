@@ -96,11 +96,11 @@ simphy_parameters = simphy.SimphyParameters()
 datadir = simphy.get_output_dir(simphy_parameters, root_output)
 print(datadir)
 run_filter = RunFilter()
-#run_filter.generate = False
-#run_filter.force_overwrite = False
-run_filter.raxml = False
-run_filter.generax = False
-run_filter.fastme = False
+run_filter.generate = False
+run_filter.force_overwrite = False
+#run_filter.raxml = False
+#run_filter.generax = False
+#run_filter.fastme = False
 run_filter.ba = False
 run_filter.compare = False
 start = time.time()
