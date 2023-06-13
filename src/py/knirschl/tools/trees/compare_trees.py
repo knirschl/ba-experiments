@@ -15,8 +15,10 @@ def rf_compare(tree1, tree2):
     command.append(paths.raxml_exec)
     command.append("--rf")
     command.append(tree1 + "," + tree2)
-  
-    out = subprocess.check_output(command).decode("utf-8")
+    try:
+        out = subprocess.check_output(command).decode("utf-8")
+    except subprocess.CalledProcessError as error:
+        return ["abort", error]
     lines = out.split("\n")
     rf_abs = lines[0].split(" ")[-1]
     rf_rel = lines[1].split(" ")[-1]
@@ -39,6 +41,10 @@ def compare_all(datadir):
                 continue
             # CALCULATIONS
             dist_abs, dist_rel = rf_compare(abs_path_tree, true_tree)
+            if dist_abs == "abort":
+                # distance error
+                print("I've catched an error, maybe look into this?\n", dist_rel, "\n")
+                continue
             # family min/max
             fam_min_abs = (fam_min_abs, dist_abs)[dist_abs < fam_min_abs]
             fam_max_abs = (fam_max_abs, dist_abs)[dist_abs > fam_max_abs]
