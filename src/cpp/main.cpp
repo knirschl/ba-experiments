@@ -2,6 +2,8 @@
 // Created by knirschl on 18.04.23.
 //
 
+#include <sstream>
+#include <iomanip>
 #include "io/parse_cli.h"
 #include "io/parse_phylip.h"
 #include "nj/tree.h"
@@ -32,7 +34,18 @@ int main(int argc, char *argv[]) {
 
     // calculate
     matrix_t<double> distMatrix;
-    for (double scale{}; scale <= 1.0; scale += 0.1) {
+    for (double scale{-1.0}; scale <= 1.0; scale += 0.1) {
+        matscale(species_tree_mat, scale, distMatrix);
+        matadd(alignment_mat, distMatrix, distMatrix);
+        //std::cout << "Scaled Species-Tree-Matrix + Alignment-Matrix =\n" << matstr(distMatrix) << "\n\n";
+        std::shared_ptr <Tree> tree = neighborJoining<>(distMatrix, alignment_start_leafs);
+        std::cout << "Neighbor-joined tree: " << to_newick(*tree) << std::endl;
+        // double to string without trailing zeros
+        std::ostringstream oss;
+        oss << std::setprecision(8) << std::noshowpoint << scale;
+        write_newick(*tree, getP(cli_parser) + oss.str() + "S+G.geneTree.newick");
+    }
+    for (int scale{}; scale <= 100; scale += 5) {
         matscale(species_tree_mat, scale, distMatrix);
         matadd(alignment_mat, distMatrix, distMatrix);
         //std::cout << "Scaled Species-Tree-Matrix + Alignment-Matrix =\n" << matstr(distMatrix) << "\n\n";
