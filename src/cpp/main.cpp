@@ -34,7 +34,7 @@ int main(int argc, char *argv[]) {
 
     // calculate
     matrix_t<double> distMatrix;
-    for (double scale{-1.0}; scale <= 1.0; scale += 0.1) {
+    for (double scale{}; scale <= 1.0; scale += 0.1) {
         matscale(species_tree_mat, scale, distMatrix);
         matadd(alignment_mat, distMatrix, distMatrix);
         //std::cout << "Scaled Species-Tree-Matrix + Alignment-Matrix =\n" << matstr(distMatrix) << "\n\n";
@@ -45,7 +45,7 @@ int main(int argc, char *argv[]) {
         oss << std::setprecision(8) << std::noshowpoint << scale;
         write_newick(*tree, getP(cli_parser) + oss.str() + "S+G.geneTree.newick");
     }
-    for (int scale{}; scale <= 100; scale += 5) {
+    for (int scale{5}; scale <= 100; scale += 5) {
         matscale(species_tree_mat, scale, distMatrix);
         matadd(alignment_mat, distMatrix, distMatrix);
         //std::cout << "Scaled Species-Tree-Matrix + Alignment-Matrix =\n" << matstr(distMatrix) << "\n\n";
