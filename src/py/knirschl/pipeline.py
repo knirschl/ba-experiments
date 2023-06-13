@@ -45,6 +45,10 @@ class RunFilter():
         self.generax = False
         self.fastme = False
 
+    def run_compare(self):
+        self.script_ba()
+        self.ba = False
+
     def run_methods(self, datadir, subst_model, cores):
         if (self.generate):
             if (not os.path.isdir(datadir) or self.force_overwrite):
@@ -101,7 +105,7 @@ class RunFilter():
 
 root_output = paths.families_datasets_root # output/families/
 # SET simphy PARAMETERS
-simphy_parameters = simphy.SimphyParameters()
+simphy_parameters = simphy.SimphyParameters(tag="DL", loss_rate=1.0, dup_rate=1.0)
 datadir = simphy.get_output_dir(simphy_parameters, root_output)
 print(datadir)
 # TOGGLE PIPELINE ELEMENTS
@@ -109,6 +113,7 @@ print(datadir)
 run_filter = RunFilter() # all enabled
 #run_filter.force_overwrite = True # regenerate old dataset
 #run_filter.script_ba() # only ba script
+#run_filter.run_compare() # only compare inferred trees
 # ====== ! CAREFUL ! ======
 
 # RUN PIPELINE
