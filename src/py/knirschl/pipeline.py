@@ -27,16 +27,23 @@ class RunFilter():
         self.fastme = True
         self.ba = True
 
-        self.force_overwrite = True
+        #self.force_overwrite = True
         self.compare = True
-        #self.debug = False
     
     def disable_all(self):
-        self.simphy = False
+        self.generate = False
         self.raxml = False
         self.generax = False
         self.fastme = False
         self.ba = False
+        self.force_overwrite = False
+        self.compare = False
+    
+    def script_ba(self):
+        self.generate = False
+        self.raxml = False
+        self.generax = False
+        self.fastme = False
 
     def run_methods(self, datadir, subst_model, cores):
         if (self.generate):
@@ -91,20 +98,20 @@ class RunFilter():
             except Exception as exc:
                 utils.printFlush("Failed running compare\n" + str(exc))
 
+
 root_output = paths.families_datasets_root # output/families/
+# SET simphy PARAMETERS
 simphy_parameters = simphy.SimphyParameters()
 datadir = simphy.get_output_dir(simphy_parameters, root_output)
 print(datadir)
-run_filter = RunFilter()
-# ****** NO NEED TO CHANGE ******
-run_filter.generate = False
-run_filter.force_overwrite = False
-run_filter.raxml = False
-run_filter.generax = False
-run_filter.fastme = False
-#run_filter.ba = False
-#run_filter.compare = False
-# ****** NO NEED TO CHANGE ******
+# TOGGLE PIPELINE ELEMENTS
+# ====== ! CAREFUL ! ======
+run_filter = RunFilter() # all enabled
+#run_filter.force_overwrite = True # regenerate old dataset
+#run_filter.script_ba() # only ba script
+# ====== ! CAREFUL ! ======
+
+# RUN PIPELINE
 start = time.time()
 try:
     run_filter.run_methods(datadir, "F81", 1)

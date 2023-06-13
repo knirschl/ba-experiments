@@ -16,10 +16,10 @@ import discordance_rate
 import sample_missing_data
 
 class SimphyParameters():
-  def __init__(self, tag = "dtl", prefix = "ssim", speciations_per_year = 0.000000005,
+  def __init__(self, tag = "NE", prefix = "ssim", speciations_per_year = 0.000000005,
               extinction_per_year = 0.0000000049, species_taxa = 20 ,
               families_number = 100, bl = 1.0, loss_rate = 0.0, dup_rate = 0.0,
-              transfer_rate = 1.0, gene_conversion_rate = 0.0, sites = 200,
+              transfer_rate = 0.0, gene_conversion_rate = 0.0, perturbation = 0.0, sites = 200,
               model = "GTR", seed = 42, distance_hgt = False, population = 10,
               miss_species = 0.0, miss_fam = 0.0):
     self.tag = tag
@@ -33,6 +33,7 @@ class SimphyParameters():
     self.dup_rate = dup_rate
     self.transfer_rate = transfer_rate
     self.gene_conversion_rate = gene_conversion_rate
+    self.perturbation = perturbation
     self.sites = sites
     self.model = model
     self.seed = seed
@@ -112,7 +113,6 @@ def build_config_file(parameters, output_dir):
 def build_indelible_config_file(parameters, output_dir):
   config_file = os.path.join(output_dir, "indelible_config.txt")
   with open(config_file, "w") as writer:
-    
     sites_mean = parameters.sites
     sites_teta = 0.25
     sites_mu = 0
@@ -182,14 +182,13 @@ def rescale_gene_tree_bl(output_dir, bl):
     gene_tree = os.path.join(simphy_output_dir, "g_trees" + family_number + ".trees")
     rescale_bl.rescale_bl(gene_tree, gene_tree, bl)
 
-def run_indelible(output_dir, config_file, cores):
+def run_indelible(output_dir, config_file, seed, cores):
   commands = []
-  seed = "42"
   commands.append("perl")
   commands.append(paths.simphy_indelible_wrapper_exec)
   commands.append(output_dir)
   commands.append(config_file)
-  commands.append(seed)
+  commands.append(str(seed))
   commands.append(str(cores))
   subprocess.check_call(commands)
 
@@ -250,7 +249,7 @@ def get_output_dir(parameters, root_output):
   res += "_l" + str(parameters.loss_rate)
   res += "_t" + str(parameters.transfer_rate)
   res += "_gc" + str(parameters.gene_conversion_rate)
-  res += "_p0.0"
+  res += "_p" + str(parameters.perturbation)
   res += "_pop" + str(parameters.population)
   res += "_ms" + str(parameters.miss_species)
   res += "_mf" + str(parameters.miss_fam)
@@ -289,7 +288,7 @@ def generate_from_parameters(parameters, root_output, cores = 1):
   run_simphy(output_dir, config_file)
   rescale_gene_tree_bl(output_dir, parameters.bl)
   indelible_config_file = build_indelible_config_file(parameters, output_dir)
-  run_indelible(output_dir, indelible_config_file, cores)
+  run_indelible(output_dir, indelible_config_file, parameters.seed, cores)
   export_to_family(output_dir)
   compute_and_write_discordance_rate(parameters, output_dir)
   print("Done! output in " + output_dir) 
@@ -307,10 +306,10 @@ def generate_simphy(tag, species, families, sites, model, bl_factor, dup_rate, l
   p.loss_rate = float(loss_rate)
   p.transfer_rate = float(transfer_rate)
   p.gene_conversion_rate = float(gene_conversion_rate)
-  p.seed = int(seed)
+  p.perturbation = perturbation
   p.population = population
+  p.seed = int(seed)
   p.miss_species = float(miss_species)
-  print(miss_fam)
   p.miss_fam = float(miss_fam)
   if (p.miss_species != 0.0 or p.miss_fam != 0.0):
     p.prefix = p.prefix + "temp"
