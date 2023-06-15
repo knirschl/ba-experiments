@@ -1,0 +1,60 @@
+
+ - FastME 2.1.6.2 - 
+
+
+Papers to be cited:
+
+FastME 2.0 - A comprehensive, accurate and fast distance-based phylogeny inference program.
+	Vincent Lefort, Richard Desper and Olivier Gascuel,
+	Molecular Biology and Evolution 32(10), 2798-800, 2015.
+BIONJ algorithm:
+	Gascuel O. 1997. BIONJ: an improved version of the NJ algorithm based on a simple model of sequence data.
+	Molecular Biology and Evolution, 14(7):685-695
+
+-------------------------------------------------------------------------------
+Settings for this run:
+
+  I                                      Input data type  DNA             
+  E                                   evolutionary model  F81             
+  G                    Gamma rate variation across sites  no              
+  R                              Remove sites whith gaps  no              
+  O                    Output calculated distance matrix  yes             
+
+  D                                   Number of datasets  1               
+  M                         Initial tree building method  BIONJ           
+  N                                   NNI postprocessing  no              
+  S                                   SPR postprocessing  yes             
+
+-------------------------------------------------------------------------------
+Dataset 1
+	Tree length is 10.02003891	Before SPR:     tree length is 10.03556197
+	SPR      1: new tree length is 10.02600168
+	SPR      2: new tree length is 10.01666186
+	SPR      3: new tree length is 10.00857677
+	SPR      4: new tree length is 10.00155879
+	SPR      5: new tree length is 9.99540741
+	SPR      6: new tree length is 9.98952485
+	SPR      7: new tree length is 9.98476819
+	SPR      8: new tree length is 9.98036838
+	SPR      9: new tree length is 9.97640976
+	SPR     10: new tree length is 9.97253075
+	SPR     11: new tree length is 9.97006713
+	SPR     12: new tree length is 9.96766602
+	SPR     13: new tree length is 9.96552127
+	SPR     14: new tree length is 9.96342498
+	SPR     15: new tree length is 9.96165127
+	SPR     16: new tree length is 9.96026366
+	SPR     17: new tree length is 9.95883912
+	SPR     18: new tree length is 9.95856091
+	SPR     19: new tree length is 9.95831070
+	SPR     20: new tree length is 9.95813495
+	SPR     21: new tree length is 9.95794771
+	SPR     22: new tree length is 9.95780719
+	SPR     23: new tree length is 9.95774954
+	SPR     24: new tree length is 9.95766428
+	SPR     25: new tree length is 9.95762934
+	SPR     26: new tree length is 9.95762819
+	SPR     27: new tree length is 9.95762737
+	Performed 27 SPR(s).
+
+	Explained variance : 0.84374479
