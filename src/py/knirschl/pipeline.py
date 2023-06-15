@@ -110,9 +110,10 @@ datadir = simphy.get_output_dir(simphy_parameters, root_output)
 print(datadir)
 # TOGGLE PIPELINE ELEMENTS
 # ====== ! CAREFUL ! ======
-run_filter = RunFilter() # all enabled
+#run_filter = RunFilter() # all enabled
 #run_filter.force_overwrite = True # regenerate old dataset
-#run_filter.script_ba() # only ba script
+#run_filter.ba = False
+run_filter.script_ba() # only ba script
 #run_filter.run_compare() # only compare inferred trees
 # ====== ! CAREFUL ! ======
 
