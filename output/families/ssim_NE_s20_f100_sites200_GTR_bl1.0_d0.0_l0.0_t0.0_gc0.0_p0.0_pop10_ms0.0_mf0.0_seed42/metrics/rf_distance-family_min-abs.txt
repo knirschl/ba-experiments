@@ -29,6 +29,7 @@ family_013 : 0.0
 family_046 : 0.0
 family_048 : 0.0
 family_052 : 0.0
+family_023 : 0.0
 family_080 : 0.0
 family_007 : 0.0
 family_087 : 0.0
@@ -65,12 +66,15 @@ family_019 : 0.0
 family_060 : 0.0
 family_049 : 0.0
 family_093 : 0.0
+family_053 : 0.0
 family_065 : 0.0
 family_044 : 0.0
 family_074 : 0.0
 family_078 : 0.0
 family_003 : 0.0
 family_069 : 0.0
+family_058 : 0.0
+family_032 : 0.0
 family_076 : 0.0
 family_056 : 0.0
 family_018 : 0.0
@@ -78,8 +82,10 @@ family_066 : 0.0
 family_040 : 0.0
 family_082 : 0.0
 family_057 : 0.0
+family_072 : 0.0
 family_022 : 0.0
 family_051 : 0.0
+family_045 : 0.0
 family_026 : 0.0
 family_077 : 0.0
 family_039 : 0.0
@@ -92,9 +98,3 @@ family_008 : 0.0
 family_028 : 0.0
 family_083 : 0.0
 family_061 : 0.0
-family_058 : 2.0
-family_032 : 4.0
-family_045 : 4.0
-family_072 : 6.0
-family_053 : 8.0
-family_023 : 16.0

@@ -27,7 +27,7 @@ Settings for this run:
 
 -------------------------------------------------------------------------------
 Dataset 1
-	Tree length is 1.56685726
+	Tree length is 1.43451680
 	Performed 0 SPR(s).
 
-	Explained variance : 0.98328227
+	Explained variance : 0.97533174

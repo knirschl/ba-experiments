@@ -1,29 +1,29 @@
-Program started at Tue Jun 13 13:44:57 2023
+Program started at Mon Jun 19 17:11:49 2023
 
 MPIScheduler was called as follow:
 /home/fili/Documents/KIT/2023/BA/resources/tools/MPIScheduler/build/mpi-scheduler --fork-scheduler 1 /home/fili/Documents/KIT/2023/BA/resources/tools/FastME/fastme-2.1.6.4/binaries/fastme-2.1.6.2-linux64 /home/fili/Documents/KIT/2023/BA/code/output/families/ssim_NE_s20_f100_sites200_GTR_bl1.0_d0.0_l0.0_t0.0_gc0.0_p0.0_pop10_ms0.0_mf0.0_seed42/runs/F81/fastme_run/commands.txt /home/fili/Documents/KIT/2023/BA/code/output/families/ssim_NE_s20_f100_sites200_GTR_bl1.0_d0.0_l0.0_t0.0_gc0.0_p0.0_pop10_ms0.0_mf0.0_seed42/runs/F81/fastme_run 
-The master process runs on node cmp-manj and on pid 43193
+The master process runs on node cmp-manj and on pid 59223
 Remaining commands: 100
 ## Started family_050 on [0:0] 
 End of family_050 after 3ms  (1/100)
 ## Started family_069 on [0:0] 
-End of family_069 after 3ms  (2/100)
+End of family_069 after 4ms  (2/100)
 ## Started family_003 on [0:0] 
-End of family_003 after 3ms  (3/100)
+End of family_003 after 2ms  (3/100)
 ## Started family_078 on [0:0] 
-End of family_078 after 2ms  (4/100)
+End of family_078 after 3ms  (4/100)
 ## Started family_074 on [0:0] 
-End of family_074 after 3ms  (5/100)
+End of family_074 after 2ms  (5/100)
 ## Started family_044 on [0:0] 
 End of family_044 after 3ms  (6/100)
 ## Started family_065 on [0:0] 
 End of family_065 after 3ms  (7/100)
 ## Started family_053 on [0:0] 
-End of family_053 after 2ms  (8/100)
+End of family_053 after 3ms  (8/100)
 ## Started family_093 on [0:0] 
 End of family_093 after 3ms  (9/100)
 ## Started family_049 on [0:0] 
-End of family_049 after 2ms  (10/100)
+End of family_049 after 3ms  (10/100)
 ## Started family_060 on [0:0] 
 End of family_060 after 3ms  (11/100)
 ## Started family_019 on [0:0] 
@@ -61,7 +61,7 @@ End of family_061 after 3ms  (27/100)
 ## Started family_083 on [0:0] 
 End of family_083 after 3ms  (28/100)
 ## Started family_028 on [0:0] 
-End of family_028 after 2ms  (29/100)
+End of family_028 after 3ms  (29/100)
 ## Started family_008 on [0:0] 
 End of family_008 after 3ms  (30/100)
 ## Started family_017 on [0:0] 
@@ -69,11 +69,11 @@ End of family_017 after 3ms  (31/100)
 ## Started family_036 on [0:0] 
 End of family_036 after 3ms  (32/100)
 ## Started family_068 on [0:0] 
-End of family_068 after 2ms  (33/100)
+End of family_068 after 3ms  (33/100)
 ## Started family_024 on [0:0] 
 End of family_024 after 3ms  (34/100)
 ## Started family_025 on [0:0] 
-End of family_025 after 2ms  (35/100)
+End of family_025 after 3ms  (35/100)
 ## Started family_039 on [0:0] 
 End of family_039 after 3ms  (36/100)
 ## Started family_077 on [0:0] 
@@ -91,13 +91,13 @@ End of family_072 after 2ms  (42/100)
 ## Started family_057 on [0:0] 
 End of family_057 after 2ms  (43/100)
 ## Started family_082 on [0:0] 
-End of family_082 after 2ms  (44/100)
+End of family_082 after 3ms  (44/100)
 ## Started family_040 on [0:0] 
 End of family_040 after 3ms  (45/100)
 ## Started family_066 on [0:0] 
 End of family_066 after 2ms  (46/100)
 ## Started family_018 on [0:0] 
-End of family_018 after 2ms  (47/100)
+End of family_018 after 3ms  (47/100)
 ## Started family_056 on [0:0] 
 End of family_056 after 2ms  (48/100)
 ## Started family_076 on [0:0] 
@@ -119,11 +119,11 @@ End of family_067 after 3ms  (56/100)
 ## Started family_043 on [0:0] 
 End of family_043 after 2ms  (57/100)
 ## Started family_073 on [0:0] 
-End of family_073 after 2ms  (58/100)
+End of family_073 after 3ms  (58/100)
 ## Started family_009 on [0:0] 
 End of family_009 after 2ms  (59/100)
 ## Started family_079 on [0:0] 
-End of family_079 after 3ms  (60/100)
+End of family_079 after 2ms  (60/100)
 ## Started family_094 on [0:0] 
 End of family_094 after 2ms  (61/100)
 ## Started family_031 on [0:0] 
@@ -141,7 +141,7 @@ End of family_020 after 2ms  (67/100)
 ## Started family_085 on [0:0] 
 End of family_085 after 2ms  (68/100)
 ## Started family_042 on [0:0] 
-End of family_042 after 2ms  (69/100)
+End of family_042 after 3ms  (69/100)
 ## Started family_011 on [0:0] 
 End of family_011 after 2ms  (70/100)
 ## Started family_033 on [0:0] 
@@ -153,7 +153,7 @@ End of family_090 after 3ms  (73/100)
 ## Started family_012 on [0:0] 
 End of family_012 after 3ms  (74/100)
 ## Started family_064 on [0:0] 
-End of family_064 after 2ms  (75/100)
+End of family_064 after 3ms  (75/100)
 ## Started family_004 on [0:0] 
 End of family_004 after 3ms  (76/100)
 ## Started family_075 on [0:0] 
@@ -163,7 +163,7 @@ End of family_005 after 2ms  (78/100)
 ## Started family_071 on [0:0] 
 End of family_071 after 3ms  (79/100)
 ## Started family_029 on [0:0] 
-End of family_029 after 2ms  (80/100)
+End of family_029 after 3ms  (80/100)
 ## Started family_099 on [0:0] 
 End of family_099 after 2ms  (81/100)
 ## Started family_035 on [0:0] 
@@ -183,7 +183,7 @@ End of family_034 after 2ms  (88/100)
 ## Started family_047 on [0:0] 
 End of family_047 after 2ms  (89/100)
 ## Started family_096 on [0:0] 
-End of family_096 after 3ms  (90/100)
+End of family_096 after 2ms  (90/100)
 ## Started family_059 on [0:0] 
 End of family_059 after 2ms  (91/100)
 ## Started family_087 on [0:0] 
@@ -207,7 +207,7 @@ All commands were launched
 End of family_063 after 2ms  (100/100)
 end of run
 Finished running commands. Total elasped time: 0s
-Load balance ratio: 0.79375
+Load balance ratio: 0.811728
 Saving svg output in /home/fili/Documents/KIT/2023/BA/code/output/families/ssim_NE_s20_f100_sites200_GTR_bl1.0_d0.0_l0.0_t0.0_gc0.0_p0.0_pop10_ms0.0_mf0.0_seed42/runs/F81/fastme_run/statistics.svg
 total width 2
 Time spent writting svg: 0s

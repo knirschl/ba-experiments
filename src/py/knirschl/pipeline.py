@@ -108,15 +108,15 @@ class RunFilter():
 
 root_output = paths.families_datasets_root # output/families/
 # SET simphy PARAMETERS
-simphy_parameters = simphy.SimphyParameters(tag="DTL", species_taxa=50, bl=0.1, transfer_rate=1.0, seed=14) # tag="DL", loss_rate=1.0, dup_rate=1.0, 
+simphy_parameters = simphy.SimphyParameters()#tag="DTL", species_taxa=50, bl=0.1, transfer_rate=1.0, seed=14) # tag="DL", loss_rate=1.0, dup_rate=1.0, 
 datadir = simphy.get_output_dir(simphy_parameters, root_output)
 print(datadir)
 # TOGGLE PIPELINE ELEMENTS
 # ====== ! CAREFUL ! ======
 run_filter = RunFilter() # all enabled
-#run_filter.force_overwrite = True # regenerate old dataset
+run_filter.force_overwrite = True # regenerate old dataset
 #run_filter.ba = False
-run_filter.script_ba() # only ba script
+#run_filter.script_ba() # only ba script
 #run_filter.run_compare() # only compare inferred trees
 # ====== ! CAREFUL ! ======
 

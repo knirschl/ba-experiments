@@ -2,48 +2,27 @@ Starting optimizeGeneTreesSlave
 LibpllModel /home/fili/Documents/KIT/2023/BA/code/output/families/ssim_NE_s20_f100_sites200_GTR_bl1.0_d0.0_l0.0_t0.0_gc0.0_p0.0_pop10_ms0.0_mf0.0_seed42/runs/F81/generax/results/family_008/libpllModel.txt
 Starting optimizing gene tree
 Number of ranks 1
-(1e-07, 0.0135351, 0.0198171, score = 0)
+(1e-07, 0.013016, 0.0206743, score = 0)
 Taxa number: 20
-joint: -1352.84  libpll: -1332.79  reconciliation: -20.0485  
-Initial ll = -1352.84
+joint: -1238.35  libpll: -1213.22  reconciliation: -25.1354  
+Initial ll = -1238.35
 
 SPR Search with radius 2: trying 54 prune nodes
-Found 1 potential better moves
-	GeneRax will now test and apply all the 1 potential good moves one after each other
-	Applying move, ll = -1350.6, 60 73
+Found 2 potential better moves
+	GeneRax will now test and apply all the 2 potential good moves one after each other
+	Applying move, ll = -1237.26, 40 49
+	Applying move, ll = -1235.19, 66 0
 
 SPR Search with radius 2: trying 54 prune nodes
-Found 7 potential better moves
-	GeneRax will now test and apply all the 7 potential good moves one after each other
-	Applying move, ll = -1350.58, 57 68
-	Worse likelihood, Move rejected
-
-SPR Search with radius 2: trying 54 prune nodes
-Found 5 potential better moves
-	GeneRax will now test and apply all the 5 potential good moves one after each other
-	Worse likelihood, Move rejected
-	Applying move, ll = -1350.34, 60 47
-
-SPR Search with radius 2: trying 54 prune nodes
-Found 7 potential better moves
-	GeneRax will now test and apply all the 7 potential good moves one after each other
-	Applying move, ll = -1350.16, 56 53
-	Applying move, ll = -1349.84, 71 68
-
-SPR Search with radius 2: trying 54 prune nodes
-Found 5 potential better moves
-	GeneRax will now test and apply all the 5 potential good moves one after each other
-	Applying move, ll = -1346.01, 56 73
-
-SPR Search with radius 2: trying 54 prune nodes
-Found 1 potential better moves
-	GeneRax will now test and apply all the 1 potential good moves one after each other
-	Applying move, ll = -1344.15, 60 0
+Found 8 potential better moves
+	GeneRax will now test and apply all the 8 potential good moves one after each other
+	Applying move, ll = -1224.37, 39 9
+	Applying move, ll = -1218.03, 54 66
 
 SPR Search with radius 2: trying 54 prune nodes
 Found 0 potential better moves
 	GeneRax will now test and apply all the 0 potential good moves one after each other
-joint: -1344.15  libpll: -1342.88  reconciliation: -1.27579  
+joint: -1218.03  libpll: -1216.74  reconciliation: -1.28842  
 Saving tree in /home/fili/Documents/KIT/2023/BA/code/output/families/ssim_NE_s20_f100_sites200_GTR_bl1.0_d0.0_l0.0_t0.0_gc0.0_p0.0_pop10_ms0.0_mf0.0_seed42/runs/F81/generax/results/family_008/geneTree.newick
 Finished saving  /home/fili/Documents/KIT/2023/BA/code/output/families/ssim_NE_s20_f100_sites200_GTR_bl1.0_d0.0_l0.0_t0.0_gc0.0_p0.0_pop10_ms0.0_mf0.0_seed42/runs/F81/generax/results/family_008/geneTree.newick
 End of optimizing gene tree after 0s
