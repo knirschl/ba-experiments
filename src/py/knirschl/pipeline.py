@@ -89,12 +89,11 @@ class RunFilter():
         if (self.ba):
             utils.printFlush("Run ba...")
             try:
-                # hacky
-                #rescale_bl.lower_threshold_bl(fam.get_true_species_tree(datadir), fam.get_true_species_tree(datadir), 1434018883.83676)
-                
                 dist_matrix_converter.convert_input(datadir)
                 species_tree = fam.get_true_species_tree_matrix_sorted(datadir)
-                launch_ba.run_ba_on_families(datadir, "experimental", species_tree, cores)
+                launch_ba.run_ba_on_families(datadir, "exp", species_tree, cores)
+                # hacky
+                #rescale_bl.lower_threshold_bl(fam.get_true_species_tree(datadir), fam.get_modified_species_tree(datadir), 1434018883.83676)
             except Exception as exc:
                 utils.printFlush("Failed running bachelor thesis script\n" + str(exc))
         # COMPARE INFERRED TREES WITH TRUE TREE
@@ -108,15 +107,15 @@ class RunFilter():
 
 root_output = paths.families_datasets_root # output/families/
 # SET simphy PARAMETERS
-simphy_parameters = simphy.SimphyParameters()#tag="DTL", species_taxa=50, bl=0.1, transfer_rate=1.0, seed=14) # tag="DL", loss_rate=1.0, dup_rate=1.0, 
+simphy_parameters = simphy.SimphyParameters(seed=19732311)#tag="DTL", species_taxa=50, bl=0.1, transfer_rate=1.0, seed=14) # tag="DL", loss_rate=1.0, dup_rate=1.0, 
 datadir = simphy.get_output_dir(simphy_parameters, root_output)
 print(datadir)
 # TOGGLE PIPELINE ELEMENTS
 # ====== ! CAREFUL ! ======
 run_filter = RunFilter() # all enabled
-run_filter.force_overwrite = True # regenerate old dataset
+#run_filter.force_overwrite = True # regenerate old dataset
 #run_filter.ba = False
-#run_filter.script_ba() # only ba script
+run_filter.script_ba() # only ba script
 #run_filter.run_compare() # only compare inferred trees
 # ====== ! CAREFUL ! ======
 

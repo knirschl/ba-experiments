@@ -20,7 +20,7 @@ def generate_scheduler_commands_file(datadir, subst_model, species_tree, ba_fami
                 os.mkdir(ba_dir)
             except:
                 pass
-            ba_output_prefix = os.path.join(ba_dir, "ba_output." + subst_model)
+            ba_output_prefix = os.path.join(ba_dir, "ba." + subst_model + ".")
             command = []
             command.append(family)
             command.append("1")
@@ -43,7 +43,7 @@ def extract_ba_trees(datadir, subst_model):
     invalid = 0
     for family in os.listdir(families_dir):
         for miscfile in os.listdir(fam.get_family_misc_dir(datadir, family)):
-            if not miscfile.startswith("ba_output." + subst_model):
+            if not miscfile.startswith("ba." + subst_model):
                 continue
             batree = os.path.join(fam.get_family_misc_dir(datadir, family), miscfile)
             tree = os.path.join(fam.get_gene_tree_dir(datadir, family), miscfile)

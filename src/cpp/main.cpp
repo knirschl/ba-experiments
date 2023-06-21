@@ -14,7 +14,8 @@
 
 auto convert(vector_t<std::string> string_ids, vector_t<std::shared_ptr<Tree>>& trees) {
     std::transform(string_ids.begin(), string_ids.end(), std::back_inserter(trees),
-                   [](auto id) { return std::make_shared<Leaf>(id); });
+                   // TODO mapping.link, this way is very hacky and bad (removes _0_0)
+                   [](auto id) { return std::make_shared<Leaf>(id.substr(0, id.length() - 4)); });
 }
 
 int main(int argc, char *argv[]) {
@@ -37,25 +38,43 @@ int main(int argc, char *argv[]) {
     {
         matrix_t<double> scaleMatrix{};
         matrix_t<double> sumMatrix{};
-        // 1S+0G
-        std::shared_ptr <Tree> tree = neighborJoining<>(species_tree_mat, alignment_start_leafs);
-        write_newick(*tree, getP(cli_parser) + "1S+" + "0G.geneTree.newick");
         // 0S+1G
-        tree = neighborJoining<>(alignment_mat, alignment_start_leafs);
+        std::shared_ptr<Tree> tree = neighborJoining<>(alignment_mat, alignment_start_leafs);
         write_newick(*tree, getP(cli_parser) + "0S+" + "1G.geneTree.newick");
+    }
+    {
+        matrix_t<double> scaleMatrix{};
+        matrix_t<double> sumMatrix{};
+        // 0.3S+1G
+        matscale(species_tree_mat, 0.3, scaleMatrix);
+        matadd(scaleMatrix, alignment_mat, sumMatrix);
+        std::shared_ptr<Tree> tree = neighborJoining<>(sumMatrix, alignment_start_leafs);
+        write_newick(*tree, getP(cli_parser) + "0.3S+" + "1G.geneTree.newick");
+    }
+    {
+        matrix_t<double> scaleMatrix{};
+        matrix_t<double> sumMatrix{};
         // 1S+1G
         matadd(species_tree_mat, alignment_mat, sumMatrix);
-        tree = neighborJoining<>(sumMatrix, alignment_start_leafs);
+        std::shared_ptr<Tree> tree = neighborJoining<>(sumMatrix, alignment_start_leafs);
         write_newick(*tree, getP(cli_parser) + "1S+" + "1G.geneTree.newick");
+    }
+    {
+        matrix_t<double> scaleMatrix{};
+        matrix_t<double> sumMatrix{};
         // 10S+1G
         matscale(species_tree_mat, 10, scaleMatrix);
         matadd(scaleMatrix, alignment_mat, sumMatrix);
-        tree = neighborJoining<>(sumMatrix, alignment_start_leafs);
+        std::shared_ptr<Tree> tree = neighborJoining<>(sumMatrix, alignment_start_leafs);
         write_newick(*tree, getP(cli_parser) + "10S+" + "1G.geneTree.newick");
+    }
+    {
+        matrix_t<double> scaleMatrix{};
+        matrix_t<double> sumMatrix{};
         // 100S+1G
         matscale(species_tree_mat, 100, scaleMatrix);
         matadd(scaleMatrix, alignment_mat, sumMatrix);
-        tree = neighborJoining<>(sumMatrix, alignment_start_leafs);
+        std::shared_ptr<Tree> tree = neighborJoining<>(sumMatrix, alignment_start_leafs);
         write_newick(*tree, getP(cli_parser) + "100S+" + "1G.geneTree.newick");
     }
 
