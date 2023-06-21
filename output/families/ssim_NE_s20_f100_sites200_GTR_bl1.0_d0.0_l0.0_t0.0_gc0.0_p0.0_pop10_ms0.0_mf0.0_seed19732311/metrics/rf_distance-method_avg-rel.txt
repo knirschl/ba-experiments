@@ -1,0 +1,5 @@
+ba.exp.0s+1g.genetree.newick : 0.411765
+ba.exp.0.3s+1g.genetree.newick : 0.352941
+ba.exp.1s+1g.genetree.newick : 0.058824
+ba.exp.10s+1g.genetree.newick : 0.0
+ba.exp.100s+1g.genetree.newick : 0.0

@@ -1,5 +1,5 @@
-generax-spr-undateddtl-r5.f81.genetree.newick : 0.0
-ba_output.experimental1s+0g.genetree.newick : 0.0
-ba_output.experimental0s+1g.genetree.newick : 0.235294
-fastme.f81.genetree.newick : 0.294118
-raxml.f81.genetree.newick : 0.352941
+ba.exp.0s+1g.genetree.newick : 0.235294
+ba.exp.0.3s+1g.genetree.newick : 0.0
+ba.exp.1s+1g.genetree.newick : 0.0
+ba.exp.10s+1g.genetree.newick : 0.0
+ba.exp.100s+1g.genetree.newick : 0.0

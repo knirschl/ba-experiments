@@ -1,0 +1,14 @@
+/home/fili/Documents/KIT/2023/BA/code/output/families/ssim_NE_s20_f100_sites200_GTR_bl1.0_d0.0_l0.0_t0.0_gc0.0_p0.0_pop10_ms0.0_mf0.0_seed19732311/runs/F81/generax/startingTrees/family_060.newick
+[00:00:00] LL = -3141.03
+[00:00:00] [-2780.65] Optimize parametres (10)
+[00:00:00] [-2779.09] FAST SPR Round (radius=5)
+[00:00:00] [-1695.09] FAST SPR Round (radius=10)
+[00:00:00] [-1546.05] FAST SPR Round (radius=15)
+[00:00:00] [-1546.05] Optimize parametres (3)
+[00:00:00] [-1546.05] FAST SPR Round (radius=10)
+[00:00:00] [-1511.65] FAST SPR Round (radius=10)
+[00:00:00] [-1506.61] FAST SPR Round (radius=10)
+[00:00:00] [-1506.61] Optimize parametres (1)
+[00:00:00] [-1506.61] SLOW SPR Round (radius=5)
+[00:00:00] [-1506.61] SLOW SPR Round (radius=10)
+[00:00:00] [-1506.61] SLOW SPR Round (radius=15)
