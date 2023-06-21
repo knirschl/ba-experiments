@@ -35,10 +35,28 @@ int main(int argc, char *argv[]) {
     // calculate
 
     {
+        matrix_t<double> scaleMatrix{};
+        matrix_t<double> sumMatrix{};
+        // 1S+0G
         std::shared_ptr <Tree> tree = neighborJoining<>(species_tree_mat, alignment_start_leafs);
         write_newick(*tree, getP(cli_parser) + "1S+" + "0G.geneTree.newick");
+        // 0S+1G
         tree = neighborJoining<>(alignment_mat, alignment_start_leafs);
         write_newick(*tree, getP(cli_parser) + "0S+" + "1G.geneTree.newick");
+        // 1S+1G
+        matadd(species_tree_mat, alignment_mat, sumMatrix);
+        tree = neighborJoining<>(sumMatrix, alignment_start_leafs);
+        write_newick(*tree, getP(cli_parser) + "1S+" + "1G.geneTree.newick");
+        // 10S+1G
+        matscale(species_tree_mat, 10, scaleMatrix);
+        matadd(scaleMatrix, alignment_mat, sumMatrix);
+        tree = neighborJoining<>(sumMatrix, alignment_start_leafs);
+        write_newick(*tree, getP(cli_parser) + "10S+" + "1G.geneTree.newick");
+        // 100S+1G
+        matscale(species_tree_mat, 100, scaleMatrix);
+        matadd(scaleMatrix, alignment_mat, sumMatrix);
+        tree = neighborJoining<>(sumMatrix, alignment_start_leafs);
+        write_newick(*tree, getP(cli_parser) + "100S+" + "1G.geneTree.newick");
     }
 
     /*
