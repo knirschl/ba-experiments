@@ -14,8 +14,7 @@
 
 auto convert(vector_t<std::string> string_ids, vector_t<std::shared_ptr<Tree>>& trees) {
     std::transform(string_ids.begin(), string_ids.end(), std::back_inserter(trees),
-                   // TODO mapping.link, this way is very hacky and bad (removes _0_0)
-                   [](auto id) { return std::make_shared<Leaf>(id.substr(0, id.length() - 4)); });
+                   [](auto id) { return std::make_shared<Leaf>(id); });
 }
 
 int main(int argc, char *argv[]) {

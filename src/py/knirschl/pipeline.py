@@ -89,8 +89,6 @@ class RunFilter():
         if (self.ba):
             utils.printFlush("Run ba...")
             try:
-                # hacky
-                rescale_bl.lower_threshold_bl(fam.get_true_species_tree(datadir), fam.get_modified_species_tree(datadir), 169145400.097286)
                 dist_matrix_converter.convert_input(datadir)
                 species_tree = fam.get_true_species_tree_matrix_sorted(datadir)
                 launch_ba.run_ba_on_families(datadir, "exp", species_tree, cores)
