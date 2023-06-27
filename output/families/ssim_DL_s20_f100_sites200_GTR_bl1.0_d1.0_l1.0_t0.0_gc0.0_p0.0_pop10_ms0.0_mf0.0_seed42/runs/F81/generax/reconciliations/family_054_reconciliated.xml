@@ -223,7 +223,7 @@
 						<speciation speciesLocation="Node_2_3_0"/>
 					</eventsRec>
 					<clade>
-						<name>2_3_0</name>
+						<name>2_2_0</name>
 						<eventsRec>
 							<leaf speciesLocation="2"/>
 						</eventsRec>
@@ -241,7 +241,7 @@
 						<speciation speciesLocation="Node_2_3_0"/>
 					</eventsRec>
 					<clade>
-						<name>2_2_0</name>
+						<name>2_3_0</name>
 						<eventsRec>
 							<leaf speciesLocation="2"/>
 						</eventsRec>

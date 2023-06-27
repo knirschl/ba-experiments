@@ -7,14 +7,14 @@ Questions/problems/suggestions? Please visit: https://groups.google.com/forum/#!
 
 System: AMD Ryzen 7 5800X 8-Core Processor, 8 cores, 31 GB RAM
 
-RAxML-NG was called at 13-Jun-2023 16:03:58 as follows:
+RAxML-NG was called at 27-Jun-2023 12:59:33 as follows:
 
 /home/fili/Documents/KIT/2023/BA/resources/tools/RAxML-NG/raxml-ng --msa /home/fili/Documents/KIT/2023/BA/code/output/families/ssim_DL_s20_f100_sites200_GTR_bl1.0_d1.0_l1.0_t0.0_gc0.0_p0.0_pop10_ms0.0_mf0.0_seed42/families/family_037/alignment.msa --model F81 --prefix /home/fili/Documents/KIT/2023/BA/code/output/families/ssim_DL_s20_f100_sites200_GTR_bl1.0_d1.0_l1.0_t0.0_gc0.0_p0.0_pop10_ms0.0_mf0.0_seed42/families/family_037/misc/raxml_output.F81
 
 Analysis options:
   run mode: ML tree search
   start tree(s): random (10) + parsimony (10)
-  random seed: 1686665038
+  random seed: 1687863573
   tip-inner: OFF
   pattern compression: ON
   per-rate scalers: OFF
@@ -30,18 +30,19 @@ Analysis options:
 
 WARNING: Sequences 13_0_0 and 9_0_0 are exactly identical!
 WARNING: Sequences 13_10_0 and 9_10_0 are exactly identical!
-WARNING: Duplicate sequences found: 2
+WARNING: Sequences 13_10_0 and 7_10_0 are exactly identical!
+WARNING: Duplicate sequences found: 3
 
 NOTE: Reduced alignment (with duplicates and gap-only sites/taxa removed) 
 NOTE: was saved to: /home/fili/Documents/KIT/2023/BA/code/output/families/ssim_DL_s20_f100_sites200_GTR_bl1.0_d1.0_l1.0_t0.0_gc0.0_p0.0_pop10_ms0.0_mf0.0_seed42/families/family_037/misc/raxml_output.F81.raxml.reduced.phy
 
-Alignment comprises 1 partitions and 110 patterns
+Alignment comprises 1 partitions and 104 patterns
 
 Partition 0: noname
 Model: F81+FO
-Alignment sites / patterns: 165 / 110
+Alignment sites / patterns: 165 / 104
 Gaps: 0.00 %
-Invariant sites: 32.12 %
+Invariant sites: 34.55 %
 
 
 NOTE: Binary MSA file created: /home/fili/Documents/KIT/2023/BA/code/output/families/ssim_DL_s20_f100_sites200_GTR_bl1.0_d1.0_l1.0_t0.0_gc0.0_p0.0_pop10_ms0.0_mf0.0_seed42/families/family_037/misc/raxml_output.F81.raxml.rba
@@ -52,96 +53,97 @@ Parallel reduction/worker buffer size: 1 KB  / 0 KB
 
 [00:00:00] Generating 10 random starting tree(s) with 25 taxa
 [00:00:00] Generating 10 parsimony starting tree(s) with 25 taxa
-[00:00:00] Data distribution: max. partitions/sites/weight per thread: 1 / 110 / 440
+[00:00:00] Data distribution: max. partitions/sites/weight per thread: 1 / 104 / 416
 [00:00:00] Data distribution: max. searches per worker: 3
 
 Starting ML tree search with 20 distinct starting trees
 
-[00:00:00 -2714.484117] Initial branch length optimization
-[00:00:00 -2459.301005] Model parameter optimization (eps = 10.000000)
-[00:00:00 -2335.110103] AUTODETECT spr round 1 (radius: 5)
-[00:00:00 -1497.656463] AUTODETECT spr round 2 (radius: 10)
-[00:00:00 -1497.637668] SPR radius for FAST iterations: 5 (autodetect)
-[00:00:00 -1497.637668] Model parameter optimization (eps = 3.000000)
-[00:00:00 -1494.466804] FAST spr round 1 (radius: 5)
-[00:00:00 -1467.682213] FAST spr round 2 (radius: 5)
-[00:00:00 -1467.682206] Model parameter optimization (eps = 1.000000)
-[00:00:00 -1467.441234] SLOW spr round 1 (radius: 5)
-[00:00:00 -1467.436265] SLOW spr round 2 (radius: 10)
-[00:00:00 -1467.436224] SLOW spr round 3 (radius: 15)
-[00:00:00] [worker #7] ML tree search #8, logLikelihood: -1465.354015
-[00:00:00] [worker #6] ML tree search #7, logLikelihood: -1465.354003
-[00:00:00 -1467.436224] SLOW spr round 4 (radius: 20)
-[00:00:00] [worker #4] ML tree search #5, logLikelihood: -1465.353986
-[00:00:00 -1467.436224] SLOW spr round 5 (radius: 25)
-[00:00:00 -1467.436224] Model parameter optimization (eps = 0.100000)
+[00:00:00 -2506.061346] Initial branch length optimization
+[00:00:00 -2234.708734] Model parameter optimization (eps = 10.000000)
+[00:00:00 -2170.732709] AUTODETECT spr round 1 (radius: 5)
+[00:00:00 -1365.048666] AUTODETECT spr round 2 (radius: 10)
+[00:00:00 -1365.048664] SPR radius for FAST iterations: 5 (autodetect)
+[00:00:00 -1365.048664] Model parameter optimization (eps = 3.000000)
+[00:00:00 -1364.325770] FAST spr round 1 (radius: 5)
+[00:00:00 -1352.558245] FAST spr round 2 (radius: 5)
+[00:00:00 -1352.558243] Model parameter optimization (eps = 1.000000)
+[00:00:00 -1352.431113] SLOW spr round 1 (radius: 5)
+[00:00:00 -1352.431076] SLOW spr round 2 (radius: 10)
+[00:00:00 -1352.431076] SLOW spr round 3 (radius: 15)
+[00:00:00 -1352.431076] SLOW spr round 4 (radius: 20)
+[00:00:00] [worker #7] ML tree search #8, logLikelihood: -1353.431375
+[00:00:00 -1352.431076] SLOW spr round 5 (radius: 25)
+[00:00:00] [worker #6] ML tree search #7, logLikelihood: -1353.896532
+[00:00:00] [worker #4] ML tree search #5, logLikelihood: -1353.016090
+[00:00:00 -1352.431076] Model parameter optimization (eps = 0.100000)
 
-[00:00:00] [worker #0] ML tree search #1, logLikelihood: -1467.430612
+[00:00:00] [worker #0] ML tree search #1, logLikelihood: -1352.431016
 
-[00:00:00 -2819.198047] Initial branch length optimization
-[00:00:00 -2560.602303] Model parameter optimization (eps = 10.000000)
-[00:00:00 -2417.639980] AUTODETECT spr round 1 (radius: 5)
-[00:00:00] [worker #3] ML tree search #4, logLikelihood: -1465.353961
-[00:00:00 -1681.806063] AUTODETECT spr round 2 (radius: 10)
-[00:00:00 -1546.532725] AUTODETECT spr round 3 (radius: 15)
-[00:00:00 -1546.521945] SPR radius for FAST iterations: 10 (autodetect)
-[00:00:00 -1546.521945] Model parameter optimization (eps = 3.000000)
-[00:00:00 -1543.117937] FAST spr round 1 (radius: 10)
-[00:00:00] [worker #5] ML tree search #6, logLikelihood: -1465.354074
-[00:00:00] [worker #1] ML tree search #2, logLikelihood: -1465.353967
-[00:00:00 -1466.275731] FAST spr round 2 (radius: 10)
-[00:00:00 -1465.729225] FAST spr round 3 (radius: 10)
-[00:00:00] [worker #2] ML tree search #3, logLikelihood: -1465.353989
-[00:00:00 -1465.728613] Model parameter optimization (eps = 1.000000)
-[00:00:00 -1465.372800] SLOW spr round 1 (radius: 5)
-[00:00:00 -1465.361827] SLOW spr round 2 (radius: 10)
-[00:00:00] [worker #7] ML tree search #16, logLikelihood: -1467.430497
-[00:00:00] [worker #4] ML tree search #13, logLikelihood: -1467.430415
-[00:00:00] [worker #6] ML tree search #15, logLikelihood: -1465.354013
-[00:00:00 -1465.361220] SLOW spr round 3 (radius: 15)
-[00:00:00] [worker #3] ML tree search #12, logLikelihood: -1467.430415
-[00:00:00 -1465.361189] SLOW spr round 4 (radius: 20)
-[00:00:00 -1465.361188] SLOW spr round 5 (radius: 25)
-[00:00:00 -1465.361188] Model parameter optimization (eps = 0.100000)
+[00:00:00 -2664.879601] Initial branch length optimization
+[00:00:00 -2421.323154] Model parameter optimization (eps = 10.000000)
+[00:00:00] [worker #5] ML tree search #6, logLikelihood: -1353.636966
+[00:00:00 -2340.174548] AUTODETECT spr round 1 (radius: 5)
+[00:00:00] [worker #3] ML tree search #4, logLikelihood: -1353.317394
+[00:00:00 -1385.157227] AUTODETECT spr round 2 (radius: 10)
+[00:00:00] [worker #1] ML tree search #2, logLikelihood: -1352.459156
+[00:00:00 -1385.152431] SPR radius for FAST iterations: 5 (autodetect)
+[00:00:00 -1385.152431] Model parameter optimization (eps = 3.000000)
+[00:00:00 -1379.448820] FAST spr round 1 (radius: 5)
+[00:00:00] [worker #2] ML tree search #3, logLikelihood: -1353.016090
+[00:00:00 -1358.019188] FAST spr round 2 (radius: 5)
+[00:00:00 -1355.301244] FAST spr round 3 (radius: 5)
+[00:00:00 -1353.784504] FAST spr round 4 (radius: 5)
+[00:00:00 -1352.585241] FAST spr round 5 (radius: 5)
+[00:00:00 -1352.559241] Model parameter optimization (eps = 1.000000)
+[00:00:00 -1352.431133] SLOW spr round 1 (radius: 5)
+[00:00:00] [worker #4] ML tree search #13, logLikelihood: -1352.459156
+[00:00:00] [worker #7] ML tree search #16, logLikelihood: -1352.431016
+[00:00:00] [worker #6] ML tree search #15, logLikelihood: -1352.459158
+[00:00:00 -1352.431102] SLOW spr round 2 (radius: 10)
+[00:00:00] [worker #5] ML tree search #14, logLikelihood: -1353.016091
+[00:00:00 -1352.431102] SLOW spr round 3 (radius: 15)
+[00:00:00] [worker #3] ML tree search #12, logLikelihood: -1353.317460
+[00:00:00 -1352.431102] SLOW spr round 4 (radius: 20)
+[00:00:00 -1352.431102] SLOW spr round 5 (radius: 25)
+[00:00:00] [worker #2] ML tree search #11, logLikelihood: -1354.383507
+[00:00:00 -1352.431102] Model parameter optimization (eps = 0.100000)
 
-[00:00:00] [worker #0] ML tree search #9, logLikelihood: -1465.354323
+[00:00:00] [worker #0] ML tree search #9, logLikelihood: -1352.431021
 
-[00:00:00 -1846.650848] Initial branch length optimization
-[00:00:00 -1521.041768] Model parameter optimization (eps = 10.000000)
-[00:00:00 -1467.670779] AUTODETECT spr round 1 (radius: 5)
-[00:00:00 -1467.670410] SPR radius for FAST iterations: 5 (autodetect)
-[00:00:00 -1467.670410] Model parameter optimization (eps = 3.000000)
-[00:00:00 -1467.670282] FAST spr round 1 (radius: 5)
-[00:00:00] [worker #5] ML tree search #14, logLikelihood: -1465.354068
-[00:00:00 -1467.623299] Model parameter optimization (eps = 1.000000)
-[00:00:00 -1467.617365] SLOW spr round 1 (radius: 5)
-[00:00:00] [worker #2] ML tree search #11, logLikelihood: -1465.353972
-[00:00:00] [worker #1] ML tree search #10, logLikelihood: -1465.354724
-[00:00:00 -1467.261652] SLOW spr round 2 (radius: 5)
-[00:00:00 -1465.360998] SLOW spr round 3 (radius: 5)
-[00:00:00 -1465.360825] SLOW spr round 4 (radius: 10)
-[00:00:00] [worker #2] ML tree search #19, logLikelihood: -1465.353998
-[00:00:00 -1465.360819] SLOW spr round 5 (radius: 15)
-[00:00:00 -1465.360818] SLOW spr round 6 (radius: 20)
-[00:00:00 -1465.360818] SLOW spr round 7 (radius: 25)
-[00:00:00 -1465.360818] Model parameter optimization (eps = 0.100000)
+[00:00:00 -1749.187843] Initial branch length optimization
+[00:00:00 -1394.391641] Model parameter optimization (eps = 10.000000)
+[00:00:00 -1356.646571] AUTODETECT spr round 1 (radius: 5)
+[00:00:00] [worker #1] ML tree search #10, logLikelihood: -1353.041670
+[00:00:00 -1354.307382] AUTODETECT spr round 2 (radius: 10)
+[00:00:00 -1354.307369] SPR radius for FAST iterations: 5 (autodetect)
+[00:00:00 -1354.307369] Model parameter optimization (eps = 3.000000)
+[00:00:00 -1354.299526] FAST spr round 1 (radius: 5)
+[00:00:00 -1353.017738] FAST spr round 2 (radius: 5)
+[00:00:00 -1353.017737] Model parameter optimization (eps = 1.000000)
+[00:00:00 -1353.016093] SLOW spr round 1 (radius: 5)
+[00:00:00 -1353.016093] SLOW spr round 2 (radius: 10)
+[00:00:00] [worker #2] ML tree search #19, logLikelihood: -1352.431016
+[00:00:00 -1353.016093] SLOW spr round 3 (radius: 15)
+[00:00:00 -1353.016093] SLOW spr round 4 (radius: 20)
+[00:00:00 -1353.016093] SLOW spr round 5 (radius: 25)
+[00:00:00] [worker #1] ML tree search #18, logLikelihood: -1353.016092
+[00:00:00 -1353.016093] Model parameter optimization (eps = 0.100000)
 
-[00:00:00] [worker #0] ML tree search #17, logLikelihood: -1465.354134
+[00:00:00] [worker #0] ML tree search #17, logLikelihood: -1353.016091
 
-[00:00:00] [worker #3] ML tree search #20, logLikelihood: -1465.354205
-[00:00:00] [worker #1] ML tree search #18, logLikelihood: -1465.353955
+[00:00:00] [worker #3] ML tree search #20, logLikelihood: -1353.331326
 
 Optimized model parameters:
 
    Partition 0: noname
    Rate heterogeneity: NONE
-   Base frequencies (ML): 0.368851 0.089860 0.344999 0.196291 
+   Base frequencies (ML): 0.319710 0.110162 0.356380 0.213748 
    Substitution rates (model): 1.000000 1.000000 1.000000 1.000000 1.000000 1.000000 
 
 
-Final LogLikelihood: -1465.353955
+Final LogLikelihood: -1352.431016
 
-AIC score: 3030.707910 / AICc score: 3075.444752 / BIC score: 3186.005183
+AIC score: 2804.862031 / AICc score: 2849.598873 / BIC score: 2960.159305
 Free parameters (model + branch lengths): 50
 
 WARNING: Best ML tree contains 2 near-zero branches!
@@ -153,7 +155,7 @@ Optimized model saved to: /home/fili/Documents/KIT/2023/BA/code/output/families/
 
 Execution log saved to: /home/fili/Documents/KIT/2023/BA/code/output/families/ssim_DL_s20_f100_sites200_GTR_bl1.0_d1.0_l1.0_t0.0_gc0.0_p0.0_pop10_ms0.0_mf0.0_seed42/families/family_037/misc/raxml_output.F81.raxml.log
 
-Analysis started: 13-Jun-2023 16:03:58 / finished: 13-Jun-2023 16:03:58
+Analysis started: 27-Jun-2023 12:59:33 / finished: 27-Jun-2023 12:59:33
 
-Elapsed time: 0.341 seconds
+Elapsed time: 0.282 seconds
 

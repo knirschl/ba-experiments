@@ -1,0 +1,47 @@
+
+ - FastME 2.1.6.2 - 
+
+
+Papers to be cited:
+
+FastME 2.0 - A comprehensive, accurate and fast distance-based phylogeny inference program.
+	Vincent Lefort, Richard Desper and Olivier Gascuel,
+	Molecular Biology and Evolution 32(10), 2798-800, 2015.
+BIONJ algorithm:
+	Gascuel O. 1997. BIONJ: an improved version of the NJ algorithm based on a simple model of sequence data.
+	Molecular Biology and Evolution, 14(7):685-695
+
+-------------------------------------------------------------------------------
+Settings for this run:
+
+  I                                      Input data type  DNA             
+  E                                   evolutionary model  F81             
+  G                    Gamma rate variation across sites  no              
+  R                              Remove sites whith gaps  no              
+  O                    Output calculated distance matrix  yes             
+
+  D                                   Number of datasets  1               
+  M                         Initial tree building method  BIONJ           
+  N                                   NNI postprocessing  no              
+  S                                   SPR postprocessing  yes             
+
+-------------------------------------------------------------------------------
+Dataset 1
+	Tree length is 4.12511617	Before SPR:     tree length is 4.14411913
+	SPR      1: new tree length is 4.13776485
+	SPR      2: new tree length is 4.13203444
+	SPR      3: new tree length is 4.12723941
+	SPR      4: new tree length is 4.12343951
+	SPR      5: new tree length is 4.11989393
+	SPR      6: new tree length is 4.11666581
+	SPR      7: new tree length is 4.11374390
+	SPR      8: new tree length is 4.11116766
+	SPR      9: new tree length is 4.10959883
+	SPR     10: new tree length is 4.10885508
+	SPR     11: new tree length is 4.10867805
+	SPR     12: new tree length is 4.10803532
+	SPR     13: new tree length is 4.10796346
+	SPR     14: new tree length is 4.10795756
+	Performed 14 SPR(s).
+
+	Explained variance : 0.94571810

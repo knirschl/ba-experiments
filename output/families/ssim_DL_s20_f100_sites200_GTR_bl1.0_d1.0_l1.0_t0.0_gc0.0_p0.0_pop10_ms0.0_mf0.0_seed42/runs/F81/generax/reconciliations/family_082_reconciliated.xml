@@ -274,13 +274,13 @@
 									<duplication speciesLocation="8"/>
 								</eventsRec>
 								<clade>
-									<name>8_1_0</name>
+									<name>8_2_0</name>
 									<eventsRec>
 										<leaf speciesLocation="8"/>
 									</eventsRec>
 								</clade>
 								<clade>
-									<name>8_2_0</name>
+									<name>8_1_0</name>
 									<eventsRec>
 										<leaf speciesLocation="8"/>
 									</eventsRec>

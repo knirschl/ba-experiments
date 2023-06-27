@@ -177,7 +177,7 @@
 				<duplication speciesLocation="20"/>
 			</eventsRec>
 			<clade>
-				<name>20_0_0</name>
+				<name>20_4_0</name>
 				<eventsRec>
 					<leaf speciesLocation="20"/>
 				</eventsRec>
@@ -206,7 +206,7 @@
 					</clade>
 				</clade>
 				<clade>
-					<name>20_4_0</name>
+					<name>20_0_0</name>
 					<eventsRec>
 						<leaf speciesLocation="20"/>
 					</eventsRec>

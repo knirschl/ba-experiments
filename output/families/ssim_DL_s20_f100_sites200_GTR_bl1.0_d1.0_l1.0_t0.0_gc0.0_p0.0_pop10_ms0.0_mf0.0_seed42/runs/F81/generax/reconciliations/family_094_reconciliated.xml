@@ -245,13 +245,13 @@
 								<speciation speciesLocation="Node_9_13_0"/>
 							</eventsRec>
 							<clade>
-								<name>9_1_0</name>
+								<name>9_2_0</name>
 								<eventsRec>
 									<leaf speciesLocation="9"/>
 								</eventsRec>
 							</clade>
 							<clade>
-								<name>13_1_0</name>
+								<name>13_2_0</name>
 								<eventsRec>
 									<leaf speciesLocation="13"/>
 								</eventsRec>
@@ -263,13 +263,13 @@
 								<speciation speciesLocation="Node_9_13_0"/>
 							</eventsRec>
 							<clade>
-								<name>9_2_0</name>
+								<name>9_1_0</name>
 								<eventsRec>
 									<leaf speciesLocation="9"/>
 								</eventsRec>
 							</clade>
 							<clade>
-								<name>13_2_0</name>
+								<name>13_1_0</name>
 								<eventsRec>
 									<leaf speciesLocation="13"/>
 								</eventsRec>

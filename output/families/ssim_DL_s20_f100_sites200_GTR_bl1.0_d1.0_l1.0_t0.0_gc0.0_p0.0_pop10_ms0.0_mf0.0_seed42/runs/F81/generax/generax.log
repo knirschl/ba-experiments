@@ -22,14 +22,14 @@ Gene tree correction information:
 End of instance initialization
 
 [00:00:00] [Initialization] Initial optimization of the starting random gene trees from the MSAs only
-[00:00:09] [Initialization] Finished optimizing the gene trees from the MSAs
+[00:00:10] [Initialization] Finished optimizing the gene trees from the MSAs
 
-[00:00:09] Starting species tree initialization...
-[00:00:09] End of species tree initialization
-[00:00:09] Filtering invalid families based on the starting species tree...
+[00:00:10] Starting species tree initialization...
+[00:00:10] End of species tree initialization
+[00:00:10] Filtering invalid families based on the starting species tree...
 
-[00:00:09] Gathering statistics about the families...
-[00:00:09] Input data information:
+[00:00:10] Gathering statistics about the families...
+[00:00:10] Input data information:
 - Number of gene families: 100
 - Number of species: 20
 - Total number of genes: 2366
@@ -38,42 +38,42 @@ End of instance initialization
 - Species covered with the smallest family coverage: "11" (covered by 56/100 families)
 - Average (over species) species family coverage: 64
 
-[00:00:09] Reconciliation rates optimization... 
-	D=0.0706543, L=0.0716869, T=0.111554, RecLL= -4784.11
+[00:00:10] Reconciliation rates optimization... 
+	D=0.0673394, L=0.0609187, T=0.113812, RecLL= -4682.8
 
-[00:00:10] Optimizing gene trees with radius=1... 
-[00:00:18] JointLL=-142647 RecLL=-3338.83 LibpllLL=-139308
+[00:00:11] Optimizing gene trees with radius=1... 
+[00:00:18] JointLL=-142914 RecLL=-3367.85 LibpllLL=-139546
 
 [00:00:18] Reconciliation rates optimization... 
-	D=0.090628, L=0.042548, T=0.0409489, RecLL= -3224.16
+	D=0.0905216, L=0.0432208, T=0.0434741, RecLL= -3273.22
 
 [00:00:19] Optimizing gene trees with radius=2... 
-[00:00:34] JointLL=-142332 RecLL=-3020.5 LibpllLL=-139312
+[00:00:30] JointLL=-142565 RecLL=-2959.81 LibpllLL=-139605
 
-[00:00:34] Reconciliation rates optimization... 
-	D=0.0976337, L=0.0418383, T=0.0314503, RecLL= -3026.58
+[00:00:30] Reconciliation rates optimization... 
+	D=0.0935888, L=0.0398861, T=0.0303506, RecLL= -2962.78
 
-[00:00:35] Optimizing gene trees with radius=3... 
-[00:00:53] JointLL=-142233 RecLL=-2891.05 LibpllLL=-139342
+[00:00:31] Optimizing gene trees with radius=3... 
+[00:00:49] JointLL=-142478 RecLL=-2860.34 LibpllLL=-139618
 
-[00:00:53] Reconciliation rates optimization... 
-	D=0.0989076, L=0.0419521, T=0.0258114, RecLL= -2898.47
+[00:00:49] Reconciliation rates optimization... 
+	D=0.0992981, L=0.0419746, T=0.0242172, RecLL= -2866.45
 
-[00:00:54] Optimizing gene trees with radius=4... 
-[00:01:10] JointLL=-142195 RecLL=-2851.09 LibpllLL=-139344
+[00:00:50] Optimizing gene trees with radius=4... 
+[00:01:23] JointLL=-142411 RecLL=-2773.02 LibpllLL=-139638
 
-[00:01:10] Reconciliation rates optimization... 
-	D=0.098597, L=0.0428273, T=0.02162, RecLL= -2859.79
+[00:01:23] Reconciliation rates optimization... 
+	D=0.0973465, L=0.0427662, T=0.0199923, RecLL= -2779.7
 
-[00:01:11] Optimizing gene trees with radius=5... 
-[00:01:28] JointLL=-142100 RecLL=-2777.55 LibpllLL=-139323
+[00:01:24] Optimizing gene trees with radius=5... 
+[00:01:40] JointLL=-142386 RecLL=-2755.64 LibpllLL=-139631
 
-[00:01:28] Reconciling gene trees with the species tree...
-[00:01:28] Terminating the instance..
+[00:01:40] Reconciling gene trees with the species tree...
+[00:01:40] Terminating the instance..
 
-[00:01:28] DTL rates: D=0.098597 L= 0.0428273 T=0.02162
-[00:01:28] Reconciliation likelihood: -2777.55
-[00:01:28] Phylogenetic likelihood: -139323
-[00:01:28] Joint likelihood: -142100
-[00:01:28] Results directory: /home/fili/Documents/KIT/2023/BA/code/output/families/ssim_DL_s20_f100_sites200_GTR_bl1.0_d1.0_l1.0_t0.0_gc0.0_p0.0_pop10_ms0.0_mf0.0_seed42/runs/F81/generax
-[00:01:28] End of GeneRax execution
+[00:01:40] DTL rates: D=0.0973465 L= 0.0427662 T=0.0199923
+[00:01:40] Reconciliation likelihood: -2755.64
+[00:01:40] Phylogenetic likelihood: -139631
+[00:01:40] Joint likelihood: -142386
+[00:01:40] Results directory: /home/fili/Documents/KIT/2023/BA/code/output/families/ssim_DL_s20_f100_sites200_GTR_bl1.0_d1.0_l1.0_t0.0_gc0.0_p0.0_pop10_ms0.0_mf0.0_seed42/runs/F81/generax
+[00:01:40] End of GeneRax execution

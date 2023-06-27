@@ -2,23 +2,24 @@ Starting optimizeGeneTreesSlave
 LibpllModel /home/fili/Documents/KIT/2023/BA/code/output/families/ssim_DL_s20_f100_sites200_GTR_bl1.0_d1.0_l1.0_t0.0_gc0.0_p0.0_pop10_ms0.0_mf0.0_seed42/runs/F81/generax/results/family_003/libpllModel.txt
 Starting optimizing gene tree
 Number of ranks 1
-(0.0706543, 0.0716869, 0.111554, score = 0)
+(0.0673394, 0.0609187, 0.113812, score = 0)
 Taxa number: 24
-joint: -860.755  libpll: -824.604  reconciliation: -36.1512  
-Initial ll = -860.755
+joint: -891.889  libpll: -848.775  reconciliation: -43.1143  
+Initial ll = -891.889
 
 SPR Search with radius 1: trying 66 prune nodes
-Found 12 potential better moves
-	GeneRax will now test and apply all the 12 potential good moves one after each other
-	Worse likelihood, Move rejected
-	Applying move, ll = -858.699, 36 5
-	Applying move, ll = -854.303, 41 8
-	Applying move, ll = -852.49, 85 27
+Found 20 potential better moves
+	GeneRax will now test and apply all the 20 potential good moves one after each other
+	Applying move, ll = -883.987, 28 35
+	Applying move, ll = -881.534, 58 63
+	Applying move, ll = -878.633, 61 17
+	Applying move, ll = -878.258, 70 24
+	Applying move, ll = -870.355, 79 86
 
 SPR Search with radius 1: trying 66 prune nodes
 Found 0 potential better moves
 	GeneRax will now test and apply all the 0 potential good moves one after each other
-joint: -852.49  libpll: -833.64  reconciliation: -18.8501  
+joint: -870.355  libpll: -851.686  reconciliation: -18.6684  
 Saving tree in /home/fili/Documents/KIT/2023/BA/code/output/families/ssim_DL_s20_f100_sites200_GTR_bl1.0_d1.0_l1.0_t0.0_gc0.0_p0.0_pop10_ms0.0_mf0.0_seed42/runs/F81/generax/results/family_003/geneTree.newick
 Finished saving  /home/fili/Documents/KIT/2023/BA/code/output/families/ssim_DL_s20_f100_sites200_GTR_bl1.0_d1.0_l1.0_t0.0_gc0.0_p0.0_pop10_ms0.0_mf0.0_seed42/runs/F81/generax/results/family_003/geneTree.newick
 End of optimizing gene tree after 0s

@@ -141,7 +141,7 @@
 				<speciation speciesLocation="Node_1_2_0"/>
 			</eventsRec>
 			<clade>
-				<name>1_2_0</name>
+				<name>1_8_0</name>
 				<eventsRec>
 					<leaf speciesLocation="1"/>
 				</eventsRec>
@@ -152,13 +152,13 @@
 					<speciation speciesLocation="Node_2_3_0"/>
 				</eventsRec>
 				<clade>
-					<name>2_2_0</name>
+					<name>2_8_0</name>
 					<eventsRec>
 						<leaf speciesLocation="2"/>
 					</eventsRec>
 				</clade>
 				<clade>
-					<name>3_2_0</name>
+					<name>3_8_0</name>
 					<eventsRec>
 						<leaf speciesLocation="3"/>
 					</eventsRec>
@@ -168,53 +168,23 @@
 		<clade>
 			<name>NULL</name>
 			<eventsRec>
-				<duplication speciesLocation="Node_1_2_0"/>
+				<speciation speciesLocation="Node_1_2_0"/>
 			</eventsRec>
 			<clade>
-				<name>NULL</name>
+				<name>1_9_0</name>
 				<eventsRec>
-					<speciation speciesLocation="Node_1_2_0"/>
+					<leaf speciesLocation="1"/>
 				</eventsRec>
-					<clade>
-					<name>loss</name>
-					<eventsRec>
-						<loss speciesLocation="1"/>
-					</eventsRec>
-				</clade>
-				<clade>
-					<name>NULL</name>
-					<eventsRec>
-						<speciation speciesLocation="Node_2_3_0"/>
-					</eventsRec>
-					<clade>
-						<name>2_5_0</name>
-						<eventsRec>
-							<leaf speciesLocation="2"/>
-						</eventsRec>
-					</clade>
-					<clade>
-						<name>3_5_0</name>
-						<eventsRec>
-							<leaf speciesLocation="3"/>
-						</eventsRec>
-					</clade>
-				</clade>
 			</clade>
 			<clade>
 				<name>NULL</name>
 				<eventsRec>
-					<speciation speciesLocation="Node_1_2_0"/>
+					<speciation speciesLocation="Node_2_3_0"/>
 				</eventsRec>
-				<clade>
-					<name>1_9_0</name>
-					<eventsRec>
-						<leaf speciesLocation="1"/>
-					</eventsRec>
-				</clade>
 				<clade>
 					<name>NULL</name>
 					<eventsRec>
-						<speciation speciesLocation="Node_2_3_0"/>
+						<branchingOut speciesLocation="2"/>
 					</eventsRec>
 					<clade>
 						<name>2_9_0</name>
@@ -223,11 +193,30 @@
 						</eventsRec>
 					</clade>
 					<clade>
-						<name>3_9_0</name>
+						<name>NULL</name>
 						<eventsRec>
-							<leaf speciesLocation="3"/>
+							<transferBack destinationSpecies="Node_2_3_0"/>
+							<speciation speciesLocation="Node_2_3_0"/>
 						</eventsRec>
+						<clade>
+							<name>2_5_0</name>
+							<eventsRec>
+								<leaf speciesLocation="2"/>
+							</eventsRec>
+						</clade>
+						<clade>
+							<name>3_5_0</name>
+							<eventsRec>
+								<leaf speciesLocation="3"/>
+							</eventsRec>
+						</clade>
 					</clade>
+				</clade>
+				<clade>
+					<name>3_9_0</name>
+					<eventsRec>
+						<leaf speciesLocation="3"/>
+					</eventsRec>
 				</clade>
 			</clade>
 		</clade>
@@ -238,7 +227,7 @@
 			<speciation speciesLocation="Node_1_2_0"/>
 		</eventsRec>
 		<clade>
-			<name>1_8_0</name>
+			<name>1_2_0</name>
 			<eventsRec>
 				<leaf speciesLocation="1"/>
 			</eventsRec>
@@ -249,13 +238,13 @@
 				<speciation speciesLocation="Node_2_3_0"/>
 			</eventsRec>
 			<clade>
-				<name>2_8_0</name>
+				<name>2_2_0</name>
 				<eventsRec>
 					<leaf speciesLocation="2"/>
 				</eventsRec>
 			</clade>
 			<clade>
-				<name>3_8_0</name>
+				<name>3_2_0</name>
 				<eventsRec>
 					<leaf speciesLocation="3"/>
 				</eventsRec>

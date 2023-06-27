@@ -106,9 +106,9 @@ class RunFilter():
 # TOGGLE PIPELINE ELEMENTS
 # ====== ! CAREFUL ! ======
 run_filter = RunFilter() # all enabled
-#run_filter.force_overwrite = True # regenerate old dataset
+run_filter.force_overwrite = True # regenerate old dataset
 #run_filter.ba = False
-run_filter.script_ba() # only ba script
+#run_filter.script_ba() # only ba script
 #run_filter.run_compare() # only compare inferred trees
 # ====== ! CAREFUL ! ======
 
@@ -117,8 +117,8 @@ seeds = [42, 1007, 19732311]
 
 # Run multiple replicates
 for seed in seeds:
-    # SET simphy PARAMETERS
-    simphy_parameters = simphy.SimphyParameters(seed=seed)#tag="DTL", species_taxa=50, bl=0.1, transfer_rate=1.0, seed=14) # tag="DL", loss_rate=1.0, dup_rate=1.0, 
+    # SET simphy PARAMETERS 
+    simphy_parameters = simphy.SimphyParameters(tag="DL", dup_rate=1.0, loss_rate=1.0, seed=seed)
     datadir = simphy.get_output_dir(simphy_parameters, root_output)
     print(datadir)
 

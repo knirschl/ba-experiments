@@ -27,7 +27,8 @@ Settings for this run:
 
 -------------------------------------------------------------------------------
 Dataset 1
-	Tree length is 1.39247824
-	Performed 0 SPR(s).
+	Tree length is 1.71267958	Before SPR:     tree length is 1.70081081
+	SPR      1: new tree length is 1.69838342
+	Performed 1 SPR(s).
 
-	Explained variance : 0.97427435
+	Explained variance : 0.96646753

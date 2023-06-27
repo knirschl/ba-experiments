@@ -1,0 +1,40 @@
+Starting optimizeGeneTreesSlave
+LibpllModel /home/fili/Documents/KIT/2023/BA/code/output/families/ssim_DL_s20_f100_sites200_GTR_bl1.0_d1.0_l1.0_t0.0_gc0.0_p0.0_pop10_ms0.0_mf0.0_seed1007/runs/F81/generax/results/family_014/libpllModel.txt
+Starting optimizing gene tree
+Number of ranks 1
+(0.081495, 0.0352198, 0.0416884, score = 0)
+Taxa number: 48
+joint: -3347.61  libpll: -3238.22  reconciliation: -109.39  
+Initial ll = -3347.61
+
+SPR Search with radius 3: trying 138 prune nodes
+Found 5 potential better moves
+	GeneRax will now test and apply all the 5 potential good moves one after each other
+	Worse likelihood, Move rejected
+	Applying move, ll = -3347.47, 175 180
+
+SPR Search with radius 3: trying 138 prune nodes
+Found 4 potential better moves
+	GeneRax will now test and apply all the 4 potential good moves one after each other
+	Applying move, ll = -3345.7, 130 160
+
+SPR Search with radius 3: trying 138 prune nodes
+Found 7 potential better moves
+	GeneRax will now test and apply all the 7 potential good moves one after each other
+	Applying move, ll = -3343.67, 91 126
+	Worse likelihood, Move rejected
+	Worse likelihood, Move rejected
+
+SPR Search with radius 3: trying 138 prune nodes
+Found 4 potential better moves
+	GeneRax will now test and apply all the 4 potential good moves one after each other
+	Applying move, ll = -3342.81, 97 153
+
+SPR Search with radius 3: trying 138 prune nodes
+Found 0 potential better moves
+	GeneRax will now test and apply all the 0 potential good moves one after each other
+joint: -3342.81  libpll: -3241.06  reconciliation: -101.754  
+Saving tree in /home/fili/Documents/KIT/2023/BA/code/output/families/ssim_DL_s20_f100_sites200_GTR_bl1.0_d1.0_l1.0_t0.0_gc0.0_p0.0_pop10_ms0.0_mf0.0_seed1007/runs/F81/generax/results/family_014/geneTree.newick
+Finished saving  /home/fili/Documents/KIT/2023/BA/code/output/families/ssim_DL_s20_f100_sites200_GTR_bl1.0_d1.0_l1.0_t0.0_gc0.0_p0.0_pop10_ms0.0_mf0.0_seed1007/runs/F81/generax/results/family_014/geneTree.newick
+End of optimizing gene tree after 1s
+End of optimizeGeneTreesSlave

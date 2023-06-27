@@ -141,6 +141,60 @@
 				<duplication speciesLocation="20"/>
 			</eventsRec>
 			<clade>
+				<name>20_13_0</name>
+				<eventsRec>
+					<leaf speciesLocation="20"/>
+				</eventsRec>
+			</clade>
+			<clade>
+				<name>NULL</name>
+				<eventsRec>
+					<duplication speciesLocation="20"/>
+				</eventsRec>
+				<clade>
+					<name>NULL</name>
+					<eventsRec>
+						<duplication speciesLocation="20"/>
+					</eventsRec>
+					<clade>
+						<name>20_36_0</name>
+						<eventsRec>
+							<leaf speciesLocation="20"/>
+						</eventsRec>
+					</clade>
+					<clade>
+						<name>NULL</name>
+						<eventsRec>
+							<duplication speciesLocation="20"/>
+						</eventsRec>
+						<clade>
+							<name>20_35_0</name>
+							<eventsRec>
+								<leaf speciesLocation="20"/>
+							</eventsRec>
+						</clade>
+						<clade>
+							<name>20_32_0</name>
+							<eventsRec>
+								<leaf speciesLocation="20"/>
+							</eventsRec>
+						</clade>
+					</clade>
+				</clade>
+				<clade>
+					<name>20_34_0</name>
+					<eventsRec>
+						<leaf speciesLocation="20"/>
+					</eventsRec>
+				</clade>
+			</clade>
+		</clade>
+		<clade>
+			<name>NULL</name>
+			<eventsRec>
+				<duplication speciesLocation="20"/>
+			</eventsRec>
+			<clade>
 				<name>NULL</name>
 				<eventsRec>
 					<duplication speciesLocation="20"/>
@@ -187,60 +241,6 @@
 						<leaf speciesLocation="20"/>
 					</eventsRec>
 				</clade>
-			</clade>
-		</clade>
-		<clade>
-			<name>NULL</name>
-			<eventsRec>
-				<duplication speciesLocation="20"/>
-			</eventsRec>
-			<clade>
-				<name>NULL</name>
-				<eventsRec>
-					<duplication speciesLocation="20"/>
-				</eventsRec>
-				<clade>
-					<name>NULL</name>
-					<eventsRec>
-						<duplication speciesLocation="20"/>
-					</eventsRec>
-					<clade>
-						<name>20_32_0</name>
-						<eventsRec>
-							<leaf speciesLocation="20"/>
-						</eventsRec>
-					</clade>
-					<clade>
-						<name>20_35_0</name>
-						<eventsRec>
-							<leaf speciesLocation="20"/>
-						</eventsRec>
-					</clade>
-				</clade>
-				<clade>
-					<name>NULL</name>
-					<eventsRec>
-						<duplication speciesLocation="20"/>
-					</eventsRec>
-					<clade>
-						<name>20_36_0</name>
-						<eventsRec>
-							<leaf speciesLocation="20"/>
-						</eventsRec>
-					</clade>
-					<clade>
-						<name>20_34_0</name>
-						<eventsRec>
-							<leaf speciesLocation="20"/>
-						</eventsRec>
-					</clade>
-				</clade>
-			</clade>
-			<clade>
-				<name>20_13_0</name>
-				<eventsRec>
-					<leaf speciesLocation="20"/>
-				</eventsRec>
 			</clade>
 		</clade>
 	</clade>

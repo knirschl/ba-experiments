@@ -1,0 +1,32 @@
+Starting optimizeGeneTreesSlave
+LibpllModel /home/fili/Documents/KIT/2023/BA/code/output/families/ssim_DL_s20_f100_sites200_GTR_bl1.0_d1.0_l1.0_t0.0_gc0.0_p0.0_pop10_ms0.0_mf0.0_seed1007/runs/F81/generax/results/family_014/libpllModel.txt
+Starting optimizing gene tree
+Number of ranks 1
+(0.0744056, 0.0364999, 0.0588858, score = 0)
+Taxa number: 48
+joint: -3356.75  libpll: -3244.22  reconciliation: -112.525  
+Initial ll = -3356.75
+
+SPR Search with radius 2: trying 138 prune nodes
+Found 2 potential better moves
+	GeneRax will now test and apply all the 2 potential good moves one after each other
+	Applying move, ll = -3348.49, 115 125
+
+SPR Search with radius 2: trying 138 prune nodes
+Found 10 potential better moves
+	GeneRax will now test and apply all the 10 potential good moves one after each other
+	Applying move, ll = -3347.42, 115 154
+	Worse likelihood, Move rejected
+	Worse likelihood, Move rejected
+	Worse likelihood, Move rejected
+	Worse likelihood, Move rejected
+
+SPR Search with radius 2: trying 138 prune nodes
+Found 1 potential better moves
+	GeneRax will now test and apply all the 1 potential good moves one after each other
+	Worse likelihood, Move rejected
+joint: -3347.42  libpll: -3238.46  reconciliation: -108.96  
+Saving tree in /home/fili/Documents/KIT/2023/BA/code/output/families/ssim_DL_s20_f100_sites200_GTR_bl1.0_d1.0_l1.0_t0.0_gc0.0_p0.0_pop10_ms0.0_mf0.0_seed1007/runs/F81/generax/results/family_014/geneTree.newick
+Finished saving  /home/fili/Documents/KIT/2023/BA/code/output/families/ssim_DL_s20_f100_sites200_GTR_bl1.0_d1.0_l1.0_t0.0_gc0.0_p0.0_pop10_ms0.0_mf0.0_seed1007/runs/F81/generax/results/family_014/geneTree.newick
+End of optimizing gene tree after 0s
+End of optimizeGeneTreesSlave

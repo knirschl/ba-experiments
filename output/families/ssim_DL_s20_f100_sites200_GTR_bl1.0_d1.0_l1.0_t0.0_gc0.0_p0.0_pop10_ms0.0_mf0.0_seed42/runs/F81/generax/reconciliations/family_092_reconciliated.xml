@@ -171,13 +171,13 @@
 				<duplication speciesLocation="16"/>
 			</eventsRec>
 			<clade>
-				<name>16_0_0</name>
+				<name>16_1_0</name>
 				<eventsRec>
 					<leaf speciesLocation="16"/>
 				</eventsRec>
 			</clade>
 			<clade>
-				<name>16_1_0</name>
+				<name>16_0_0</name>
 				<eventsRec>
 					<leaf speciesLocation="16"/>
 				</eventsRec>
