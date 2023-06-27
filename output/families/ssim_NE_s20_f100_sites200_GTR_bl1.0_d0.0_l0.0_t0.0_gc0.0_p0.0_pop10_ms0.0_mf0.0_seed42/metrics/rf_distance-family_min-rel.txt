@@ -30,7 +30,6 @@ family_046 : 0.0
 family_048 : 0.0
 family_052 : 0.0
 family_023 : 0.0
-family_080 : 0.0
 family_007 : 0.0
 family_087 : 0.0
 family_059 : 0.0
@@ -56,7 +55,6 @@ family_030 : 0.0
 family_054 : 0.0
 family_081 : 0.0
 family_041 : 0.0
-family_097 : 0.0
 family_088 : 0.0
 family_015 : 0.0
 family_092 : 0.0
@@ -98,3 +96,5 @@ family_008 : 0.0
 family_028 : 0.0
 family_083 : 0.0
 family_061 : 0.0
+family_080 : 0.058824
+family_097 : 0.058824
