@@ -1,0 +1,38 @@
+Starting optimizeGeneTreesSlave
+LibpllModel /home/fili/Documents/KIT/2023/BA/code/output/families/ssim_NE_s20_f100_sites200_GTR_bl1.0_d0.0_l0.0_t0.0_gc0.0_p0.0_pop10_ms0.0_mf0.0_seed14976684177860080345/runs/F81/generax/results/family_071/libpllModel.txt
+Starting optimizing gene tree
+Number of ranks 1
+(1e-07, 0.114061, 0.151946, score = 0)
+Taxa number: 20
+joint: -1090.17  libpll: -1027.25  reconciliation: -62.9212  
+Initial ll = -1090.17
+
+SPR Search with radius 1: trying 54 prune nodes
+Found 24 potential better moves
+	GeneRax will now test and apply all the 24 potential good moves one after each other
+	Applying move, ll = -1087.31, 21 27
+	Worse likelihood, Move rejected
+	Applying move, ll = -1086.03, 36 10
+	Applying move, ll = -1085.99, 45 1
+	Applying move, ll = -1082.78, 54 62
+	Worse likelihood, Move rejected
+	Applying move, ll = -1080.32, 71 12
+
+SPR Search with radius 1: trying 54 prune nodes
+Found 4 potential better moves
+	GeneRax will now test and apply all the 4 potential good moves one after each other
+	Applying move, ll = -1077.06, 27 33
+
+SPR Search with radius 1: trying 54 prune nodes
+Found 4 potential better moves
+	GeneRax will now test and apply all the 4 potential good moves one after each other
+	Applying move, ll = -1073.73, 26 8
+
+SPR Search with radius 1: trying 54 prune nodes
+Found 0 potential better moves
+	GeneRax will now test and apply all the 0 potential good moves one after each other
+joint: -1073.73  libpll: -1033.24  reconciliation: -40.4893  
+Saving tree in /home/fili/Documents/KIT/2023/BA/code/output/families/ssim_NE_s20_f100_sites200_GTR_bl1.0_d0.0_l0.0_t0.0_gc0.0_p0.0_pop10_ms0.0_mf0.0_seed14976684177860080345/runs/F81/generax/results/family_071/geneTree.newick
+Finished saving  /home/fili/Documents/KIT/2023/BA/code/output/families/ssim_NE_s20_f100_sites200_GTR_bl1.0_d0.0_l0.0_t0.0_gc0.0_p0.0_pop10_ms0.0_mf0.0_seed14976684177860080345/runs/F81/generax/results/family_071/geneTree.newick
+End of optimizing gene tree after 0s
+End of optimizeGeneTreesSlave

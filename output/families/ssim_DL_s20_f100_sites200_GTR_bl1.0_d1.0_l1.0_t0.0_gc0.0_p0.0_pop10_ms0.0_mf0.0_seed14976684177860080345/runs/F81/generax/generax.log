@@ -1,0 +1,81 @@
+GeneRax was called as follow:
+/home/fili/Documents/KIT/2023/BA/resources/tools/GeneRax/build/bin/generax -f /home/fili/Documents/KIT/2023/BA/code/output/families/ssim_DL_s20_f100_sites200_GTR_bl1.0_d1.0_l1.0_t0.0_gc0.0_p0.0_pop10_ms0.0_mf0.0_seed14976684177860080345/runs/F81/families-generax.txt -s /home/fili/Documents/KIT/2023/BA/code/output/families/ssim_DL_s20_f100_sites200_GTR_bl1.0_d1.0_l1.0_t0.0_gc0.0_p0.0_pop10_ms0.0_mf0.0_seed14976684177860080345/species_trees/speciesTree.newick --strategy SPR -p /home/fili/Documents/KIT/2023/BA/code/output/families/ssim_DL_s20_f100_sites200_GTR_bl1.0_d1.0_l1.0_t0.0_gc0.0_p0.0_pop10_ms0.0_mf0.0_seed14976684177860080345/runs/F81/generax 
+
+General information:
+- Output prefix: /home/fili/Documents/KIT/2023/BA/code/output/families/ssim_DL_s20_f100_sites200_GTR_bl1.0_d1.0_l1.0_t0.0_gc0.0_p0.0_pop10_ms0.0_mf0.0_seed14976684177860080345/runs/F81/generax
+- Families information: /home/fili/Documents/KIT/2023/BA/code/output/families/ssim_DL_s20_f100_sites200_GTR_bl1.0_d1.0_l1.0_t0.0_gc0.0_p0.0_pop10_ms0.0_mf0.0_seed14976684177860080345/runs/F81/families-generax.txt
+- Species tree: /home/fili/Documents/KIT/2023/BA/code/output/families/ssim_DL_s20_f100_sites200_GTR_bl1.0_d1.0_l1.0_t0.0_gc0.0_p0.0_pop10_ms0.0_mf0.0_seed14976684177860080345/species_trees/speciesTree.newick
+- MPI Ranks: 1
+- Random seed: 123
+- Reconciliation model: UndatedDTL
+- DTL rates: global rates
+- Infer ML reconciliation: ON
+- Unrooted reconciliation likelihood: OFF
+- Prune species tree mode: OFF
+
+Gene tree correction information:
+- Gene tree search strategy: SPR
+- Max gene SPR radius: 5
+
+[00:00:00] Filtering invalid families...
+
+Error in family family_023: The gene family should contain at least 3 sequences
+WARNING!!! Found 1 invalid families (they will be discarded from the analysis)
+End of instance initialization
+
+[00:00:00] [Initialization] Initial optimization of the starting random gene trees from the MSAs only
+[00:00:09] [Initialization] Finished optimizing the gene trees from the MSAs
+
+[00:00:09] Starting species tree initialization...
+[00:00:09] End of species tree initialization
+[00:00:09] Filtering invalid families based on the starting species tree...
+
+[00:00:09] Gathering statistics about the families...
+[00:00:09] Input data information:
+- Number of gene families: 99
+- Number of species: 20
+- Total number of genes: 2520
+- Average number of genes per family: 25
+- Maximum number of genes per family: 162
+- Species covered with the smallest family coverage: "19" (covered by 57/99 families)
+- Average (over species) species family coverage: 62
+
+[00:00:09] Reconciliation rates optimization... 
+	D=0.0400806, L=0.0953005, T=0.172428, RecLL= -6176
+
+[00:00:10] Optimizing gene trees with radius=1... 
+[00:00:19] JointLL=-119477 RecLL=-3964.21 LibpllLL=-115512
+
+[00:00:19] Reconciliation rates optimization... 
+	D=0.0593115, L=0.0452242, T=0.0623087, RecLL= -3747.51
+
+[00:00:20] Optimizing gene trees with radius=2... 
+[00:00:39] JointLL=-118774 RecLL=-3122.6 LibpllLL=-115651
+
+[00:00:39] Reconciliation rates optimization... 
+	D=0.0671742, L=0.0335966, T=0.0405918, RecLL= -3109.54
+
+[00:00:40] Optimizing gene trees with radius=3... 
+[00:01:01] JointLL=-118558 RecLL=-2885.15 LibpllLL=-115673
+
+[00:01:01] Reconciliation rates optimization... 
+	D=0.0728898, L=0.0309146, T=0.0312286, RecLL= -2890.63
+
+[00:01:02] Optimizing gene trees with radius=4... 
+[00:01:23] JointLL=-118398 RecLL=-2677.51 LibpllLL=-115721
+
+[00:01:23] Reconciliation rates optimization... 
+	D=0.0738984, L=0.0284962, T=0.0245208, RecLL= -2682.9
+
+[00:01:24] Optimizing gene trees with radius=5... 
+[00:01:36] JointLL=-118338 RecLL=-2596.22 LibpllLL=-115742
+
+[00:01:36] Reconciling gene trees with the species tree...
+[00:01:36] Terminating the instance..
+
+[00:01:36] DTL rates: D=0.0738984 L= 0.0284962 T=0.0245208
+[00:01:36] Reconciliation likelihood: -2596.22
+[00:01:36] Phylogenetic likelihood: -115742
+[00:01:36] Joint likelihood: -118338
+[00:01:36] Results directory: /home/fili/Documents/KIT/2023/BA/code/output/families/ssim_DL_s20_f100_sites200_GTR_bl1.0_d1.0_l1.0_t0.0_gc0.0_p0.0_pop10_ms0.0_mf0.0_seed14976684177860080345/runs/F81/generax
+[00:01:36] End of GeneRax execution

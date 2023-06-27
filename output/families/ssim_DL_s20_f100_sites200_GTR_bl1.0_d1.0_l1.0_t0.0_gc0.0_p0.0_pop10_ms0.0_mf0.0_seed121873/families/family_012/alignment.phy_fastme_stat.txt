@@ -1,0 +1,44 @@
+
+ - FastME 2.1.6.2 - 
+
+
+Papers to be cited:
+
+FastME 2.0 - A comprehensive, accurate and fast distance-based phylogeny inference program.
+	Vincent Lefort, Richard Desper and Olivier Gascuel,
+	Molecular Biology and Evolution 32(10), 2798-800, 2015.
+BIONJ algorithm:
+	Gascuel O. 1997. BIONJ: an improved version of the NJ algorithm based on a simple model of sequence data.
+	Molecular Biology and Evolution, 14(7):685-695
+
+-------------------------------------------------------------------------------
+Settings for this run:
+
+  I                                      Input data type  DNA             
+  E                                   evolutionary model  F81             
+  G                    Gamma rate variation across sites  no              
+  R                              Remove sites whith gaps  no              
+  O                    Output calculated distance matrix  yes             
+
+  D                                   Number of datasets  1               
+  M                         Initial tree building method  BIONJ           
+  N                                   NNI postprocessing  no              
+  S                                   SPR postprocessing  yes             
+
+-------------------------------------------------------------------------------
+Dataset 1
+	Tree length is 3.80506185	Before SPR:     tree length is 3.81071636
+	SPR      1: new tree length is 3.79760953
+	SPR      2: new tree length is 3.78855927
+	SPR      3: new tree length is 3.78197153
+	SPR      4: new tree length is 3.77559851
+	SPR      5: new tree length is 3.76999058
+	SPR      6: new tree length is 3.76749949
+	SPR      7: new tree length is 3.76540549
+	SPR      8: new tree length is 3.76356489
+	SPR      9: new tree length is 3.76277405
+	SPR     10: new tree length is 3.76209561
+	SPR     11: new tree length is 3.76197635
+	Performed 11 SPR(s).
+
+	Explained variance : 0.84428945

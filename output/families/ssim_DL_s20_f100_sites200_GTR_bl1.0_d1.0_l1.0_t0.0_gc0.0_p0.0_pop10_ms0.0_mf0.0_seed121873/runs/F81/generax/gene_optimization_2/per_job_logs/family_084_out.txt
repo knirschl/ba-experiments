@@ -1,0 +1,42 @@
+Starting optimizeGeneTreesSlave
+LibpllModel /home/fili/Documents/KIT/2023/BA/code/output/families/ssim_DL_s20_f100_sites200_GTR_bl1.0_d1.0_l1.0_t0.0_gc0.0_p0.0_pop10_ms0.0_mf0.0_seed121873/runs/F81/generax/results/family_084/libpllModel.txt
+Starting optimizing gene tree
+Number of ranks 1
+(0.0935197, 0.0463194, 0.0553718, score = 0)
+Taxa number: 113
+joint: -4153.65  libpll: -3899.06  reconciliation: -254.592  
+Initial ll = -4153.65
+
+SPR Search with radius 2: trying 333 prune nodes
+Found 6 potential better moves
+	GeneRax will now test and apply all the 6 potential good moves one after each other
+	Applying move, ll = -4152.36, 135 9
+	Applying move, ll = -4152.07, 188 179
+	Applying move, ll = -4151.93, 345 248
+
+SPR Search with radius 2: trying 333 prune nodes
+Found 12 potential better moves
+	GeneRax will now test and apply all the 12 potential good moves one after each other
+	Applying move, ll = -4151.73, 180 198
+	Applying move, ll = -4151.59, 336 343
+	Applying move, ll = -4151.42, 384 405
+
+SPR Search with radius 2: trying 333 prune nodes
+Found 8 potential better moves
+	GeneRax will now test and apply all the 8 potential good moves one after each other
+	Applying move, ll = -4150.71, 297 330
+	Applying move, ll = -4150.54, 414 429
+
+SPR Search with radius 2: trying 333 prune nodes
+Found 4 potential better moves
+	GeneRax will now test and apply all the 4 potential good moves one after each other
+	Applying move, ll = -4149.6, 429 441
+
+SPR Search with radius 2: trying 333 prune nodes
+Found 0 potential better moves
+	GeneRax will now test and apply all the 0 potential good moves one after each other
+joint: -4149.6  libpll: -3914.78  reconciliation: -234.814  
+Saving tree in /home/fili/Documents/KIT/2023/BA/code/output/families/ssim_DL_s20_f100_sites200_GTR_bl1.0_d1.0_l1.0_t0.0_gc0.0_p0.0_pop10_ms0.0_mf0.0_seed121873/runs/F81/generax/results/family_084/geneTree.newick
+Finished saving  /home/fili/Documents/KIT/2023/BA/code/output/families/ssim_DL_s20_f100_sites200_GTR_bl1.0_d1.0_l1.0_t0.0_gc0.0_p0.0_pop10_ms0.0_mf0.0_seed121873/runs/F81/generax/results/family_084/geneTree.newick
+End of optimizing gene tree after 2s
+End of optimizeGeneTreesSlave
