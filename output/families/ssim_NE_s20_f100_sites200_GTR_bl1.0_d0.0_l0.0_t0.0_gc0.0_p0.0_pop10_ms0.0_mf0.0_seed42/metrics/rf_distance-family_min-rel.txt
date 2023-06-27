@@ -96,5 +96,5 @@ family_008 : 0.0
 family_028 : 0.0
 family_083 : 0.0
 family_061 : 0.0
-family_080 : 0.058824
-family_097 : 0.058824
+family_080 : 0.0
+family_097 : 0.0

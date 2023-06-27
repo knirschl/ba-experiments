@@ -1,8 +1,8 @@
-Program started at Tue Jun 27 12:39:27 2023
+Program started at Tue Jun 27 12:49:24 2023
 
 MPIScheduler was called as follow:
 /home/fili/Documents/KIT/2023/BA/resources/tools/MPIScheduler/build/mpi-scheduler --fork-scheduler 1 /home/fili/Documents/KIT/2023/BA/code/cmake-build-debug/BA /home/fili/Documents/KIT/2023/BA/code/output/families/ssim_NE_s20_f100_sites200_GTR_bl1.0_d0.0_l0.0_t0.0_gc0.0_p0.0_pop10_ms0.0_mf0.0_seed1007/runs/exp/ba_run/commands.txt /home/fili/Documents/KIT/2023/BA/code/output/families/ssim_NE_s20_f100_sites200_GTR_bl1.0_d0.0_l0.0_t0.0_gc0.0_p0.0_pop10_ms0.0_mf0.0_seed1007/runs/exp/ba_run 
-The master process runs on node cmp-manj and on pid 78228
+The master process runs on node cmp-manj and on pid 99231
 Remaining commands: 100
 ## Started family_050 on [0:0] 
 End of family_050 after 26ms  (1/100)
@@ -11,11 +11,11 @@ End of family_069 after 26ms  (2/100)
 ## Started family_003 on [0:0] 
 End of family_003 after 26ms  (3/100)
 ## Started family_078 on [0:0] 
-End of family_078 after 29ms  (4/100)
+End of family_078 after 26ms  (4/100)
 ## Started family_074 on [0:0] 
 End of family_074 after 26ms  (5/100)
 ## Started family_044 on [0:0] 
-End of family_044 after 27ms  (6/100)
+End of family_044 after 26ms  (6/100)
 ## Started family_065 on [0:0] 
 End of family_065 after 26ms  (7/100)
 ## Started family_053 on [0:0] 
@@ -31,37 +31,37 @@ End of family_019 after 26ms  (12/100)
 ## Started family_001 on [0:0] 
 End of family_001 after 26ms  (13/100)
 ## Started family_058 on [0:0] 
-End of family_058 after 27ms  (14/100)
+End of family_058 after 26ms  (14/100)
 ## Started family_092 on [0:0] 
-End of family_092 after 27ms  (15/100)
+End of family_092 after 26ms  (15/100)
 ## Started family_015 on [0:0] 
-End of family_015 after 27ms  (16/100)
+End of family_015 after 26ms  (16/100)
 ## Started family_088 on [0:0] 
 End of family_088 after 26ms  (17/100)
 ## Started family_097 on [0:0] 
 End of family_097 after 27ms  (18/100)
 ## Started family_041 on [0:0] 
-End of family_041 after 29ms  (19/100)
+End of family_041 after 26ms  (19/100)
 ## Started family_081 on [0:0] 
-End of family_081 after 27ms  (20/100)
+End of family_081 after 26ms  (20/100)
 ## Started family_054 on [0:0] 
-End of family_054 after 27ms  (21/100)
+End of family_054 after 26ms  (21/100)
 ## Started family_030 on [0:0] 
 End of family_030 after 26ms  (22/100)
 ## Started family_086 on [0:0] 
-End of family_086 after 27ms  (23/100)
+End of family_086 after 26ms  (23/100)
 ## Started family_084 on [0:0] 
-End of family_084 after 26ms  (24/100)
+End of family_084 after 27ms  (24/100)
 ## Started family_021 on [0:0] 
 End of family_021 after 27ms  (25/100)
 ## Started family_045 on [0:0] 
-End of family_045 after 27ms  (26/100)
+End of family_045 after 26ms  (26/100)
 ## Started family_061 on [0:0] 
 End of family_061 after 26ms  (27/100)
 ## Started family_083 on [0:0] 
-End of family_083 after 27ms  (28/100)
+End of family_083 after 26ms  (28/100)
 ## Started family_028 on [0:0] 
-End of family_028 after 26ms  (29/100)
+End of family_028 after 27ms  (29/100)
 ## Started family_008 on [0:0] 
 End of family_008 after 26ms  (30/100)
 ## Started family_017 on [0:0] 
@@ -71,17 +71,17 @@ End of family_036 after 26ms  (32/100)
 ## Started family_068 on [0:0] 
 End of family_068 after 26ms  (33/100)
 ## Started family_024 on [0:0] 
-End of family_024 after 26ms  (34/100)
+End of family_024 after 27ms  (34/100)
 ## Started family_025 on [0:0] 
 End of family_025 after 26ms  (35/100)
 ## Started family_039 on [0:0] 
 End of family_039 after 26ms  (36/100)
 ## Started family_077 on [0:0] 
-End of family_077 after 27ms  (37/100)
+End of family_077 after 26ms  (37/100)
 ## Started family_026 on [0:0] 
 End of family_026 after 26ms  (38/100)
 ## Started family_100 on [0:0] 
-End of family_100 after 26ms  (39/100)
+End of family_100 after 25ms  (39/100)
 ## Started family_051 on [0:0] 
 End of family_051 after 26ms  (40/100)
 ## Started family_022 on [0:0] 
@@ -93,13 +93,13 @@ End of family_057 after 26ms  (43/100)
 ## Started family_082 on [0:0] 
 End of family_082 after 26ms  (44/100)
 ## Started family_040 on [0:0] 
-End of family_040 after 26ms  (45/100)
+End of family_040 after 27ms  (45/100)
 ## Started family_066 on [0:0] 
 End of family_066 after 26ms  (46/100)
 ## Started family_018 on [0:0] 
 End of family_018 after 26ms  (47/100)
 ## Started family_056 on [0:0] 
-End of family_056 after 27ms  (48/100)
+End of family_056 after 26ms  (48/100)
 ## Started family_076 on [0:0] 
 End of family_076 after 26ms  (49/100)
 ## Started family_032 on [0:0] 
@@ -107,35 +107,35 @@ End of family_032 after 26ms  (50/100)
 ## Started family_089 on [0:0] 
 End of family_089 after 26ms  (51/100)
 ## Started family_038 on [0:0] 
-End of family_038 after 33ms  (52/100)
+End of family_038 after 26ms  (52/100)
 ## Started family_091 on [0:0] 
-End of family_091 after 26ms  (53/100)
+End of family_091 after 27ms  (53/100)
 ## Started family_027 on [0:0] 
-End of family_027 after 26ms  (54/100)
+End of family_027 after 28ms  (54/100)
 ## Started family_010 on [0:0] 
 End of family_010 after 26ms  (55/100)
 ## Started family_067 on [0:0] 
-End of family_067 after 29ms  (56/100)
+End of family_067 after 26ms  (56/100)
 ## Started family_043 on [0:0] 
 End of family_043 after 26ms  (57/100)
 ## Started family_073 on [0:0] 
-End of family_073 after 27ms  (58/100)
+End of family_073 after 26ms  (58/100)
 ## Started family_009 on [0:0] 
 End of family_009 after 26ms  (59/100)
 ## Started family_079 on [0:0] 
-End of family_079 after 27ms  (60/100)
+End of family_079 after 26ms  (60/100)
 ## Started family_094 on [0:0] 
-End of family_094 after 26ms  (61/100)
+End of family_094 after 27ms  (61/100)
 ## Started family_031 on [0:0] 
-End of family_031 after 27ms  (62/100)
+End of family_031 after 26ms  (62/100)
 ## Started family_062 on [0:0] 
-End of family_062 after 27ms  (63/100)
+End of family_062 after 26ms  (63/100)
 ## Started family_016 on [0:0] 
 End of family_016 after 27ms  (64/100)
 ## Started family_098 on [0:0] 
-End of family_098 after 27ms  (65/100)
+End of family_098 after 34ms  (65/100)
 ## Started family_055 on [0:0] 
-End of family_055 after 26ms  (66/100)
+End of family_055 after 27ms  (66/100)
 ## Started family_020 on [0:0] 
 End of family_020 after 26ms  (67/100)
 ## Started family_085 on [0:0] 
@@ -143,11 +143,11 @@ End of family_085 after 26ms  (68/100)
 ## Started family_042 on [0:0] 
 End of family_042 after 26ms  (69/100)
 ## Started family_011 on [0:0] 
-End of family_011 after 28ms  (70/100)
+End of family_011 after 26ms  (70/100)
 ## Started family_033 on [0:0] 
 End of family_033 after 26ms  (71/100)
 ## Started family_095 on [0:0] 
-End of family_095 after 26ms  (72/100)
+End of family_095 after 28ms  (72/100)
 ## Started family_090 on [0:0] 
 End of family_090 after 26ms  (73/100)
 ## Started family_012 on [0:0] 
@@ -157,11 +157,11 @@ End of family_064 after 26ms  (75/100)
 ## Started family_004 on [0:0] 
 End of family_004 after 26ms  (76/100)
 ## Started family_075 on [0:0] 
-End of family_075 after 26ms  (77/100)
+End of family_075 after 27ms  (77/100)
 ## Started family_005 on [0:0] 
-End of family_005 after 27ms  (78/100)
+End of family_005 after 26ms  (78/100)
 ## Started family_071 on [0:0] 
-End of family_071 after 26ms  (79/100)
+End of family_071 after 25ms  (79/100)
 ## Started family_029 on [0:0] 
 End of family_029 after 26ms  (80/100)
 ## Started family_099 on [0:0] 
@@ -171,9 +171,9 @@ End of family_035 after 26ms  (82/100)
 ## Started family_014 on [0:0] 
 End of family_014 after 26ms  (83/100)
 ## Started family_037 on [0:0] 
-End of family_037 after 26ms  (84/100)
+End of family_037 after 27ms  (84/100)
 ## Started family_006 on [0:0] 
-End of family_006 after 28ms  (85/100)
+End of family_006 after 27ms  (85/100)
 ## Started family_002 on [0:0] 
 End of family_002 after 26ms  (86/100)
 ## Started family_070 on [0:0] 
@@ -183,31 +183,31 @@ End of family_034 after 26ms  (88/100)
 ## Started family_047 on [0:0] 
 End of family_047 after 26ms  (89/100)
 ## Started family_096 on [0:0] 
-End of family_096 after 28ms  (90/100)
+End of family_096 after 26ms  (90/100)
 ## Started family_059 on [0:0] 
-End of family_059 after 26ms  (91/100)
+End of family_059 after 27ms  (91/100)
 ## Started family_087 on [0:0] 
-End of family_087 after 26ms  (92/100)
+End of family_087 after 27ms  (92/100)
 ## Started family_007 on [0:0] 
 End of family_007 after 26ms  (93/100)
 ## Started family_080 on [0:0] 
-End of family_080 after 26ms  (94/100)
+End of family_080 after 28ms  (94/100)
 ## Started family_023 on [0:0] 
 End of family_023 after 26ms  (95/100)
 ## Started family_052 on [0:0] 
 End of family_052 after 26ms  (96/100)
 ## Started family_048 on [0:0] 
-End of family_048 after 26ms  (97/100)
+End of family_048 after 27ms  (97/100)
 ## Started family_046 on [0:0] 
 End of family_046 after 26ms  (98/100)
 ## Started family_013 on [0:0] 
-End of family_013 after 27ms  (99/100)
+End of family_013 after 30ms  (99/100)
 ## Started family_063 on [0:0] 
 All commands were launched
 End of family_063 after 26ms  (100/100)
 end of run
 Finished running commands. Total elasped time: 2s
-Load balance ratio: 0.977441
+Load balance ratio: 0.978803
 Saving svg output in /home/fili/Documents/KIT/2023/BA/code/output/families/ssim_NE_s20_f100_sites200_GTR_bl1.0_d0.0_l0.0_t0.0_gc0.0_p0.0_pop10_ms0.0_mf0.0_seed1007/runs/exp/ba_run/statistics.svg
 total width 2
 Time spent writting svg: 0s

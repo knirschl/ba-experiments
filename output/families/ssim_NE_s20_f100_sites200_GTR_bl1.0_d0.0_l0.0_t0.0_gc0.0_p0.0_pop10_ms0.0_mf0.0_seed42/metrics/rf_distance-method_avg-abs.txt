@@ -12,6 +12,7 @@ ba.exp.5s+g.genetree.newick : 0.0
 ba.exp.0.6s+g.genetree.newick : 0.0
 ba.exp.0.85s+g.genetree.newick : 0.0
 ba.exp.1.75s+g.genetree.newick : 0.0
+generax-spr-undateddtl-r5.f81.genetree.newick : 0.0
 ba.exp.0.95s+g.genetree.newick : 0.0
 ba.exp.0.75s+g.genetree.newick : 0.0
 ba.exp.0.8s+g.genetree.newick : 0.0
@@ -26,3 +27,5 @@ ba.exp.0.05s+g.genetree.newick : 2.0
 ba.exp.0.1s+g.genetree.newick : 2.0
 ba.exp.0.2s+g.genetree.newick : 2.0
 ba.exp.0s+g.genetree.newick : 8.0
+fastme.f81.genetree.newick : 10.0
+raxml.f81.genetree.newick : 12.0
