@@ -106,27 +106,45 @@ class RunFilter():
 # TOGGLE PIPELINE ELEMENTS
 # ====== ! CAREFUL ! ======
 run_filter = RunFilter() # all enabled
-run_filter.force_overwrite = True # regenerate old dataset
-#run_filter.ba = False
+#run_filter.force_overwrite = True # regenerate old dataset
+#run_filter.compare = False
 #run_filter.script_ba() # only ba script
-#run_filter.run_compare() # only compare inferred trees
+run_filter.run_compare() # only compare inferred trees
 # ====== ! CAREFUL ! ======
 
 root_output = paths.families_datasets_root # output/families/
-seeds = [42, 1007, 19732311]
+seeds = [42, 1007, 19732311, 121873, 14976684177860080345]
+tag = "DL"
+replicates = []
 
 # Run multiple replicates
 for seed in seeds:
     # SET simphy PARAMETERS 
-    simphy_parameters = simphy.SimphyParameters(tag="DL", dup_rate=1.0, loss_rate=1.0, seed=seed)
+    simphy_parameters = simphy.SimphyParameters(tag=tag, seed=seed, dup_rate=1.0, loss_rate=1.0)
     datadir = simphy.get_output_dir(simphy_parameters, root_output)
+    replicates.append(datadir)
     print(datadir)
 
     # RUN PIPELINE
-    start = time.time()
+    rep_start = time.time()
     try:
         run_filter.run_methods(datadir, "F81", 1)
     finally:
-        elapsed = time.time() - start
+        elapsed = time.time() - rep_start
         print("End of single experiment. Elapsed time: " + str(elapsed) + "s")
-        metrics.save_metrics(datadir, "pipeline", elapsed, "runtimes")
+        metrics.save_metrics(datadir, "pipeline_" + tag + str(seed), elapsed, "runtimes")
+
+# AVERAGE OVER ALL REPLICATES
+abs_name = "rf_distance_avg-abs"
+rel_name = "rf_distance_avg-rel"
+abs_avgs_dico = metrics.get_metrics(replicates[0], abs_name)
+rel_avgs_dico = metrics.get_metrics(replicates[0], rel_name)
+rep_counter = 1
+for rep in replicates[1:]:
+    cur_abs = metrics.get_metrics(rep, abs_name)
+    cur_rel = metrics.get_metrics(rep, rel_name)
+    abs_avgs_dico = {x: (float(abs_avgs_dico[x]) * rep_counter + float(cur_abs[x])) / (rep_counter + 1) for x in set(abs_avgs_dico).union(cur_abs)}
+    rel_avgs_dico = {x: (float(rel_avgs_dico[x]) * rep_counter + float(cur_rel[x])) / (rep_counter + 1) for x in set(rel_avgs_dico).union(cur_rel)}
+    rep_counter += 1
+metrics.save_dico(root_output, abs_avgs_dico, tag + "_global__rf_distance_avg-abs")
+metrics.save_dico(root_output, rel_avgs_dico, tag + "_global__rf_distance_avg-rel")

@@ -68,5 +68,5 @@ def compare_all(datadir):
         metrics.save_metrics(datadir, family, fam_min_rel, "rf_distance-family_min-rel")
         metrics.save_metrics(datadir, family, fam_max_rel, "rf_distance-family_max-rel")
     # save method average distance
-    metrics.save_dico(datadir, method_avg_abs_dico, "rf_distance-method_avg-abs")
-    metrics.save_dico(datadir, method_avg_rel_dico, "rf_distance-method_avg-rel")
+    metrics.save_dico(datadir, method_avg_abs_dico, "rf_distance_avg-abs")
+    metrics.save_dico(datadir, method_avg_rel_dico, "rf_distance_avg-rel")
