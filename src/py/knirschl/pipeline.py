@@ -105,11 +105,6 @@ class RunFilter():
                 utils.printFlush("Failed running compare\n" + str(exc))
 
 
-root_output = paths.families_datasets_root # output/families/
-# SET simphy PARAMETERS
-simphy_parameters = simphy.SimphyParameters(seed=1007)#tag="DTL", species_taxa=50, bl=0.1, transfer_rate=1.0, seed=14) # tag="DL", loss_rate=1.0, dup_rate=1.0, 
-datadir = simphy.get_output_dir(simphy_parameters, root_output)
-print(datadir)
 # TOGGLE PIPELINE ELEMENTS
 # ====== ! CAREFUL ! ======
 run_filter = RunFilter() # all enabled
@@ -119,11 +114,21 @@ run_filter.script_ba() # only ba script
 #run_filter.run_compare() # only compare inferred trees
 # ====== ! CAREFUL ! ======
 
-# RUN PIPELINE
-start = time.time()
-try:
-    run_filter.run_methods(datadir, "F81", 1)
-finally:
-    elapsed = time.time() - start
-    print("End of single experiment. Elapsed time: " + str(elapsed) + "s")
-    metrics.save_metrics(datadir, "pipeline", elapsed, "runtimes")
+root_output = paths.families_datasets_root # output/families/
+seeds = [42, 1007, 19732311]
+
+# Run multiple replicates
+for seed in seeds:
+    # SET simphy PARAMETERS
+    simphy_parameters = simphy.SimphyParameters(seed=seed)#tag="DTL", species_taxa=50, bl=0.1, transfer_rate=1.0, seed=14) # tag="DL", loss_rate=1.0, dup_rate=1.0, 
+    datadir = simphy.get_output_dir(simphy_parameters, root_output)
+    print(datadir)
+
+    # RUN PIPELINE
+    start = time.time()
+    try:
+        run_filter.run_methods(datadir, "F81", 1)
+    finally:
+        elapsed = time.time() - start
+        print("End of single experiment. Elapsed time: " + str(elapsed) + "s")
+        metrics.save_metrics(datadir, "pipeline", elapsed, "runtimes")
