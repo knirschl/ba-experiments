@@ -34,7 +34,7 @@ def compare_all(datadir):
         fam_max_abs = float("-inf")
         fam_min_rel = float("inf")
         fam_max_rel = float("-inf")
-        true_tree = fam.get_true_species_tree(datadir)
+        true_tree = fam.get_modified_species_tree(datadir)
         for tree in os.listdir(fam.get_gene_tree_dir(datadir, family)):
             abs_path_tree = os.path.join(fam.get_gene_tree_dir(datadir, family), tree)
             if (abs_path_tree == true_tree):
