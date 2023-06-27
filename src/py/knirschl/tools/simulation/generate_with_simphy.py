@@ -17,8 +17,8 @@ import sample_missing_data
 
 class SimphyParameters():
   def __init__(self, tag = "NE", prefix = "ssim", speciations_per_year = 0.000000005,
-              extinction_per_year = 0.0000000049, species_taxa = 20 ,
-              families_number = 100, bl = 1.0, loss_rate = 0.0, dup_rate = 0.0,
+              extinction_per_year = 0.0000000049, species_taxa = 20,
+              families_number = 100, bl = 1.0, dup_rate = 0.0, loss_rate = 0.0,
               transfer_rate = 0.0, gene_conversion_rate = 0.0, perturbation = 0.0, sites = 200,
               model = "GTR", seed = 42, distance_hgt = False, population = 10,
               miss_species = 0.0, miss_fam = 0.0):
@@ -29,8 +29,8 @@ class SimphyParameters():
     self.species_taxa = species_taxa
     self.families_number = families_number
     self.bl = bl     
-    self.loss_rate = loss_rate 
     self.dup_rate = dup_rate
+    self.loss_rate = loss_rate
     self.transfer_rate = transfer_rate
     self.gene_conversion_rate = gene_conversion_rate
     self.perturbation = perturbation
