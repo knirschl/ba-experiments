@@ -11,12 +11,45 @@
 #include <utility>
 #include "../common_types.h"
 
+struct TNode {
+    std::string id;
+    std::shared_ptr<TNode> par{};
+    std::shared_ptr<TNode> left{};
+    std::shared_ptr<TNode> right{};
+
+    explicit TNode(std::string id) {
+        this->id = std::move(id);
+    }
+
+    std::string to_string() {
+        if (left == nullptr && right == nullptr) {
+            // leaf
+            return id;
+        }
+        return std::format("{}({}, {})",
+                           id,
+                           left->to_string(),
+                           right->to_string());
+    }
+
+    std::string print_info() {
+        if (left == nullptr && right == nullptr) {
+            return std::format("LEAF {}[par= {}]", id, par->id);
+        }
+        return std::format("NODE {}[par= {}, l= {}, r= {}];    {};    {}",
+                           id, par != nullptr ? par->id : "root", left->id, right->id,
+                           left->print_info(), right->print_info());
+    }
+};
+
 struct Tree {
+    std::string id;
+    std::shared_ptr<Tree> parent{};
     virtual std::string to_string() const = 0;
+    virtual std::string print_info() = 0;
 };
 
 struct Leaf : Tree {
-    std::string id;
 
     explicit Leaf(std::string id) {
         this->id = std::move(id);
@@ -24,6 +57,10 @@ struct Leaf : Tree {
 
     std::string to_string() const override {
         return id;
+    }
+
+    std::string print_info() override {
+        return std::format("LEAF {}[par= {}]", id, parent->id);
     }
 };
 
@@ -34,6 +71,10 @@ struct Node : Tree {
     T branch_length_left;
     T branch_length_right;
 
+    explicit Node(std::string id) {
+        this->id = std::move(id);
+    }
+
     Node(std::shared_ptr<Tree> n_left, T bl_left, std::shared_ptr<Tree> n_right, T bl_right) {
         left = std::move(n_left);
         branch_length_left = bl_left;
@@ -42,11 +83,16 @@ struct Node : Tree {
     }
 
     std::string to_string() const override {
-        return std::format("({}:{},{}:{})",
+        return std::format("{}({}, {})",
+                           id,
                            left->to_string(),
-                           branch_length_left,
-                           right->to_string(),
-                           branch_length_right);
+                           right->to_string());
+    }
+
+    std::string print_info() override {
+        return std::format("NODE {}[par= {}, l= {}, r= {}];    {};    {}",
+                    id, parent != NULL ? parent->id : "root", left->id, right->id,
+                    left->print_info(), right->print_info());
     }
 };
 
