@@ -21,7 +21,7 @@ auto build_parser(std::string const& name, std::string const& version) {
 
     program.add_argument("-a", "--alignmat")
         .required()
-        .help("specify the alignment distance matrix in PHYLIP format");
+        .help("specify the gene alignment distance matrix in PHYLIP format");
 
     //program.add_argument("-f", "--families")
     //        .help("specify the families file");

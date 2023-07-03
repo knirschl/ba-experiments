@@ -21,11 +21,12 @@ int main(int argc, char *argv[]) {
     auto cli_parser = build_parser("thesis", "0.1");
     parse(cli_parser, argc, argv);
     //std::cout << getS(cli_parser) << "\n" << getA(cli_parser) << "\n" << getP(cli_parser) << "\n";
+
     // read species tree
     auto species_tree_pair = parse_from_file<double>(getS(cli_parser));
     auto species_tree_mat = species_tree_pair.first;
-    //vector_t<std::shared_ptr<Tree>> species_tree_start_leafs;
-    //convert(species_tree_pair.second, species_tree_start_leafs);
+    auto species_tree_ids = species_tree_pair.second;
+
     // read alignment
     auto alignment_pair = parse_from_file<double>(getA(cli_parser));
     auto alignment_mat = alignment_pair.first;
