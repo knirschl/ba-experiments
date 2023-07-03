@@ -4,7 +4,7 @@
 
 #include <iostream>
 #include <algorithm>
-#include "nj/tree.h"
+#include "../cpp/nj/tree.h"
 
 void reverse_branch(std::shared_ptr<TNode> &new_parent,
                     std::shared_ptr<TNode> &old_parent,
@@ -168,7 +168,7 @@ auto get_pairs_to_modify(std::shared_ptr<TNode> &root) {
 }
 
 int main() {
-    /*
+
     {
         std::shared_ptr<TNode> a = std::make_shared<TNode>("a");
         std::shared_ptr<TNode> b = std::make_shared<TNode>("b");
@@ -217,7 +217,7 @@ int main() {
         std::cout << "#################\n  tag-rooted tree\n#################\n" << rerooted->to_string() << "\n"
                   << rerooted->print_info() << "\n\n";
     }
-    */
+
     {
         std::shared_ptr<TNode> r = std::make_shared<TNode>("r");
         std::shared_ptr<TNode> u = std::make_shared<TNode>("u");
