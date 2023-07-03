@@ -16,9 +16,16 @@ struct TNode {
     std::shared_ptr<TNode> par{};
     std::shared_ptr<TNode> left{};
     std::shared_ptr<TNode> right{};
+    int score{};
+    int species_map{};
+    bool dup{};
 
     explicit TNode(std::string id) {
         this->id = std::move(id);
+    }
+
+    bool is_leaf() {
+        return left == nullptr && right == nullptr;
     }
 
     std::string to_string() {
@@ -34,10 +41,10 @@ struct TNode {
 
     std::string print_info() {
         if (left == nullptr && right == nullptr) {
-            return std::format("LEAF {}[par= {}]", id, par->id);
+            return std::format("LEAF {}[par= {}, dup= {}]", id, par->id, dup);
         }
-        return std::format("NODE {}[par= {}, l= {}, r= {}];    {};    {}",
-                           id, par != nullptr ? par->id : "root", left->id, right->id,
+        return std::format("NODE {}[par= {}, l= {}, r= {}, dup= {}];    {};    {}",
+                           id, par != nullptr ? par->id : "root", left->id, right->id, dup,
                            left->print_info(), right->print_info());
     }
 };
