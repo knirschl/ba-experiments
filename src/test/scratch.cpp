@@ -2,7 +2,7 @@ using dist_t = double;
 /**
  * (TODO APro rerooting: tag_and_root, make_edge_list, reroot, reverse_branch)
  * TODO mad rerooting
- * TODO get_pairs_to_modify
+ * TODO get_pairs_to_modify -> lca (efficient for many queries: https://www.baeldung.com/cs/tree-lowest-common-ancestor)
  *
  * TODO NJ/parse rewrite to support this tree layout
  * TODO parse mapping
@@ -310,4 +310,56 @@ int tag_APro(int cur) {
     }
     return tree[cur].score += 3;
     */
+}
+
+/**
+ * Computes the depth of the node in the tree.
+ * @link https://www.geeksforgeeks.org/lowest-common-ancestor-in-a-binary-tree-using-parent-pointer/
+ * @param node
+ * @return
+ */
+int depth(int node) {
+    int d{-1};
+    while (node > 0) {
+        d++;
+        node = tree[node].parent_idx;
+    }
+}
+
+/**
+ * Easy but not efficient for many queries Lowest Common Ancestor algorithm.
+ * Time: O(h)
+ * Space: O(1)
+ * @link https://www.geeksforgeeks.org/lowest-common-ancestor-in-a-binary-tree-using-parent-pointer/
+ *
+ * @param low_node
+ * @param high_node
+ * @return
+ */
+int lca(int low_node, int high_node) {
+    // find difference of depths of the two nodes
+    int depth_difference {depth(low_node) - depth(high_node)};
+    // if high_node is deeper, swap low_node and high_node
+    if (depth_difference < 0) {
+        int tmp {low_node};
+        low_node = high_node;
+        high_node = tmp;
+        depth_difference *= -1;
+    }
+
+    // move low_node up until it reaches the same level as high_node
+    while (depth_difference--) {
+        low_node = tree[low_node].parent_idx;
+    }
+
+    while (low_node > 0 && high_node > 0) {
+        if (low_node == high_node) {
+            return low_node;
+        }
+        low_node = tree[low_node].parent_idx;
+        high_node = tree[high_node].parent_idx;
+    }
+    
+    // no common ancestor
+    return -1;
 }
