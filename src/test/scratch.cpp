@@ -12,7 +12,7 @@ using dist_t = double;
 
 
 /*
- * https://github.com/SchadePaul/MasterThesis/blob/master/njst/src/node.h
+ * https://github.com/SchadePaul/MasterThesis/blob/master/njst/src/tree.c#L857
  * https://github.com/chaoszhang/ASTER/blob/master/src/astral-pro.cpp
  */
 
@@ -22,12 +22,13 @@ using dist_t = double;
 #include <format>
 
 std::vector<std::string> idx2leafname{}; // map node array index to locus name ("12_0_1")
+std::vector<int> leaf_indices{}; // leaf array indices
 std::unordered_map<std::string, std::string> leafname2groupname{}; // map locus name to species name
 std::unordered_map<std::string, int> groupname2id{}; // map species name ("12") to id
 
 /**
  * Implementation of a dynamic bitset by ASTER.
- * @link https://github.com/chaoszhang/ASTER/blob/master/src/astral-pro.cpp#L55 *
+ * @link https://github.com/chaoszhang/ASTER/blob/master/src/astral-pro.cpp#L55
  */
 struct DynamicBitset {
 private:
@@ -254,6 +255,7 @@ auto make_leafs(std::vector<std::string> leafnames) {
         tree[leaf_idx].is_leaf = true;
         tree[leaf_idx].score = 0;
         idx2leafname[leaf_idx] = leafname;
+        leaf_indices.push_back(leaf_idx);
         // give associated groupname an id or use existing one to set bitset
         std::string groupname = leafname2groupname.at(leafname);
         if (!(groupname2id.contains(groupname))) {
@@ -362,4 +364,24 @@ int lca(int low_node, int high_node) {
     
     // no common ancestor
     return -1;
+}
+
+/**
+ * Computes all leaf pairs whose lowest common ancestor was tagged as a speciation event.
+ *
+ * @return
+ */
+std::vector<std::pair<int, int>> get_speciation_pairs() {
+    std::vector<std::pair<int, int>> pairs{};
+    for (int i{}; i < leaf_indices.size(); i++) {
+        int leaf1_id {tree[leaf_indices[i]].idx};
+        for (int j{i + 1}; j < leaf_indices.size(); j++) {
+            int leaf2_id {tree[leaf_indices[j]].idx};
+            if (!tree[lca(leaf1_id, leaf2_id)].is_dup) {
+                pairs.emplace_back(leaf1_id, leaf2_id);
+            }
+        }
+    }
+
+    return pairs;
 }
