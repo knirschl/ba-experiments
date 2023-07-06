@@ -1,6 +1,5 @@
 using dist_t = double;
 /**
- * (TODO APro rerooting: tag_and_root, make_edge_list, reroot, reverse_branch)
  * TODO mad rerooting
  * TODO get_pairs_to_modify -> lca (efficient for many queries: https://www.baeldung.com/cs/tree-lowest-common-ancestor)
  *
@@ -268,14 +267,17 @@ int make_node(int left, int right) {
     return make_node(-1, left, right);
 }
 
-auto make_leafs(std::vector<std::string> leafnames) {
-    tree = std::vector<Node>{leafnames.size()};
+auto make_leafs(const std::vector<std::string>& leafnames) {
+    tree = std::vector<Node>{};
     for (auto &leafname: leafnames) {
         int leaf_idx = tree.size();
         tree.emplace_back();
         tree[leaf_idx].idx = leaf_idx;
         tree[leaf_idx].is_leaf = true;
         tree[leaf_idx].score = 0;
+        if (idx2leafname.size() <= leaf_idx) {
+            idx2leafname.resize(leaf_idx + 1);
+        }
         idx2leafname[leaf_idx] = leafname;
         leaf_indices.push_back(leaf_idx);
         // give associated groupname an id or use existing one to set bitset
@@ -427,6 +429,72 @@ int tag_APro(int cur) {
     */
 }
 
+int root_APro() {
+    int best_score{std::numeric_limits<int>::max()};
+    int best_root{-1};
+    int best_counter{};
+
+    for (int root{}; root < tree.size(); root++) {
+        int score{tag_APro(root)};
+        if (score == best_score) {
+            best_counter++;
+            if (rand() % best_counter == 0) {
+                best_root = root;
+            }
+        } else if (score < best_score) {
+            best_score = score;
+            best_root = root;
+            best_counter = 1;
+        }
+    }
+
+    return best_root;
+}
+
+void reverse_branch(int new_parent, bool overwrite_left) {
+    Node& new_parent_node {tree[new_parent]};
+    int old_parent {new_parent_node.parent_idx};
+    Node& old_parent_node {tree[old_parent]};
+    if (old_parent_node.parent_idx == -1) {
+        int old_sibling{
+                old_parent_node.left_child_idx == new_parent ? old_parent_node.left_child_idx
+                                                              : old_parent_node.right_child_idx};
+        tree[old_sibling].parent_idx = new_parent;
+        if (overwrite_left) {
+            new_parent_node.left_child_idx = old_sibling;
+        } else {
+            new_parent_node.right_child_idx = old_sibling;
+        }
+        return;
+    }
+    if (overwrite_left) {
+        new_parent_node.left_child_idx = old_parent;
+    } else {
+        new_parent_node.right_child_idx = old_parent;
+    }
+    reverse_branch(old_parent,
+                   old_parent_node.left_child_idx == new_parent);
+    old_parent_node.parent_idx = new_parent;
+}
+
+int reroot(int root_child) {
+    int old_parent{tree[root_child].parent_idx};
+    if (old_parent == -1) {
+        // already root
+        return root_child;
+    }
+    int root{make_node()};
+    bool overwrite_left{tree[old_parent].left_child_idx == root_child};
+    reverse_branch(old_parent, overwrite_left);
+    if (overwrite_left) {
+        make_node(root, root_child, old_parent);
+    } else {
+        make_node(root, old_parent, root_child);
+    }
+
+    return root;
+}
+
 /**
  * Computes the depth of the node in the tree.
  * @link https://www.geeksforgeeks.org/lowest-common-ancestor-in-a-binary-tree-using-parent-pointer/
@@ -453,10 +521,10 @@ int depth(int node) {
  */
 int lca(int low_node, int high_node) {
     // find difference of depths of the two nodes
-    int depth_difference {depth(low_node) - depth(high_node)};
+    int depth_difference{depth(low_node) - depth(high_node)};
     // if high_node is deeper, swap low_node and high_node
     if (depth_difference < 0) {
-        int tmp {low_node};
+        int tmp{low_node};
         low_node = high_node;
         high_node = tmp;
         depth_difference *= -1;
@@ -474,7 +542,7 @@ int lca(int low_node, int high_node) {
         low_node = tree[low_node].parent_idx;
         high_node = tree[high_node].parent_idx;
     }
-    
+
     // no common ancestor
     return -1;
 }
@@ -487,9 +555,9 @@ int lca(int low_node, int high_node) {
 std::vector<std::pair<int, int>> get_speciation_pairs() {
     std::vector<std::pair<int, int>> pairs{};
     for (int i{}; i < leaf_indices.size(); i++) {
-        int leaf1_id {tree[leaf_indices[i]].idx};
+        int leaf1_id{tree[leaf_indices[i]].idx};
         for (int j{i + 1}; j < leaf_indices.size(); j++) {
-            int leaf2_id {tree[leaf_indices[j]].idx};
+            int leaf2_id{tree[leaf_indices[j]].idx};
             if (!tree[lca(leaf1_id, leaf2_id)].is_dup) {
                 pairs.emplace_back(leaf1_id, leaf2_id);
             }
