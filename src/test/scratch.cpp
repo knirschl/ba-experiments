@@ -307,6 +307,49 @@ auto make_tree(const std::vector<std::string>& leafnames) {
     return tree;
 }
 
+void reverse_branch(int new_parent, bool overwrite_left) {
+    Node &new_parent_node{tree[new_parent]};
+    int old_parent{new_parent_node.parent_idx};
+    Node &old_parent_node{tree[old_parent]};
+    if (old_parent_node.parent_idx == -1) {
+        int old_sibling{
+                old_parent_node.left_child_idx == new_parent ? old_parent_node.right_child_idx
+                                                             : old_parent_node.left_child_idx};
+        tree[old_sibling].parent_idx = new_parent;
+        if (overwrite_left) {
+            new_parent_node.left_child_idx = old_sibling;
+        } else {
+            new_parent_node.right_child_idx = old_sibling;
+        }
+        return;
+    }
+    if (overwrite_left) {
+        new_parent_node.left_child_idx = old_parent;
+    } else {
+        new_parent_node.right_child_idx = old_parent;
+    }
+    reverse_branch(old_parent, old_parent_node.left_child_idx == new_parent);
+    old_parent_node.parent_idx = new_parent;
+}
+
+int reroot(int root_child) {
+    int old_parent{tree[root_child].parent_idx};
+    if (old_parent == -1) {
+        // already root
+        return root_child;
+    }
+    int root{make_node()};
+    bool overwrite_left{tree[old_parent].left_child_idx == root_child};
+    reverse_branch(old_parent, overwrite_left);
+    if (overwrite_left) {
+        make_node(root, root_child, old_parent);
+    } else {
+        make_node(root, old_parent, root_child);
+    }
+
+    return root;
+}
+
 auto make_quadratic_double_matrix(const size_t size) {
     std::vector<std::vector<double>> mat{size};
     for (auto &row: mat) {
@@ -385,6 +428,7 @@ int mad(int root) {
     }
 
     mad_root(root, best_idx, best_rho);
+    return root;
 }
 
 int tag_APro(int cur) {
@@ -453,51 +497,8 @@ int root_APro() {
         }
     }
 
-    return best_root;
-}
-
-void reverse_branch(int new_parent, bool overwrite_left) {
-    Node& new_parent_node {tree[new_parent]};
-    int old_parent {new_parent_node.parent_idx};
-    Node& old_parent_node {tree[old_parent]};
-    if (old_parent_node.parent_idx == -1) {
-        int old_sibling{
-                old_parent_node.left_child_idx == new_parent ? old_parent_node.left_child_idx
-                                                              : old_parent_node.right_child_idx};
-        tree[old_sibling].parent_idx = new_parent;
-        if (overwrite_left) {
-            new_parent_node.left_child_idx = old_sibling;
-        } else {
-            new_parent_node.right_child_idx = old_sibling;
-        }
-        return;
-    }
-    if (overwrite_left) {
-        new_parent_node.left_child_idx = old_parent;
-    } else {
-        new_parent_node.right_child_idx = old_parent;
-    }
-    reverse_branch(old_parent,
-                   old_parent_node.left_child_idx == new_parent);
-    old_parent_node.parent_idx = new_parent;
-}
-
-int reroot(int root_child) {
-    int old_parent{tree[root_child].parent_idx};
-    if (old_parent == -1) {
-        // already root
-        return root_child;
-    }
-    int root{make_node()};
-    bool overwrite_left{tree[old_parent].left_child_idx == root_child};
-    reverse_branch(old_parent, overwrite_left);
-    if (overwrite_left) {
-        make_node(root, root_child, old_parent);
-    } else {
-        make_node(root, old_parent, root_child);
-    }
-
-    return root;
+    //return best_root;
+    return reroot(best_root);
 }
 
 /**
@@ -508,10 +509,12 @@ int reroot(int root_child) {
  */
 int depth(int node) {
     int d{-1};
-    while (node > 0) {
+    while (node >= 0) {
         d++;
         node = tree[node].parent_idx;
     }
+
+    return d;
 }
 
 /**
@@ -540,7 +543,7 @@ int lca(int low_node, int high_node) {
         low_node = tree[low_node].parent_idx;
     }
 
-    while (low_node > 0 && high_node > 0) {
+    while (low_node >= 0 && high_node >= 0) {
         if (low_node == high_node) {
             return low_node;
         }
@@ -573,16 +576,48 @@ std::vector<std::pair<int, int>> get_speciation_pairs() {
 }
 
 #include <iostream>
+#include <sstream>
 
+std::string to_string(std::vector<std::pair<int, int>> ps) {
+    std::ostringstream oss;
+    for (auto& p : ps) {
+        oss << std::format("[{},{}], ", p.first, p.second);
+    }
+
+    return oss.str();
+}
+
+/** ######
+ *  TESTS
+ * #######
+ * make                             : Correct
+ * mad                              : not tested
+ *  node_to_node_dist               : not tested
+ *  leaf_to_leaf_relative_deviation : not tested
+ *  rms                             : not tested
+ *  mad_root                        : not tested
+ * tag_APro                         : not tested
+ * root_APro                        : not tested
+ * reroot                           : Correct
+ *  reverse_branch                  : Correct
+ * lca                              : Correct
+ *  depth                           : Correct
+ * get_speciation_pairs             : Correct
+ *
+ */
 int main() {
-    leafname2groupname = {
-            {"a", "A"},
-            {"b", "B"},
-            {"c", "C"},
-            {"d", "A"},
-            {"e", "E"},
-    };
+    leafname2groupname = {{"a", "A"},
+                          {"b", "B"},
+                          {"c", "C"},
+                          {"d", "A"},
+                          {"e", "E"},};
     std::vector<std::string> leafnames = {"a", "b", "c", "d", "e"};
     tree = make_tree(leafnames);
-    std::cout << print_info(tree.size() - 1);
+    std::cout << to_string(tree.size() - 1);
+    std::cout << "\n" << print_info(tree.size() - 1);
+    std::cout << "\n" << to_string(get_speciation_pairs());
+    tree[8].is_dup = true;
+    std::cout << "\n" << to_string(get_speciation_pairs());
+    tree[7].is_dup = true;
+    std::cout << "\n" << to_string(get_speciation_pairs());
 }
