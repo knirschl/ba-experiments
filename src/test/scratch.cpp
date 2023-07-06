@@ -232,18 +232,39 @@ std::string to_string(int cur) {
 std::string print_info(int cur) {
     if (tree[cur].is_leaf) {
         return std::format("LEAF {}[par= {}, dup= {}]", idx2leafname.at(cur),
-                           tree[cur].parent_idx != -1 ? idx2leafname.at(tree[cur].parent_idx)
-                                                      : "root",
-                           tree[cur].is_dup);
+                           tree[cur].parent_idx, tree[cur].is_dup);
     }
     return std::format("NODE {}[par= {}, l= {}, r= {}, dup= {}];    {};    {}",
-                       idx2leafname.at(cur),
-                       tree[cur].parent_idx != -1 ? idx2leafname.at(tree[cur].parent_idx)
-                                                  : "root",
-                       idx2leafname.at(tree[cur].left_child_idx),
-                       idx2leafname.at(tree[cur].right_child_idx),
-                       tree[cur].is_dup, print_info(tree[cur].left_child_idx),
-                       print_info(tree[cur].right_child_idx));
+                       cur,
+                       tree[cur].parent_idx,
+                       tree[cur].left_child_idx,
+                       tree[cur].right_child_idx, tree[cur].is_dup,
+                       print_info(tree[cur].left_child_idx), print_info(tree[cur].right_child_idx));
+}
+
+int make_node() {
+    int node_idx = tree.size();
+    tree.emplace_back();
+    return node_idx;
+}
+
+int make_node(int node_idx, int left, int right) {
+    if (node_idx >= tree.size() || node_idx < 0) {
+        node_idx = make_node();
+    }
+    tree[node_idx].idx = node_idx;
+    tree[node_idx].left_child_idx = left;
+    tree[node_idx].right_child_idx = right;
+    //tree[node_idx].covered_groups = tree[left].covered_groups | tree[right].covered_groups;
+
+    tree[left].parent_idx = node_idx;
+    tree[right].parent_idx = node_idx;
+
+    return node_idx;
+}
+
+int make_node(int left, int right) {
+    return make_node(-1, left, right);
 }
 
 auto make_leafs(std::vector<std::string> leafnames) {
@@ -384,4 +405,19 @@ std::vector<std::pair<int, int>> get_speciation_pairs() {
     }
 
     return pairs;
+}
+
+#include <iostream>
+
+int main() {
+    leafname2groupname = {
+            {"a", "A"},
+            {"b", "B"},
+            {"c", "C"},
+            {"d", "A"},
+            {"e", "E"},
+    };
+    std::vector<std::string> leafnames = {"a", "b", "c", "d", "e"};
+    tree = make_tree(leafnames);
+    std::cout << print_info(tree.size() - 1);
 }
