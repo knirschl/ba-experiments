@@ -221,24 +221,31 @@ struct Node {
 
 std::vector<Node> tree;
 
+std::string get_name_or_idx(int node) {
+    if (node < 0 || node >= idx2leafname.size()) {
+        return std::to_string(node);
+    }
+    return idx2leafname[node];
+
+}
+
 std::string to_string(int cur) {
     if (tree[cur].is_leaf) {
         return idx2leafname.at(cur);
     }
-    return std::format("{}({}, {})", idx2leafname.at(cur), to_string(tree[cur].left_child_idx),
+    return std::format("{}({}, {})", get_name_or_idx(cur), to_string(tree[cur].left_child_idx),
                        to_string(tree[cur].right_child_idx));
 }
 
 std::string print_info(int cur) {
     if (tree[cur].is_leaf) {
-        return std::format("LEAF {}[par= {}, dup= {}]", idx2leafname.at(cur),
-                           tree[cur].parent_idx, tree[cur].is_dup);
+        return std::format("LEAF {}[par= {}, dup= {}]", idx2leafname.at(cur), get_name_or_idx(tree[cur].parent_idx),
+                           tree[cur].is_dup);
     }
     return std::format("NODE {}[par= {}, l= {}, r= {}, dup= {}];    {};    {}",
-                       cur,
-                       tree[cur].parent_idx,
-                       tree[cur].left_child_idx,
-                       tree[cur].right_child_idx, tree[cur].is_dup,
+                       get_name_or_idx(cur), get_name_or_idx(tree[cur].parent_idx),
+                       get_name_or_idx(tree[cur].left_child_idx),
+                       get_name_or_idx(tree[cur].right_child_idx), tree[cur].is_dup,
                        print_info(tree[cur].left_child_idx), print_info(tree[cur].right_child_idx));
 }
 
@@ -267,21 +274,19 @@ int make_node(int left, int right) {
     return make_node(-1, left, right);
 }
 
-auto make_leafs(const std::vector<std::string>& leafnames) {
-    tree = std::vector<Node>{};
-    for (auto &leafname: leafnames) {
-        int leaf_idx = tree.size();
-        tree.emplace_back();
+auto make_leafs(const std::vector<std::string> &leafnames) {
+    tree = std::vector<Node>{leafnames.size()};
+    for (int leaf_idx{}; leaf_idx < leafnames.size(); leaf_idx++) {
         tree[leaf_idx].idx = leaf_idx;
         tree[leaf_idx].is_leaf = true;
         tree[leaf_idx].score = 0;
         if (idx2leafname.size() <= leaf_idx) {
             idx2leafname.resize(leaf_idx + 1);
         }
-        idx2leafname[leaf_idx] = leafname;
+        idx2leafname[leaf_idx] = leafnames.at(leaf_idx);
         leaf_indices.push_back(leaf_idx);
         // give associated groupname an id or use existing one to set bitset
-        std::string groupname = leafname2groupname.at(leafname);
+        std::string groupname = leafname2groupname.at(leafnames.at(leaf_idx));
         if (!(groupname2id.contains(groupname))) {
             groupname2id.emplace(groupname, groupname2id.size());
         }
