@@ -12,7 +12,7 @@ using dist_t = double;
 
 
 /*
- * https://github.com/SchadePaul/MasterThesis/blob/master/njst/src/tree.c#L857
+ * https://github.com/SchadePaul/MasterThesis/blob/master/njst/src/tree.c
  * https://github.com/chaoszhang/ASTER/blob/master/src/astral-pro.cpp
  */
 
@@ -20,6 +20,7 @@ using dist_t = double;
 #include <unordered_map>
 #include <string>
 #include <format>
+#include <limits>
 
 std::vector<std::string> idx2leafname{}; // map node array index to locus name ("12_0_1")
 std::vector<int> leaf_indices{}; // leaf array indices
@@ -286,6 +287,97 @@ auto make_leafs(std::vector<std::string> leafnames) {
     }
 
     return tree;
+}
+
+auto make_tree(const std::vector<std::string>& leafnames) {
+    tree = make_leafs(leafnames);
+    int i{};
+    while (i + 1 < tree.size()) {
+        make_node(i, i + 1);
+        i += 2;
+    }
+
+    return tree;
+}
+
+auto make_quadratic_double_matrix(const size_t size) {
+    std::vector<std::vector<double>> mat{size};
+    for (auto &row: mat) {
+        row.resize(size);
+    }
+    return mat;
+}
+
+void node_to_node_dist(int root, std::vector<std::vector<double>> &dist_mat) {
+
+}
+
+void leaf_to_leaf_relative_deviation(int cur, std::vector<std::vector<double>> const &dist_mat,
+                                     std::vector<std::vector<double>> &rel_dev_mat) {
+    // TODO
+}
+
+int rms(int root, int cur, std::vector<std::vector<double>> const &dist_mat,
+        std::vector<std::vector<double>> const &rel_dev_mat, double &rho) {
+    // TODO
+    return 0;
+}
+
+void mad_root(int root, int top_id, double top_rho) {
+    // TODO
+}
+
+/**
+ * @link https://github.com/SchadePaul/MasterThesis/blob/master/njst/src/tree.c#L857
+ *
+ * @param root
+ * @return
+ */
+int mad(int root) {
+    std::vector<std::vector<double>> nn_dist_matrix{make_quadratic_double_matrix(tree.size())};
+    std::vector<std::vector<double>> ll_rel_dev_matrix{
+            make_quadratic_double_matrix(leaf_indices.size())};
+
+    // calculate all node to node distance
+    node_to_node_dist(root, nn_dist_matrix);
+    // calculate relative deviation
+    leaf_to_leaf_relative_deviation(root, nn_dist_matrix, ll_rel_dev_matrix);
+
+    // get scores for all possible roots
+
+    double score{};
+    double best_score{std::numeric_limits<double>::max()};
+    double rho{};
+    double best_rho{2};
+    int best_idx{-1};
+
+    int cur{root};
+    while (1) {
+        while (tree[cur].left_child_idx >= 0) {
+            cur = tree[cur].left_child_idx;
+            score = rms(root, cur, nn_dist_matrix, ll_rel_dev_matrix, rho);
+            if (score < best_score) {
+                best_score = score;
+                best_rho = rho;
+                best_idx = cur;
+            }
+        }
+        while (tree[cur].parent_idx >= 0 && tree[tree[cur].parent_idx].right_child_idx == cur) {
+            cur = tree[cur].parent_idx;
+        }
+        if (cur == root) {
+            break;
+        }
+        cur = tree[tree[cur].parent_idx].right_child_idx;
+        score = rms(root, cur, nn_dist_matrix, ll_rel_dev_matrix, rho);
+        if (score < best_score) {
+            best_score = score;
+            best_rho = rho;
+            best_idx = cur;
+        }
+    }
+
+    mad_root(root, best_idx, best_rho);
 }
 
 int tag_APro(int cur) {
