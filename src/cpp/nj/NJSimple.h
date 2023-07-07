@@ -9,7 +9,7 @@
 #include "../misc/common_types.h"
 
 template<typename T>
-vector_t<T> meanDistance(matrix_t<T> const& distMatrix) {
+vector_t<T> meanDistance(matrix_t<T> const &distMatrix) {
     const size_t n = distMatrix.size();
     vector_t<T> r;
     for (size_t i{0}; i < n; ++i) {
@@ -24,7 +24,7 @@ vector_t<T> meanDistance(matrix_t<T> const& distMatrix) {
 }
 
 template<typename T>
-matrix_t<T> interMatrix(matrix_t<T> const& distMatrix, vector_t<T> const& r) {
+matrix_t<T> interMatrix(matrix_t<T> const &distMatrix, vector_t<T> const &r) {
     matrix_t<T> iM;
     const size_t n = distMatrix.size();
     for (size_t i{0}; i < n; ++i) {
@@ -39,7 +39,7 @@ matrix_t<T> interMatrix(matrix_t<T> const& distMatrix, vector_t<T> const& r) {
 }
 
 template<typename T>
-std::pair<size_t, size_t> findMin(matrix_t<T> const& matrix) {
+std::pair<size_t, size_t> findMin(matrix_t<T> const &matrix) {
     T min = std::numeric_limits<T>::infinity();
     const size_t n = matrix.size();
     std::pair<size_t, size_t> minDistPos;
@@ -60,23 +60,24 @@ std::pair<size_t, size_t> findMin(matrix_t<T> const& matrix) {
 }
 
 template<typename T>
-matrix_t<T> calculateNewMatrix(matrix_t<T> const& distMatrix, std::pair<size_t, size_t> const& minDistPos) {
+matrix_t<T>
+calculateNewMatrix(matrix_t<T> const &distMatrix, std::pair<size_t, size_t> const &minDistPos) {
     const size_t n = distMatrix.size();
     matrix_t<T> newMatrix{};
     newMatrix.resize(n - 1);
     // pre-initialize to prevent creating one too many
-    for (size_t i{ 0 }; i < n - 1; ++i) {
+    for (size_t i{0}; i < n - 1; ++i) {
         newMatrix[i].resize(n - 1);
     }
     // copy old values of rows/columns that won't be changed
-    size_t xOff{ 0 };
-    for (size_t i{ 0 }; i < n; ++i) {
+    size_t xOff{0};
+    for (size_t i{0}; i < n; ++i) {
         // skip row if one of the merged ones
         if (i == minDistPos.first || i == minDistPos.second) {
             xOff++;
         } else {
-            size_t yOff{ 0 };
-            for (size_t j{ 0 }; j < n; ++j) {
+            size_t yOff{0};
+            for (size_t j{0}; j < n; ++j) {
                 // skip column if one of the merged ones
                 if (j == minDistPos.first || j == minDistPos.second) {
                     yOff++;
@@ -99,14 +100,12 @@ matrix_t<T> calculateNewMatrix(matrix_t<T> const& distMatrix, std::pair<size_t, 
          * d_u,k = (d_i,k + d_j,k - d_i,j) / 2
          * u = (i,j) the merged clusters, k is the current cluster
          */
-        newMatrix[k][n - 2] = (distMatrix[minDistPos.first][k + off]
-                               + distMatrix[minDistPos.second][k + off]
-                               - distMatrix[minDistPos.first][minDistPos.second])
-                              / 2.0;
-        newMatrix[n - 2][k] = (distMatrix[minDistPos.first][k + off]
-                               + distMatrix[minDistPos.second][k + off]
-                               - distMatrix[minDistPos.first][minDistPos.second])
-                              / 2.0;
+        newMatrix[k][n - 2] =
+                (distMatrix[minDistPos.first][k + off] + distMatrix[minDistPos.second][k + off] -
+                 distMatrix[minDistPos.first][minDistPos.second]) / 2.0;
+        newMatrix[n - 2][k] =
+                (distMatrix[minDistPos.first][k + off] + distMatrix[minDistPos.second][k + off] -
+                 distMatrix[minDistPos.first][minDistPos.second]) / 2.0;
     }
     newMatrix[n - 2][n - 2] = 0; // set new diagonal entry to 0
 
@@ -115,15 +114,12 @@ matrix_t<T> calculateNewMatrix(matrix_t<T> const& distMatrix, std::pair<size_t, 
 
 // const& to be sdure if bigger datatypes than simple numbers are used
 template<typename T>
-std::pair<T, T> calculateBranchLengths(T const& dist, T const& r1, T const& r2) {
-    return std::pair<T, T> {
-            (dist + r1 - r2) / 2.0,
-            dist - ((dist + r1 - r2) / 2.0)
-    };
+std::pair<T, T> calculateBranchLengths(T const &dist, T const &r1, T const &r2) {
+    return std::pair<T, T>{(dist + r1 - r2) / 2.0, dist - ((dist + r1 - r2) / 2.0)};
 }
 
-vector_t<std::shared_ptr<Tree>> copyUnjoinedTrees(vector_t<std::shared_ptr<Tree>> const& trees,
-                                                   std::pair<size_t, size_t> const& minDistPos) {
+vector_t<std::shared_ptr<Tree>> copyUnjoinedTrees(vector_t<std::shared_ptr<Tree>> const &trees,
+                                                  std::pair<size_t, size_t> const &minDistPos) {
     vector_t<std::shared_ptr<Tree>> copy;
     const size_t n = trees.size();
     for (size_t i{0}; i < n; ++i) {
@@ -138,7 +134,8 @@ vector_t<std::shared_ptr<Tree>> copyUnjoinedTrees(vector_t<std::shared_ptr<Tree>
 }
 
 template<typename T>
-std::shared_ptr<Tree> neighborJoining(matrix_t<T> const& distMatrix, vector_t<std::shared_ptr<Tree>> const& trees) {
+int neighborJoining(matrix_t<T> const &distMatrix, std::shared_ptr<Tree> const &tree,
+                    std::vector<int> active_nodes) {
     const size_t n = distMatrix.size();
     /*static_assert([n, distMatrix]() {
         bool quadratic = true;
@@ -156,22 +153,26 @@ std::shared_ptr<Tree> neighborJoining(matrix_t<T> const& distMatrix, vector_t<st
 
         //tree building
         std::pair<T, T> branchLengths = calculateBranchLengths(
-                distMatrix[minDistPos.first][minDistPos.second],
-                r[minDistPos.first],
+                distMatrix[minDistPos.first][minDistPos.second], r[minDistPos.first],
                 r[minDistPos.second]);
-        vector_t<std::shared_ptr<Tree>> newTrees = copyUnjoinedTrees(trees, minDistPos);
         // add joined trees (neighbors)
-        newTrees.push_back(join(trees[minDistPos.first], branchLengths.first,
-                                             trees[minDistPos.second], branchLengths.second));
+        // delete minDistPos and add new node idx to activeNodes
+        active_nodes.push_back(tree->make_node(active_nodes[minDistPos.first], branchLengths.first,
+                                               active_nodes[minDistPos.second],
+                                               branchLengths.second));
+        active_nodes.erase(active_nodes.begin() + minDistPos.first);
+        active_nodes.erase(active_nodes.begin() + minDistPos.second - 1);
 
-        return neighborJoining(newDistMatrix, newTrees);
+        return neighborJoining(newDistMatrix, tree, active_nodes);
     } else if (n == 2) {
         // base case
         // connecting branch defined by two branches of same length to parent -> "rooted" tree...
-        return join(trees[0], distMatrix[0][1], trees[1], distMatrix[0][1]);
+        tree->root = tree->make_node(active_nodes[0], distMatrix[0][1], active_nodes[1],
+                                     distMatrix[0][1]);
+        return tree->root;
     } else {
         // edge case, only one or none clusters
-        return trees[0];
+        return tree->tree[active_nodes[0]].idx;
     }
 }
 

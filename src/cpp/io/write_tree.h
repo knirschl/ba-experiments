@@ -10,7 +10,7 @@
 
 bool write_newick(Tree const& tree, std::ofstream& writer) {
     if (writer.is_open() && writer.good()) {
-        writer << to_newick(tree) << '\n';
+        writer << tree.to_newick() << '\n';
     }
     return !writer.fail();
 }
