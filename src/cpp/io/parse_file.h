@@ -2,8 +2,8 @@
 // Created by knirschl on 20.05.23.
 //
 
-#ifndef BA_PARSE_PHYLIP_H
-#define BA_PARSE_PHYLIP_H
+#ifndef BA_PARSE_FILE_H
+#define BA_PARSE_FILE_H
 
 #include <vector>
 #include <fstream>
@@ -31,17 +31,17 @@ static const std::string MATRIX_ELEMENT_REGEX_STR{"(?:" + ZERO_POINT_DBL_REGEX_S
 static const std::string WHITESPACE_MAT_ELEMENT_REGEX_STR{R"(\s*)" + MATRIX_ELEMENT_REGEX_STR};
 
 template<typename T>
-std::pair<matrix_t<T>, vector_t<std::string>> parse(std::ifstream& reader) {
-    matrix_t<T> matrix {};
-    vector_t<std::string> ids {};
-    std::string line {};
-    int seq_count {};
+std::pair<matrix_t<T>, vector_t<std::string>> parse_phylip(std::ifstream &reader) {
+    matrix_t<T> matrix{};
+    vector_t<std::string> ids{};
+    std::string line{};
+    int seq_count{};
     // first line := size
     if (reader.is_open() && reader.good()) {
         std::getline(reader, line);
         seq_count = std::stoi(line);
         matrix.resize(seq_count);
-        for (auto& c : matrix) { // ref needed to update actually column and not a copy
+        for (auto &c: matrix) { // ref needed to update actually column and not a copy
             c.resize(seq_count);
         }
         ids.resize(seq_count);
@@ -79,11 +79,41 @@ std::pair<matrix_t<T>, vector_t<std::string>> parse(std::ifstream& reader) {
 }
 
 template<typename T>
-std::pair<matrix_t<T>, vector_t<std::string>> parse_from_file(std::string const& file) {
+std::pair<matrix_t<T>, vector_t<std::string>> parse_phylip_mat_from_file(std::string const &file) {
     std::ifstream streamed_file{file};
-    auto read = parse<T>(streamed_file);
+    auto read = parse_phylip<T>(streamed_file);
     streamed_file.close();
     return read;
 }
 
-#endif //BA_PARSE_PHYLIP_H
+std::unordered_map<std::string, std::string>
+parse_mapping(std::ifstream &reader, bool is_locus_left, const std::string &delimiter) {
+    std::unordered_map<std::string, std::string> map{};
+    size_t delimiter_len{delimiter.size()};
+    std::string line{};
+    while (reader) {
+        std::getline(reader, line);
+        if (line.empty()) {
+            continue;
+        }
+        std::string left = line.substr(0, line.find(delimiter));
+        std::string right = line.substr(line.find(delimiter) + delimiter_len);
+        if (is_locus_left) {
+            map.emplace(left, right);
+        } else {
+            map.emplace(right, left);
+        }
+    }
+
+    return map;
+}
+
+std::unordered_map<std::string, std::string>
+parse_mapping_from_cfg(const std::tuple<std::string, bool, std::string> &cfg) {
+    std::ifstream streamed_file{std::get<0>(cfg)};
+    auto read = parse_mapping(streamed_file, std::get<1>(cfg), std::get<2>(cfg));
+    streamed_file.close();
+    return read;
+}
+
+#endif //BA_PARSE_FILE_H

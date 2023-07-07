@@ -1,7 +1,8 @@
 import os
 import shutil
-import time
 import sys
+import time
+
 sys.path.insert(0, 'scripts')
 sys.path.insert(0, os.path.join("tools", "families"))
 import paths
@@ -28,12 +29,14 @@ def generate_scheduler_commands_file(datadir, subst_model, species_tree, ba_fami
             command.append("-s")
             command.append(species_tree)
             # CURRENTLY NOT USING FAMILIES FILE BUT STARTING NEW INSTANCE EVERY TIME
-            #command.append("-f")
-            #command.append(ba_families_file)
+            # command.append("-f")
+            # command.append(ba_families_file)
             command.append("-a")
             command.append(alignment_matrix)
             command.append("-p")
             command.append(ba_output_prefix)
+            command.append("-m")
+            command.append(fam.get_mappings())
             writer.write(" ".join(command) + "\n")
     return scheduler_commands_file
 

@@ -1,10 +1,11 @@
-import os
 import itertools
 import numpy as np
-from phylodm import PhyloDM
-from Bio.Phylo.TreeConstruction import DistanceCalculator
-from Bio import AlignIO
+import os
 import sys
+from Bio import AlignIO
+from Bio.Phylo.TreeConstruction import DistanceCalculator
+from phylodm import PhyloDM
+
 sys.path.insert(0, 'tools/families')
 import fam
 
@@ -29,7 +30,7 @@ def from_newick(file, norm = True):
     # calculate distance matrix
     pdm = PhyloDM.load_from_newick_path(file)
     # make labels same as in alignments (map function?)
-    labels = [s + "_0_0" for s in pdm.taxa()]
+    labels = pdm.taxa()
     # sort distance matrix and labels to add the correct values in later steps (standardized output)
     dist_matrix = sort(pdm.dm(norm), get_key_order(labels))
     labels = np.sort(labels)

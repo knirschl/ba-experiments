@@ -16,18 +16,31 @@ auto build_parser(std::string const& name, std::string const& version) {
     program.add_epilog("");
 
     program.add_argument("-s", "--speciesmat")
-        .required()
-        .help("specify the species tree distance matrix in PHYLIP format");
+            .required()
+            .help("specify the species tree distance matrix in PHYLIP format");
 
     program.add_argument("-a", "--alignmat")
-        .required()
-        .help("specify the gene alignment distance matrix in PHYLIP format");
+            .required()
+            .help("specify the gene alignment distance matrix in PHYLIP format");
 
     //program.add_argument("-f", "--families")
     //        .help("specify the families file");
 
+    program.add_argument("-m", "--mapping")
+            .default_value(std::string{""})
+            .help("specify the mapping between species names and locus names");
+
+    program.add_argument("-l")
+            .default_value(false)
+            .implicit_value(true)
+            .help("if set, mapping file maps locus names to species names");
+
+    program.add_argument("-d", "--delimiter")
+            .default_value(std::string{":"})
+            .help("mapping separator");
+
     program.add_argument("-p", "--prefix")
-            .default_value(std::string("/"))
+            .default_value(std::string{"/"})
             .help("specify the output prefix");
 
     return program;
@@ -71,12 +84,16 @@ std::string getS(argparse::ArgumentParser& program) {
     return program.get("-s");
 }
 
-std::string getA(argparse::ArgumentParser& program) {
+std::string getA(argparse::ArgumentParser &program) {
     return program.get("-a");
 }
 
-std::string getP(argparse::ArgumentParser& program) {
+std::string getP(argparse::ArgumentParser &program) {
     return program.get("-p");
+}
+
+std::tuple<std::string, bool, std::string> getMappingConfig(argparse::ArgumentParser &program) {
+    return {program.get("-m"), program.get<bool>("-l"), program.get("-d")};
 }
 
 #endif //BA_PARSE_CLI_H
