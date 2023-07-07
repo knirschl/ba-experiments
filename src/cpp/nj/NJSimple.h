@@ -6,7 +6,7 @@
 #define BA_NJSIMPLE_H
 
 #include "tree.h"
-#include "../common_types.h"
+#include "../misc/common_types.h"
 
 template<typename T>
 vector_t<T> meanDistance(matrix_t<T> const& distMatrix) {

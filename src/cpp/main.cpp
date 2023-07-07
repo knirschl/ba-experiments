@@ -6,16 +6,11 @@
 #include <iomanip>
 #include "io/parse_cli.h"
 #include "io/parse_phylip.h"
+#include "io/write_tree.h"
 #include "nj/tree.h"
 #include "nj/matrix.h"
 #include "nj/NJSimple.h"
-#include "io/write_tree.h"
-#include <argparse/argparse.hpp>
-
-auto convert(vector_t<std::string> string_ids, vector_t<std::shared_ptr<Tree>>& trees) {
-    std::transform(string_ids.begin(), string_ids.end(), std::back_inserter(trees),
-                   [](auto id) { return std::make_shared<Leaf>(id); });
-}
+#include "misc/meta.h"
 
 int main(int argc, char *argv[]) {
     auto cli_parser = build_parser("thesis", "0.1");

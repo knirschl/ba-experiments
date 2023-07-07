@@ -9,12 +9,12 @@
 #include <functional>
 #include <string>
 #include <numeric>
-#include "../common_types.h"
+#include "../misc/common_types.h"
 
 template<typename T>
 matrix_t<T> make_matrix(const size_t rows, const size_t columns) {
     matrix_t<T> result{rows};
-    for (auto c : result) {
+    for (auto c: result) {
         c.resize(columns);
     }
     return result;

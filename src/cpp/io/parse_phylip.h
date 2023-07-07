@@ -11,7 +11,7 @@
 #include <regex>
 #include <iostream>
 #include <string>
-#include "../common_types.h"
+#include "../misc/common_types.h"
 #include <sstream>
 
 using namespace std::literals;
