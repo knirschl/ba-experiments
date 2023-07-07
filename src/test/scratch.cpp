@@ -20,17 +20,6 @@ using dist_t = double;
 #include <format>
 #include <limits>
 
-
-
-
-auto make_quadratic_double_matrix(const size_t size) {
-    std::vector<std::vector<double>> mat{size};
-    for (auto &row: mat) {
-        row.resize(size);
-    }
-    return mat;
-}
-
 void node_to_node_dist(int root, std::vector<std::vector<double>> &dist_mat) {
 
 }

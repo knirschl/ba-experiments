@@ -12,12 +12,17 @@
 #include "../common_types.h"
 
 template<typename T>
-matrix_t<T> make_zero_matrix(size_t rows, size_t columns) {
+matrix_t<T> make_matrix(const size_t rows, const size_t columns) {
     matrix_t<T> result{rows};
     for (auto c : result) {
         c.resize(columns);
     }
     return result;
+}
+
+template<typename T>
+matrix_t<T> make_quadratic_matrix(const size_t size) {
+    return make_matrix<T>(size, size);
 }
 
 /**
