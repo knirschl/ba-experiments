@@ -94,16 +94,6 @@ int mad(int root) {
 }
 
 #include <iostream>
-#include <sstream>
-
-std::string to_string(std::vector<std::pair<int, int>> ps) {
-    std::ostringstream oss;
-    for (auto& p : ps) {
-        oss << std::format("[{},{}], ", p.first, p.second);
-    }
-
-    return oss.str();
-}
 
 /** ######
  *  TESTS
