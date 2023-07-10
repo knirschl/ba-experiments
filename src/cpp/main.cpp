@@ -63,7 +63,7 @@ void run(double scale, const std::shared_ptr<Tree> &tree, const std::vector<int>
     matscale(species_tree_mat, scale, scaleMatrix);
     matadd(alignment_mat, scaleMatrix, sumMatrix);
     //std::cout << "Scaled Species-Tree-Matrix + Alignment-Matrix =\n" << matstr(distMatrix) << "\n\n";
-    //int root = neighborJoining<>(sumMatrix, tree, active);
+    int root = neighborJoining<>(sumMatrix, tree, active);
     std::cout << "Neighbor-joined tree: " << tree->to_newick() << std::endl;
 
     // TODO tag and reroot
