@@ -130,14 +130,20 @@ public:
      * @param leafnames names of the leafs
      */
     void make_leafs(const std::vector<std::string> &leafnames) {
+        // reset structs
+        idx2leafname.clear();
+        leaf_indices.clear();
+        idx2leafname.resize(leafnames.size());
         tree = std::vector<Node>{leafnames.size()};
+        root = -1;
+
         for (int leaf_idx{}; leaf_idx < leafnames.size(); leaf_idx++) {
             tree[leaf_idx].idx = leaf_idx;
             tree[leaf_idx].is_leaf = true;
             tree[leaf_idx].score = 0;
-            if (idx2leafname.size() <= leaf_idx) {
-                idx2leafname.resize(leaf_idx + 1);
-            }
+            //if (idx2leafname.size() <= leaf_idx) {
+            //    idx2leafname.resize(leaf_idx + 1);
+            //}
             idx2leafname[leaf_idx] = leafnames.at(leaf_idx);
             leaf_indices.push_back(leaf_idx);
             // give associated groupname an id or use existing one to set bitset

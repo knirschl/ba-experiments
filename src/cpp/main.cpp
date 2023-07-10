@@ -12,6 +12,70 @@
 #include "nj/NJSimple.h"
 #include "misc/meta.h"
 
+/**
+ * Resets tree and mappings that need to be reset.
+ *
+ * ==========
+ * INFO: Only needed for figuring out what settings are best
+ * ==========
+ *
+ * @param map_config
+ * @return
+ */
+auto reset(const std::vector<std::string> &species_tree_ids,
+           const std::vector<std::string> &alignment_ids,
+           const std::tuple<std::string, bool, std::string> &map_config) {
+    // fill map
+    if (get<0>(map_config).empty()) {
+        // no mapping provided
+        for (int i{}; i < alignment_ids.size(); i++) {
+            leafname2groupname.emplace(alignment_ids[i], species_tree_ids[i]);
+        }
+    } else {
+        leafname2groupname = parse_mapping_from_cfg(map_config);
+    }
+    // create tree
+    std::shared_ptr<Tree> tree = std::make_shared<Tree>();
+    tree->make_leafs(alignment_ids);
+    return tree;
+}
+
+/**
+ * Run nj, reroot, nj.
+ *
+ * ==========
+ * INFO: Only needed for figuring out what settings are best
+ * ==========
+ *
+ * @param scale
+ * @param tree
+ * @param active
+ * @param species_tree_mat
+ * @param alignment_mat
+ * @param cli_parser
+ */
+void run(double scale, const std::shared_ptr<Tree> &tree, const std::vector<int> &active,
+         const std::vector<std::vector<double>> &species_tree_mat,
+         const std::vector<std::vector<double>> &alignment_mat,
+         argparse::ArgumentParser &cli_parser) {
+    matrix_t<double> scaleMatrix{};
+    matrix_t<double> sumMatrix{};
+    matscale(species_tree_mat, scale, scaleMatrix);
+    matadd(alignment_mat, scaleMatrix, sumMatrix);
+    //std::cout << "Scaled Species-Tree-Matrix + Alignment-Matrix =\n" << matstr(distMatrix) << "\n\n";
+    //int root = neighborJoining<>(sumMatrix, tree, active);
+    std::cout << "Neighbor-joined tree: " << tree->to_newick() << std::endl;
+
+    // TODO tag and reroot
+    // TODO change selected alignment_mat entries
+    // TODO nj again
+
+    // double to string without trailing zeros
+    std::ostringstream oss;
+    oss << std::setprecision(8) << std::noshowpoint << scale;
+    write_newick(*tree, getP(cli_parser) + oss.str() + "S+G.geneTree.newick");
+}
+
 int main(int argc, char *argv[]) {
     auto cli_parser = build_parser("thesis", "0.1");
     parse(cli_parser, argc, argv);
@@ -27,76 +91,33 @@ int main(int argc, char *argv[]) {
     auto alignment_mat = alignment_pair.first;
     auto alignment_ids = alignment_pair.second;
 
-    // fill map
     auto map_config{getMappingConfig(cli_parser)};
-    if (get<0>(map_config).empty()) {
-        // no mapping provided
-        for (int i{}; i < alignment_ids.size(); i++) {
-            leafname2groupname.emplace(alignment_ids[i], species_tree_ids[i]);
-        }
-    } else {
-        leafname2groupname = parse_mapping_from_cfg(map_config);
-    }
 
-    // create tree
-    std::shared_ptr<Tree> tree = std::make_shared<Tree>();
-    tree->make_leafs(alignment_ids);
-    std::vector<int> active{leaf_indices};
-
-    /*
-     * TODO !!!
-     * TODO tree array gets bigger and bigger -> that`s not what we want!
-     * TODO !!!
-     */
     // calculate
     {
         double div{100.0};
         int step{5};
         for (int i{}; i < 1 * div; i += step) {
+            std::shared_ptr<Tree> tree = reset(species_tree_ids, alignment_ids, map_config);
+            std::vector<int> active{leaf_indices};
+
             if (i == 1) {
                 step = 25;
             }
-            matrix_t<dist_t> scaleMatrix{};
-            matrix_t<dist_t> sumMatrix{};
-            double scale{i / div};
-            matscale(species_tree_mat, scale, scaleMatrix);
-            matadd(alignment_mat, scaleMatrix, sumMatrix);
-            //std::cout << "Scaled Species-Tree-Matrix + Alignment-Matrix =\n" << matstr(sumMatrix) << "\n\n";
-            int root = neighborJoining<>(sumMatrix, tree, active);
-            std::cout << "Neighbor-joined tree: " << tree->to_newick() << std::endl;
-            // double to string without trailing zeros
-            std::ostringstream oss;
-            oss << std::setprecision(8) << std::noshowpoint << scale;
-            write_newick(*tree, getP(cli_parser) + oss.str() + "S+G.geneTree.newick");
+            run(i / div, tree, active, species_tree_mat, alignment_mat, cli_parser);
         }
         step = 25;
         for (int i{int(1 * div)}; i <= 2 * div; i += step) {
-            matrix_t<double> scaleMatrix{};
-            matrix_t<double> sumMatrix{};
-            double scale{i / div};
-            matscale(species_tree_mat, scale, scaleMatrix);
-            matadd(alignment_mat, scaleMatrix, sumMatrix);
-            //std::cout << "Scaled Species-Tree-Matrix + Alignment-Matrix =\n" << matstr(distMatrix) << "\n\n";
-            int root = neighborJoining<>(sumMatrix, tree, active);
-            std::cout << "Neighbor-joined tree: " << tree->to_newick() << std::endl;
-            // double to string without trailing zeros
-            std::ostringstream oss;
-            oss << std::setprecision(8) << std::noshowpoint << scale;
-            write_newick(*tree, getP(cli_parser) + oss.str() + "S+G.geneTree.newick");
+            std::shared_ptr<Tree> tree = reset(species_tree_ids, alignment_ids, map_config);
+            std::vector<int> active{leaf_indices};
+
+            run(i / div, tree, active, species_tree_mat, alignment_mat, cli_parser);
         }
         for (int i{int(2.5 * div)}; i <= 10 * div; i *= 2) {
-            matrix_t<double> scaleMatrix{};
-            matrix_t<double> sumMatrix{};
-            double scale{i / div};
-            matscale(species_tree_mat, scale, scaleMatrix);
-            matadd(alignment_mat, scaleMatrix, sumMatrix);
-            //std::cout << "Scaled Species-Tree-Matrix + Alignment-Matrix =\n" << matstr(distMatrix) << "\n\n";
-            int root = neighborJoining<>(sumMatrix, tree, active);
-            std::cout << "Neighbor-joined tree: " << tree->to_newick() << std::endl;
-            // double to string without trailing zeros
-            std::ostringstream oss;
-            oss << std::setprecision(8) << std::noshowpoint << scale;
-            write_newick(*tree, getP(cli_parser) + oss.str() + "S+G.geneTree.newick");
+            std::shared_ptr<Tree> tree = reset(species_tree_ids, alignment_ids, map_config);
+            std::vector<int> active{leaf_indices};
+
+            run(i / div, tree, active, species_tree_mat, alignment_mat, cli_parser);
         }
     }
 
