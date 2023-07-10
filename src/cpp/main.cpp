@@ -58,17 +58,26 @@ void run(double scale, const std::shared_ptr<Tree> &tree, const std::vector<int>
          const std::vector<std::vector<double>> &species_tree_mat,
          const std::vector<std::vector<double>> &alignment_mat,
          argparse::ArgumentParser &cli_parser) {
-    matrix_t<double> scaleMatrix{};
-    matrix_t<double> sumMatrix{};
+    dist_matrix_t scaleMatrix{};
+    dist_matrix_t sumMatrix{};
     matscale(species_tree_mat, scale, scaleMatrix);
     matadd(alignment_mat, scaleMatrix, sumMatrix);
     //std::cout << "Scaled Species-Tree-Matrix + Alignment-Matrix =\n" << matstr(distMatrix) << "\n\n";
-    int root = neighborJoining<>(sumMatrix, tree, active);
+    neighborJoining<>(sumMatrix, tree, active);
     std::cout << "Neighbor-joined tree: " << tree->to_newick() << std::endl;
 
-    // TODO tag and reroot
-    // TODO change selected alignment_mat entries
+    // tag and reroot
+    tree->reroot_APro();
+    auto speciation_pairs{tree->get_speciation_pairs()};
+    dist_matrix_t specMatrix{alignment_mat};
+    for (auto &pair: speciation_pairs) {
+        // TODO change selected alignment_mat entries
+
+    }
     // TODO nj again
+    //reset()
+    neighborJoining<>(specMatrix, tree, active);
+    std::cout << "Neighbor-joined and rerooted tree: " << tree->to_newick() << std::endl;
 
     // double to string without trailing zeros
     std::ostringstream oss;
