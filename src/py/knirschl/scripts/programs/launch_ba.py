@@ -36,7 +36,7 @@ def generate_scheduler_commands_file(datadir, subst_model, species_tree, ba_fami
             command.append("-p")
             command.append(ba_output_prefix)
             command.append("-m")
-            command.append(fam.get_mappings())
+            command.append(fam.get_mappings(datadir, family))
             writer.write(" ".join(command) + "\n")
     return scheduler_commands_file
 
