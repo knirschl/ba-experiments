@@ -107,9 +107,9 @@ class RunFilter():
 # ====== ! CAREFUL ! ======
 run_filter = RunFilter() # all enabled
 #run_filter.force_overwrite = True # regenerate old dataset
+run_filter.script_ba() # only ba script
 #run_filter.compare = False
-#run_filter.script_ba() # only ba script
-run_filter.run_compare() # only compare inferred trees
+#run_filter.run_compare() # only compare inferred trees
 # ====== ! CAREFUL ! ======
 
 root_output = paths.families_datasets_root # output/families/
