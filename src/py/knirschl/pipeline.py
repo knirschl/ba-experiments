@@ -116,16 +116,15 @@ run_filter = RunFilter() # all enabled
 root_output = paths.families_datasets_root # output/families/
 seeds = [42, 1007, 19732311, 121873, 14976684177860080345]
 while (len(seeds) != 100):
-    seeds.append(random.randrange(0, 99999999999999999999))
-print(seeds)
-exit(-1)
+    seeds.append(random.randrange(0, 9999999))
 tag = "DL"
+d = l = 1.0
 replicates = []
 
 # Run multiple replicates
 for seed in seeds:
     # SET simphy PARAMETERS 
-    simphy_parameters = simphy.SimphyParameters(tag=tag, seed=seed, dup_rate=1.0, loss_rate=1.0)
+    simphy_parameters = simphy.SimphyParameters(tag=tag, seed=seed, dup_rate=d, loss_rate=l)
     datadir = simphy.get_output_dir(simphy_parameters, root_output)
     replicates.append(datadir)
     print(datadir)
@@ -133,7 +132,7 @@ for seed in seeds:
     # RUN PIPELINE
     rep_start = time.time()
     try:
-        run_filter.run_methods(datadir, "F81", 1)
+        run_filter.run_methods(datadir, "F81", 12)
     finally:
         elapsed = time.time() - rep_start
         print("End of single experiment. Elapsed time: " + str(elapsed) + "s")
