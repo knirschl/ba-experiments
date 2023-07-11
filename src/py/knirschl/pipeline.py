@@ -1,6 +1,7 @@
 import sys
 import os
 import time
+import random
 sys.path.insert(0, 'scripts')
 sys.path.insert(0, 'scripts/programs')
 sys.path.insert(0, 'tools/families')
@@ -107,13 +108,17 @@ class RunFilter():
 # ====== ! CAREFUL ! ======
 run_filter = RunFilter() # all enabled
 #run_filter.force_overwrite = True # regenerate old dataset
-run_filter.script_ba() # only ba script
+#run_filter.script_ba() # only ba script
 #run_filter.compare = False
 #run_filter.run_compare() # only compare inferred trees
 # ====== ! CAREFUL ! ======
 
 root_output = paths.families_datasets_root # output/families/
 seeds = [42, 1007, 19732311, 121873, 14976684177860080345]
+while (len(seeds) != 100):
+    seeds.append(random.randrange(0, 99999999999999999999))
+print(seeds)
+exit(-1)
 tag = "DL"
 replicates = []
 
