@@ -87,22 +87,36 @@ std::pair<matrix_t<T>, vector_t<std::string>> parse_phylip_mat_from_file(std::st
 }
 
 std::unordered_map<std::string, std::string>
-parse_mapping(std::ifstream &reader, bool is_locus_left, const std::string &delimiter) {
+parse_mapping(std::ifstream &reader, bool is_locus_left, const std::string &ls_delim) {
     std::unordered_map<std::string, std::string> map{};
-    size_t delimiter_len{delimiter.size()};
+    size_t ls_delim_len{ls_delim.size()};
+    std::string ll_delim = ";";
+    size_t ll_delim_len{ll_delim.size()};
     std::string line{};
+    // per line
     while (reader) {
         std::getline(reader, line);
         if (line.empty()) {
             continue;
         }
-        std::string left = line.substr(0, line.find(delimiter));
-        std::string right = line.substr(line.find(delimiter) + delimiter_len);
+        // get loci list and species
+        std::string loci;
+        std::string species;
         if (is_locus_left) {
-            map.emplace(left, right);
+            loci = line.substr(0, line.find(ls_delim));
+            species = line.substr(line.find(ls_delim) + ls_delim_len);
         } else {
-            map.emplace(right, left);
+            loci = line.substr(line.find(ls_delim) + ls_delim_len);
+            species = line.substr(0, line.find(ls_delim));
         }
+        // split loci list
+        size_t pos_start{};
+        size_t pos_end;
+        while ((pos_end = loci.find(ll_delim, pos_start)) != std::string::npos) {
+            map.emplace(loci.substr(pos_start, pos_end - pos_start), species);
+            pos_start = pos_end + ll_delim_len;
+        }
+        map.emplace(loci.substr(pos_start), species);
     }
 
     return map;
