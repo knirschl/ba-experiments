@@ -5,7 +5,7 @@ General information:
 - Output prefix: /home/fili/Documents/KIT/2023/BA/code/output/families/ssim_NE_s20_f100_sites200_GTR_bl1.0_d0.0_l0.0_t0.0_gc0.0_p0.0_pop10_ms0.0_mf0.0_seed42/runs/F81/generax
 - Families information: /home/fili/Documents/KIT/2023/BA/code/output/families/ssim_NE_s20_f100_sites200_GTR_bl1.0_d0.0_l0.0_t0.0_gc0.0_p0.0_pop10_ms0.0_mf0.0_seed42/runs/F81/families-generax.txt
 - Species tree: /home/fili/Documents/KIT/2023/BA/code/output/families/ssim_NE_s20_f100_sites200_GTR_bl1.0_d0.0_l0.0_t0.0_gc0.0_p0.0_pop10_ms0.0_mf0.0_seed42/species_trees/speciesTree.newick
-- MPI Ranks: 1
+- MPI Ranks: 4
 - Random seed: 123
 - Reconciliation model: UndatedDTL
 - DTL rates: global rates
@@ -22,14 +22,14 @@ Gene tree correction information:
 End of instance initialization
 
 [00:00:00] [Initialization] Initial optimization of the starting random gene trees from the MSAs only
-[00:00:05] [Initialization] Finished optimizing the gene trees from the MSAs
+[00:00:00] [Initialization] Finished optimizing the gene trees from the MSAs
 
-[00:00:05] Starting species tree initialization...
-[00:00:05] End of species tree initialization
-[00:00:05] Filtering invalid families based on the starting species tree...
+[00:00:00] Starting species tree initialization...
+[00:00:00] End of species tree initialization
+[00:00:00] Filtering invalid families based on the starting species tree...
 
-[00:00:05] Gathering statistics about the families...
-[00:00:05] Input data information:
+[00:00:00] Gathering statistics about the families...
+[00:00:00] Input data information:
 - Number of gene families: 100
 - Number of species: 20
 - Total number of genes: 2000
@@ -38,42 +38,42 @@ End of instance initialization
 - Species covered with the smallest family coverage: "8" (covered by 100/100 families)
 - Average (over species) species family coverage: 100
 
-[00:00:05] Reconciliation rates optimization... 
-	D=1e-07, L=0.0629931, T=0.0954351, RecLL= -3057.33
+[00:00:00] Reconciliation rates optimization... 
+	D=1e-07, L=0.00337289, T=0.00508645, RecLL= -280.097
 
-[00:00:05] Optimizing gene trees with radius=1... 
-[00:00:08] JointLL=-135294 RecLL=-1156.23 LibpllLL=-134138
+[00:00:00] Optimizing gene trees with radius=1... 
+[00:00:00] JointLL=-134457 RecLL=-279.768 LibpllLL=-134177
 
-[00:00:08] Reconciliation rates optimization... 
-	D=1e-07, L=0.013016, T=0.0206743, RecLL= -908.784
+[00:00:00] Reconciliation rates optimization... 
+	D=1e-07, L=0.00337289, T=0.00508645, RecLL= -280.097
 
-[00:00:09] Optimizing gene trees with radius=2... 
-[00:00:14] JointLL=-134612 RecLL=-426.978 LibpllLL=-134185
+[00:00:00] Optimizing gene trees with radius=2... 
+[00:00:00] JointLL=-134457 RecLL=-279.768 LibpllLL=-134177
 
-[00:00:14] Reconciliation rates optimization... 
-	D=1e-07, L=0.00444939, T=0.00770924, RecLL= -394.178
+[00:00:00] Reconciliation rates optimization... 
+	D=1e-07, L=0.00337289, T=0.00508645, RecLL= -280.097
 
-[00:00:15] Optimizing gene trees with radius=3... 
-[00:00:20] JointLL=-134488 RecLL=-317.856 LibpllLL=-134170
+[00:00:00] Optimizing gene trees with radius=3... 
+[00:00:00] JointLL=-134457 RecLL=-279.768 LibpllLL=-134177
 
-[00:00:20] Reconciliation rates optimization... 
-	D=1e-07, L=0.00369894, T=0.00580094, RecLL= -317.255
+[00:00:00] Reconciliation rates optimization... 
+	D=1e-07, L=0.00337289, T=0.00508645, RecLL= -280.097
 
-[00:00:20] Optimizing gene trees with radius=4... 
-[00:00:25] JointLL=-134465 RecLL=-294.368 LibpllLL=-134171
+[00:00:00] Optimizing gene trees with radius=4... 
+[00:00:00] JointLL=-134457 RecLL=-279.768 LibpllLL=-134177
 
-[00:00:25] Reconciliation rates optimization... 
-	D=1e-07, L=0.00351848, T=0.00530465, RecLL= -294.677
+[00:00:00] Reconciliation rates optimization... 
+	D=1e-07, L=0.00337289, T=0.00508645, RecLL= -280.097
 
-[00:00:26] Optimizing gene trees with radius=5... 
-[00:00:31] JointLL=-134457 RecLL=-279.768 LibpllLL=-134177
+[00:00:00] Optimizing gene trees with radius=5... 
+[00:00:00] JointLL=-134457 RecLL=-279.768 LibpllLL=-134177
 
-[00:00:31] Reconciling gene trees with the species tree...
-[00:00:31] Terminating the instance..
+[00:00:00] Reconciling gene trees with the species tree...
+[00:00:01] Terminating the instance..
 
-[00:00:31] DTL rates: D=1e-07 L= 0.00351848 T=0.00530465
-[00:00:31] Reconciliation likelihood: -279.768
-[00:00:31] Phylogenetic likelihood: -134177
-[00:00:31] Joint likelihood: -134457
-[00:00:31] Results directory: /home/fili/Documents/KIT/2023/BA/code/output/families/ssim_NE_s20_f100_sites200_GTR_bl1.0_d0.0_l0.0_t0.0_gc0.0_p0.0_pop10_ms0.0_mf0.0_seed42/runs/F81/generax
-[00:00:31] End of GeneRax execution
+[00:00:01] DTL rates: D=1e-07 L= 0.00337289 T=0.00508645
+[00:00:01] Reconciliation likelihood: -279.768
+[00:00:01] Phylogenetic likelihood: -134177
+[00:00:01] Joint likelihood: -134457
+[00:00:01] Results directory: /home/fili/Documents/KIT/2023/BA/code/output/families/ssim_NE_s20_f100_sites200_GTR_bl1.0_d0.0_l0.0_t0.0_gc0.0_p0.0_pop10_ms0.0_mf0.0_seed42/runs/F81/generax
+[00:00:01] End of GeneRax execution
