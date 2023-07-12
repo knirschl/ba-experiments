@@ -115,8 +115,7 @@ run_filter = RunFilter() # all enabled
 
 root_output = paths.families_datasets_root # output/families/
 seeds = [42, 1007, 19732311, 121873, 14976684177860080345]
-while (len(seeds) != 100):
-    seeds.append(random.randrange(0, 9999999))
+#seeds = [1007, 1058026, 1091512, 1105070, 1143740, 11872, 121873, 125546, 1316419, 1320646, 14976684177860080345, 1570525, 1674005, 19732311, 2181913, 2366262, 2453027, 2525498, 2530855, 2545197, 2622038, 2650353, 2835503, 2862791, 2967039, 2967641, 3174338, 3219882, 3279056, 3389159, 340025, 3547108, 3614207, 3686221, 3939144, 3959336, 4108907, 4130562, 4144379, 4193573, 42, 4229, 4290505, 429510, 4354376, 436633, 4412646, 4602564, 4754615, 4771372, 4785291, 4824437, 491587, 5476033, 558959, 5597160, 5616680, 5749959, 6050422, 6077656, 6214982, 6382595, 6449414, 6645706, 6722758, 6734655, 7060210, 7265233, 7340707, 7342556, 7350931, 7538361, 7724757, 7927143, 7940684, 8039292, 8124350, 8386866, 8388955, 842036, 8438226, 8527944, 8563774, 8670475, 8710215, 8928866, 901464, 9070912, 9128753, 9179296, 9387015, 9442585, 9476398, 9488374, 9495297, 9510809, 9718279, 9919929, 9930269, 9955696]
 tag = "DL"
 d = l = 1.0
 replicates = []
@@ -130,13 +129,13 @@ for seed in seeds:
     print(datadir)
 
     # RUN PIPELINE
-    rep_start = time.time()
+    """ rep_start = time.time()
     try:
-        run_filter.run_methods(datadir, "F81", 12)
+        run_filter.run_methods(datadir, "F81", 8)
     finally:
         elapsed = time.time() - rep_start
         print("End of single experiment. Elapsed time: " + str(elapsed) + "s")
-        metrics.save_metrics(datadir, "pipeline_" + tag + str(seed), elapsed, "runtimes")
+        metrics.save_metrics(datadir, "pipeline_" + tag + str(seed), elapsed, "runtimes") """
 
 # AVERAGE OVER ALL REPLICATES
 abs_name = "rf_distance_avg-abs"
@@ -147,8 +146,17 @@ rep_counter = 1
 for rep in replicates[1:]:
     cur_abs = metrics.get_metrics(rep, abs_name)
     cur_rel = metrics.get_metrics(rep, rel_name)
-    abs_avgs_dico = {x: (float(abs_avgs_dico[x]) * rep_counter + float(cur_abs[x])) / (rep_counter + 1) for x in set(abs_avgs_dico).union(cur_abs)}
-    rel_avgs_dico = {x: (float(rel_avgs_dico[x]) * rep_counter + float(cur_rel[x])) / (rep_counter + 1) for x in set(rel_avgs_dico).union(cur_rel)}
+#    abs_avgs_dico = {x: (float(abs_avgs_dico[x]) * rep_counter + float(cur_abs[x])) / (rep_counter + 1) for x in set(abs_avgs_dico).union(cur_abs)}
+#    rel_avgs_dico = {x: (float(rel_avgs_dico[x]) * rep_counter + float(cur_rel[x])) / (rep_counter + 1) for x in set(rel_avgs_dico).union(cur_rel)}
+    for x in set(abs_avgs_dico).union(cur_abs):
+        if not x in abs_avgs_dico:
+            abs_avgs_dico[x] = 0
+            rel_avgs_dico[x] = 0
+        if not x in cur_abs:
+            cur_abs[x] = 0
+            cur_rel[x] = 0
+        abs_avgs_dico[x] = (float(abs_avgs_dico[x]) * rep_counter + float(cur_abs[x])) / (rep_counter + 1)
+        rel_avgs_dico[x] = (float(rel_avgs_dico[x]) * rep_counter + float(cur_rel[x])) / (rep_counter + 1)
     rep_counter += 1
 metrics.save_dico(root_output, abs_avgs_dico, tag + "_global__rf_distance_avg-abs")
 metrics.save_dico(root_output, rel_avgs_dico, tag + "_global__rf_distance_avg-rel")
