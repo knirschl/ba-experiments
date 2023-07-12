@@ -1,5 +1,0 @@
-Node_7_6_0 Node_2_8_0
-Node_5_4_0 Node_7_10_0
-Node_5_4_0 Node_1_9_0
-Node_15_16_0 13
-Node_18_14_0 Node_12_20_0

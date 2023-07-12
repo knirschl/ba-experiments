@@ -1,7 +1,0 @@
-family_047 : 4.0
-family_056 : 6.0
-family_033 : 8.0
-family_046 : 10.0
-family_073 : 14.0
-family_035 : 14.0
-family_015 : 18.0

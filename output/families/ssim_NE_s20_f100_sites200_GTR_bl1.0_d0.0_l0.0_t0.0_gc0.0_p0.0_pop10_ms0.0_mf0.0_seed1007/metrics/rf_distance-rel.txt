@@ -1,5 +1,0 @@
-y_039	ba.exp.0.95s~g.genetree.newick : 0.0
-family_079	ba.exp.0.95s~g.genetree.newick : 0.0
-family_073	ba.exp.0.95s~g.genetree.newick : 0.117647
-family_073	ba.exp.0.15s~g.genetree.newick : 0.176471
-family_079	ba.exp.0.15s~g.genetree.newick : 0.294118

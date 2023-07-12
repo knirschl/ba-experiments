@@ -1,5 +1,0 @@
-family_025 : 0.0
-family_058 : 0.0
-family_070 : 0.0
-family_083 : 0.0
-family_054 : 0.0

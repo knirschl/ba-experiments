@@ -1,6 +1,0 @@
-family_073 : 0.0
-family_056 : 0.0
-family_015 : 0.0
-family_033 : 0.0
-family_035 : 0.0
-family_047 : 0.0

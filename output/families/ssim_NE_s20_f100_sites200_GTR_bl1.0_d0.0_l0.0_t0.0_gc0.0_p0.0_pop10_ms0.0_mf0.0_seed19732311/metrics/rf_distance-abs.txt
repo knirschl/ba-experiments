@@ -1,5 +1,0 @@
-family_047	ba.exp.1.25s~g.genetree.newick : 0.0
-family_047	ba.exp.0.95s~g.genetree.newick : 2.0
-family_047	ba.exp.0.15s~g.genetree.newick : 4.0
-family_035	ba.exp.0.95s~g.genetree.newick : 6.0
-family_035	ba.exp.0.15s~g.genetree.newick : 8.0

@@ -1,5 +1,0 @@
-family_039 : 6.0
-family_053 : 8.0
-family_073 : 12.0
-family_008 : 14.0
-family_079 : 14.0

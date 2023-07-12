@@ -1,9 +1,0 @@
-18 Node_19_15_0
-16 Node_7_19_0
-Node_1_10_0 Node_3_6_0
-Node_1_5_0 Node_7_1_0
-Node_1_9_0 Node_2_12_0
-Node_1_8_0 Node_4_11_0
-Node_3_6_0 10
-10 Node_1_9_0
-3 9

@@ -1,3 +1,0 @@
-family_054 : 6.0
-family_070 : 8.0
-family_083 : 8.0
