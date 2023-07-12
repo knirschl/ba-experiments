@@ -111,16 +111,14 @@ int main(int argc, char *argv[]) {
         // NJ gene tree with corrected values
         double div{100.0};
         int step{5};
-        for (int i{}; i < 1 * div; i += step) {
+        for (int i{25}; i <= 1 * div; i += step) {
             tree = reset(species_tree_ids, alignment_ids, map_config, backup_tree);
             active = leaf_indices;
 
-            if (i == 1) {
-                step = 25;
-            }
             run(i / div, tree, active, species_tree_mat, species_tree_ids, alignment_mat,
                 alignment_ids, cli_parser);
         }
+        /*
         step = 25;
         for (int i{int(1 * div)}; i <= 2 * div; i += step) {
             tree = reset(species_tree_ids, alignment_ids, map_config);
@@ -136,6 +134,7 @@ int main(int argc, char *argv[]) {
             run(i / div, tree, active, species_tree_mat, species_tree_ids, alignment_mat,
                 alignment_ids, cli_parser);
         }
+         */
     }
 
     return 0;
