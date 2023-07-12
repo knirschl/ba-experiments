@@ -77,7 +77,7 @@ class RunFilter():
             utils.printFlush("Run generax...")
             try:
                 species_tree = fam.get_species_tree(datadir)
-                resultsdir = os.path.join(datadir, "runs", subst_model)
+                resultsdir = fam.get_run_dir(datadir, subst_model, "generax_run")
                 launch_generax.run(datadir, subst_model, "SPR", species_tree, "random", cores, "", resultsdir)#, do_analyze=False)
             except Exception as exc:
                 utils.printFlush("Failed running GeneRax\n" + str(exc))
@@ -109,6 +109,7 @@ class RunFilter():
 run_filter = RunFilter() # all enabled
 #run_filter.force_overwrite = True # regenerate old dataset
 run_filter.raxml = False
+run_filter.generax = False
 #run_filter.script_ba() # only ba script
 #run_filter.compare = False
 #run_filter.run_compare() # only compare inferred trees

@@ -159,6 +159,8 @@ def run(datadir, subst_model, strategy, species_tree, starting_tree, cores, addi
   arg_analyze = utils.getAndDelete("--analyze", additional_arguments, "yes")
   do_analyze = do_analyze and (arg_analyze == "yes") and (strategy != "EVAL")
   print("Run name " + run_name)
+  shutil.rmtree(resultsdir, True)
+  os.makedirs(resultsdir)
   sys.stdout.flush()
   mode = get_mode_from_additional_arguments(additional_arguments)
   generax_families_file = os.path.join(resultsdir, "families-generax.txt")
