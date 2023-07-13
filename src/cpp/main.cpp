@@ -42,38 +42,26 @@ auto reset(const std::vector<std::string> &species_tree_ids,
     return tree;
 }
 
-int get_idx(std::vector<std::string> vec, const std::string &key) {
-    auto it = find(vec.begin(), vec.end(), key);
-
-    return it != vec.end() ? it - vec.begin() : -1;
-}
-
 void run(double scale, const std::shared_ptr<Tree> &tree, std::vector<int> &active,
          const std::vector<std::vector<double>> &species_tree_mat,
-         const std::vector<std::basic_string<char>> &species_tree_ids,
          const std::vector<std::vector<double>> &alignment_mat,
-         const std::vector<std::basic_string<char>> &alignment_ids,
          argparse::ArgumentParser &cli_parser) {
-    auto speciation_pairs{tree->get_speciation_pairs()};
     dist_matrix_t corrected_matrix{alignment_mat};
-    for (auto &pair: speciation_pairs) {
-        // TODO mapping
+    for (auto &pair: tree->get_speciation_pairs()) {
         std::string locus1 = idx2leafname[pair.first];
         std::string locus2 = idx2leafname[pair.second];
-        int ai = get_idx(alignment_ids, locus1);
-        int aj = get_idx(alignment_ids, locus2);
-        std::string species1 = leafname2groupname[locus1];
-        std::string species2 = leafname2groupname[locus2];
-        int si = get_idx(species_tree_ids, species1);
-        int sj = get_idx(species_tree_ids, species2);
+        int ai = leafname2matidx[locus1];
+        int aj = leafname2matidx[locus2];
+        int si = groupname2matidx[leafname2groupname[locus1]];
+        int sj = groupname2matidx[leafname2groupname[locus2]];
 
         corrected_matrix[ai][aj] += scale * species_tree_mat[si][sj];
         corrected_matrix[ai][aj] /= scale + 1;
-        corrected_matrix[aj][ai] += scale * species_tree_mat[si][sj];
-        corrected_matrix[aj][ai] /= scale + 1;
+        corrected_matrix[aj][ai] += corrected_matrix[ai][aj];
     }
     neighborJoining<>(corrected_matrix, tree, active);
-    std::cout << "Neighbor-joined tree: " << tree->to_newick() << std::endl;
+    std::cout << "Neighbor-joined tree: " << tree->to_newick()
+              << std::endl; // 0.05s performance decrease
 
     // double to string without trailing zeros
     std::ostringstream oss;
@@ -90,11 +78,17 @@ int main(int argc, char *argv[]) {
     auto species_tree_pair = parse_phylip_mat_from_file<dist_t>(getS(cli_parser));
     auto species_tree_mat = species_tree_pair.first;
     auto species_tree_ids = species_tree_pair.second;
+    int s_cnt{};
+    for_each(species_tree_ids.begin(), species_tree_ids.end(),
+             [&s_cnt](auto &s) { groupname2matidx.emplace(s, s_cnt++); });
 
     // read alignment
     auto alignment_pair = parse_phylip_mat_from_file<dist_t>(getA(cli_parser));
     auto alignment_mat = alignment_pair.first;
     auto alignment_ids = alignment_pair.second;
+    int a_cnt{};
+    for_each(alignment_ids.begin(), alignment_ids.end(),
+             [&a_cnt](auto &s) { leafname2matidx.emplace(s, a_cnt++); });
 
     auto map_config{getMappingConfig(cli_parser)};
 
@@ -115,24 +109,21 @@ int main(int argc, char *argv[]) {
             tree = reset(species_tree_ids, alignment_ids, map_config, backup_tree);
             active = leaf_indices;
 
-            run(i / div, tree, active, species_tree_mat, species_tree_ids, alignment_mat,
-                alignment_ids, cli_parser);
+            run(i / div, tree, active, species_tree_mat, alignment_mat, cli_parser);
         }
         double scales[] = {2.25, 2.5, 3, 5, 10};
         for (double scale : scales) {
             tree = reset(species_tree_ids, alignment_ids, map_config);
             active = leaf_indices;
 
-            run(scale, tree, active, species_tree_mat, species_tree_ids, alignment_mat,
-                alignment_ids, cli_parser);
+            run(scale, tree, active, species_tree_mat, alignment_mat, cli_parser);
         }
         /*
         for (int i{int(2.5 * div)}; i <= 10 * div; i *= 2) {
             tree = reset(species_tree_ids, alignment_ids, map_config);
             active = leaf_indices;
 
-            run(i / div, tree, active, species_tree_mat, species_tree_ids, alignment_mat,
-                alignment_ids, cli_parser);
+            run(i / div, tree, active, species_tree_mat, alignment_mat, cli_parser);
         }
          */
     }
