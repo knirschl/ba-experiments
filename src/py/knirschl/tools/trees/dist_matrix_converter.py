@@ -36,7 +36,7 @@ def from_newick(file, norm = True):
     dist_matrix = sort(pdm.dm(norm), get_key_order(labels))
     labels = np.sort(labels)
     # write to file
-    write_phylip(dist_matrix, labels, open(os.path.join(os.path.dirname(file), "speciesTree" + ".matrix-sorted" + ".phy"), "w"))
+    write_phylip(dist_matrix, labels, open(os.path.join(os.path.dirname(file), "speciesTree" + ".matrix" + ".phy"), "w"))
 
 def from_fasta(file):
     # calculate distance matrix
@@ -47,7 +47,7 @@ def from_fasta(file):
     dist_matrix = sort(sparse_triu_to_sym(dm.matrix), get_key_order(dm.names))
     labels = np.sort(dm.names)
     # write to file
-    write_phylip(dist_matrix, labels, open(os.path.join(file + ".matrix-sorted" + ".phy"), "w"))
+    write_phylip(dist_matrix, labels, open(os.path.join(file + ".matrix" + ".phy"), "w"))
 
 def write_phylip(dist_matrix, labels, handle):
     """

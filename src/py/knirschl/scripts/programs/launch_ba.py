@@ -16,7 +16,7 @@ def generate_scheduler_commands_file(datadir, subst_model, species_tree, ba_fami
     with open(scheduler_commands_file, "w") as writer:
         for family in fam.get_families_list(datadir):
             ba_dir = fam.get_family_misc_dir(datadir, family)
-            alignment_matrix = fam.get_alignment_matrix_sorted(datadir, family)
+            alignment_matrix = fam.get_alignment_matrix(datadir, family)
             try:
                 os.mkdir(ba_dir)
             except:
@@ -72,7 +72,7 @@ def build_ba_families_file(datadir, output):
         for family in os.listdir(families_dir):
             family_path = os.path.join(families_dir, family)
             writer.write("- " + family + "\n")
-            writer.write("alignment_matrix = " + fam.get_alignment_matrix_sorted_file(family_path) + "\n")
+            writer.write("alignment_matrix = " + fam.get_alignment_matrix_file(family_path) + "\n")
             #raxml_model = ""
             #if (starting_tree != "random" and starting_tree != "true"):
             #    raxml_model = fam.get_raxml_best_model(datadir, subst_model, family)

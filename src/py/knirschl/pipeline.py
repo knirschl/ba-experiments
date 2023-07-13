@@ -102,16 +102,11 @@ class RunFilter():
         if (self.ba):
             utils.printFlush("Run ba...")
             try:
-                # fastme -dp -f17
-                start = time.time()
-                dist_matrix_converter.convert_input(datadir)
-                print("======\nConverting all 101 trees takes {}s\n======".format(
-                    time.time() - start))
-                species_tree = fam.get_true_species_tree_matrix_sorted(datadir)
+                dist_matrix_converter.convert_input(datadir, cores)
+                species_tree = fam.get_true_species_tree_matrix(datadir)
                 start = time.time()
                 launch_ba.run_ba_on_families(datadir, "exp", species_tree, cores)
-                end = time.time() - start
-                print("Running takes {}s ({}s per tree)".format(end, end / 1500))
+                print("=#=#= BA-Code takes {}s per tree =#=#=".format(time.time() - start))
             except Exception as exc:
                 utils.printFlush("Failed running bachelor thesis script\n" + str(exc))
         # COMPARE INFERRED TREES WITH TRUE TREE
