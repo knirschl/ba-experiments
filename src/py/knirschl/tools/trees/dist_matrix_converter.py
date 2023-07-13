@@ -6,8 +6,9 @@ import time
 from Bio import AlignIO
 from Bio.Phylo.TreeConstruction import DistanceCalculator
 from phylodm import PhyloDM
-
+sys.path.insert(0, os.path.join('scripts', 'programs'))
 sys.path.insert(0, 'tools/families')
+import launch_fastme
 import fam
 
 def get_key_order(keys):
@@ -63,14 +64,30 @@ def write_phylip(dist_matrix, labels, handle):
         fields = itertools.chain([label], values)
         handle.write(row_fmt.format(*fields))
 
-def convert_input(datadir):
+def convert_input(datadir, cores):
     # species tree
     start = time.time()
     from_newick(fam.get_true_species_tree(datadir))
     print("Converting the species trees takes {}s".format(time.time() - start))
     # gene alignments
     start = time.time()
-    for family in fam.get_families_list(datadir):
-        from_fasta(fam.get_alignment(datadir, family))
-    end = time.time() - start
-    print("Converting the species trees takes {}s ({}s per tree)".format(end, end / 100))
+    launch_fastme.run_fastme_matrix(datadir, cores=cores)
+    print("Converting all gene trees takes {}s".format(time.time() - start))
+
+
+""" # TIME TEST
+datadir = "/home/fili/Desktop/2023/BA/code/output/families/ssim_DL_s100_f100_sites200_GTR_bl1.0_d1.0_l1.0_t0.0_gc0.0_p0.0_pop10_ms0.0_mf0.0_seed9724682"
+s1 = time.time()
+for family in fam.get_families_list(datadir):
+    from_fasta(fam.get_alignment(datadir, family))
+t1 = time.time() - s1
+s2 = time.time()
+for family in fam.get_families_list(datadir):
+    launch_fastme.calculate_dist_matrix(datadir, family, True, os.path.join(fam.get_family_path(datadir, family), "alignment.msa.matrix.phy"))
+t2 = time.time() - s2
+s3 = time.time()
+launch_fastme.run_fastme_matrix(datadir, cores=8)
+t3 = time.time() - s3
+print("AlignIO takes {}s ({}s per tree)".format(t1, t1 / 100))
+print("FastME-single takes {}s ({}s per tree)".format(t2, t2 / 100))
+print("FastME-sched takes {}s ({}s per tree)".format(t3, t3 / 100)) """

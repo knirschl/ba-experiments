@@ -2,7 +2,7 @@ import os
 import shutil
 import sys
 import time
-
+import subprocess
 sys.path.insert(0, 'scripts')
 sys.path.insert(0, os.path.join("tools", "families"))
 sys.path.insert(0, os.path.join("tools", "msa"))
@@ -12,7 +12,7 @@ import fam
 import metrics
 import msa_converter
 
-def generate_scheduler_commands_file(datadir, subst_model, is_dna, cores, output_dir):
+def generate_scheduler_commands_file(datadir, subst_model, is_dna, only_mat, cores, output_dir):
   results_dir = os.path.join(output_dir, "results")
   scheduler_commands_file = os.path.join(output_dir, "commands.txt")
   gamma = False
@@ -40,7 +40,6 @@ def generate_scheduler_commands_file(datadir, subst_model, is_dna, cores, output
         ali = fam.get_alignment(datadir, family)
         msa_converter.msa_convert(ali, phylip, None, "iphylip_relaxed")
       command.append(phylip)
-      
       if (is_dna):
         command.append("-d" + fastme_model)
       else:
@@ -52,8 +51,14 @@ def generate_scheduler_commands_file(datadir, subst_model, is_dna, cores, output
       command.append("-O")
       command.append(fastme_matrix)
       command.append("--spr")
+      if (only_mat):
+        command.append("-c") # only mat
+        #command.append("-q") # triangular inequality correction
+        command.append("-f") # precision (max=17)
+        command.append("17")
       writer.write(" ".join(command) + "\n")
   return scheduler_commands_file
+
 
 def extract_fastme_trees(datadir, subst_model):
   families_dir = os.path.join(datadir, "families")
@@ -78,18 +83,68 @@ def extract_fastme_trees(datadir, subst_model):
   if (invalid > 0):
     print("WARNING! " + str(invalid) + " trees were skipped")
 
-def run_fastme_on_families(datadir, subst_model, is_dna, cores):
-  output_dir = fam.get_run_dir(datadir, subst_model, "fastme_run")
+def extract_fastme_mats(datadir, subst_model):
+  families_dir = os.path.join(datadir, "families")
+  valid = 0
+  invalid = 0
+  for family in os.listdir(families_dir):
+    fastme_matrix = fam.get_fastme_distances(datadir, family, subst_model)
+    matrix = fam.get_alignment_matrix(datadir, family)
+    if (os.path.isfile(fastme_matrix) and os.stat(fastme_matrix).st_size > 0):
+      valid += 1
+      shutil.copyfile(fastme_matrix, matrix)
+    else:
+      invalid += 1
+      try:
+        os.remove(matrix)
+        os.remove(fastme_matrix)
+      except:
+        pass
+    os.remove(fastme_matrix) 
+  print("Extracted " + str(valid) + " trees")
+  if (invalid > 0):
+    print("WARNING! " + str(invalid) + " trees were skipped")
+
+
+def run_fastme_on_families(datadir, subst_model, is_dna, only_mat, cores):
+  fastme_name = ["fastme", "fastme_mat"][only_mat]
+  output_dir = fam.get_run_dir(datadir, subst_model, fastme_name + "_run")
   shutil.rmtree(output_dir, True)
   os.makedirs(output_dir)
-  scheduler_commands_file = generate_scheduler_commands_file(datadir, subst_model, is_dna, cores, output_dir)
+  scheduler_commands_file = generate_scheduler_commands_file(datadir, subst_model, is_dna, only_mat, cores, output_dir)
   start = time.time()
   utils.run_with_scheduler(paths.fastme_exec, scheduler_commands_file, "fork", cores, output_dir, "logs.txt")
-  metrics.save_metrics(datadir, fam.get_run_name("fastme", subst_model), (time.time() - start), "runtimes") 
+  metrics.save_metrics(datadir, fam.get_run_name(fastme_name, subst_model), (time.time() - start), "runtimes") 
   lb = fam.get_lb_from_run(output_dir)
-  metrics.save_metrics(datadir, fam.get_run_name("fastme", subst_model), (time.time() - start) * lb, "seqtimes") 
-  extract_fastme_trees(datadir, subst_model)
- 
+  metrics.save_metrics(datadir, fam.get_run_name(fastme_name, subst_model), (time.time() - start) * lb, "seqtimes")
+  if not only_mat:
+    extract_fastme_trees(datadir, subst_model)
+  else:
+    extract_fastme_mats(datadir, subst_model)
+
+def run_fastme_matrix(datadir, subst_model="p", is_dna=True, cores=1):
+  run_fastme_on_families(datadir, subst_model, is_dna, True, cores)
+
+def calculate_dist_matrix(datadir, family, is_dna, out_file):
+  command = []
+  command.append(paths.fastme_exec)
+  command.append("-i")
+  phylip = fam.get_alignment_phylip(datadir, family)
+  if (not os.path.isfile(phylip)):
+    ali = fam.get_alignment(datadir, family)
+    msa_converter.msa_convert(ali, phylip, None, "iphylip_relaxed")
+  command.append(phylip)
+  if (is_dna):
+    command.append("-dp")
+  else:
+    command.append("-pp")
+  command.append("-O")
+  command.append(out_file)
+  command.append("-c") # only mat
+  command.append("-q") # triangular inequality correction
+  command.append("-f 17") # precision (max=17)
+  subprocess.check_call(command)
+
 
 if (__name__== "__main__"):
   max_args_number = 5
@@ -101,4 +156,4 @@ if (__name__== "__main__"):
   subst_model = sys.argv[2]
   is_dna = sys.argv[3] != "0"
   cores = int(sys.argv[4])
-  run_fastme_on_families(datadir, subst_model, is_dna, cores)
+  run_fastme_on_families(datadir, subst_model, is_dna, False, cores)
