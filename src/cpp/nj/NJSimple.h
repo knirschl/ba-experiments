@@ -12,12 +12,13 @@ template<typename T>
 vector_t<T> meanDistance(matrix_t<T> const &distMatrix) {
     const size_t n = distMatrix.size();
     vector_t<T> r;
+    r.reserve(n);
     for (size_t i{0}; i < n; ++i) {
         T sumK{0};
         for (size_t k{0}; k < n; ++k) {
             sumK += distMatrix[i][k];
         }
-        r.push_back((1.0 / (n - 2)) * sumK); // 1.0 for double division
+        r[i] = (1.0 / (n - 2)) * sumK; // 1.0 for double division
     }
 
     return r;
@@ -25,12 +26,13 @@ vector_t<T> meanDistance(matrix_t<T> const &distMatrix) {
 
 template<typename T>
 matrix_t<T> interMatrix(matrix_t<T> const &distMatrix, vector_t<T> const &r) {
-    matrix_t<T> iM;
     const size_t n = distMatrix.size();
+    matrix_t<T> iM;
+    iM.reserve(n);
     for (size_t i{0}; i < n; ++i) {
-        vector_t<T> row;
+        vector_t<T> row(n);
         for (size_t j{0}; j < n; ++j) {
-            row.push_back(distMatrix[i][j] - (r[i] + r[j]));
+            row[j] = distMatrix[i][j] - (r[i] + r[j]);
         }
         iM.push_back(row);
     }
@@ -64,10 +66,10 @@ matrix_t<T>
 calculateNewMatrix(matrix_t<T> const &distMatrix, std::pair<size_t, size_t> const &minDistPos) {
     const size_t n = distMatrix.size();
     matrix_t<T> newMatrix{};
-    newMatrix.resize(n - 1);
+    newMatrix.reserve(n - 1);
     // pre-initialize to prevent creating one too many
     for (size_t i{0}; i < n - 1; ++i) {
-        newMatrix[i].resize(n - 1);
+        newMatrix.emplace_back(n - 1);
     }
     // copy old values of rows/columns that won't be changed
     size_t xOff{0};
@@ -127,7 +129,7 @@ vector_t<std::shared_ptr<Tree>> copyUnjoinedTrees(vector_t<std::shared_ptr<Tree>
         if (i == minDistPos.first || i == minDistPos.second) {
             continue;
         }
-        copy.push_back(trees[i]);
+        copy.emplace_back(trees[i]);
     }
 
     return copy;
@@ -157,9 +159,10 @@ int neighborJoining(matrix_t<T> const &distMatrix, std::shared_ptr<Tree> const &
                 r[minDistPos.second]);
         // add joined trees (neighbors)
         // delete minDistPos and add new node idx to activeNodes
-        active_nodes.push_back(tree->make_node(active_nodes[minDistPos.first], branchLengths.first,
-                                               active_nodes[minDistPos.second],
-                                               branchLengths.second));
+        active_nodes.emplace_back(
+                tree->make_node(active_nodes[minDistPos.first], branchLengths.first,
+                                active_nodes[minDistPos.second],
+                                branchLengths.second));
         active_nodes.erase(active_nodes.begin() + minDistPos.first);
         active_nodes.erase(active_nodes.begin() + minDistPos.second - 1);
 

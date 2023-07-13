@@ -145,7 +145,7 @@ public:
             //    idx2leafname.resize(leaf_idx + 1);
             //}
             idx2leafname[leaf_idx] = leafnames.at(leaf_idx);
-            leaf_indices.push_back(leaf_idx);
+            leaf_indices.emplace_back(leaf_idx);
             // give associated groupname an id or use existing one to set bitset
             std::string groupname = leafname2groupname.at(leafnames.at(leaf_idx));
             if (!(groupname2id.contains(groupname))) {

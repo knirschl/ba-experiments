@@ -50,15 +50,15 @@ auto parse_and_get(argparse::ArgumentParser& program, int argc, char *argv[]) {
     try {
         program.parse_args(argc, argv);
     }
-    catch (const std::runtime_error& err) {
+    catch (const std::runtime_error &err) {
         std::cerr << err.what() << std::endl;
         std::cerr << program;
         exit(1);
     }
     std::vector<std::string> res{};
-    res.push_back(program.get("-s"));
-    res.push_back(program.get("-a"));
-    res.push_back(program.get("-p"));
+    res.emplace_back(program.get("-s"));
+    res.emplace_back(program.get("-a"));
+    res.emplace_back(program.get("-p"));
 
     return res;
 }
