@@ -48,7 +48,7 @@ std::pair<matrix_t<T>, vector_t<std::string>> parse_phylip(std::ifstream &reader
     }
     // build regex depending on seq_count
     std::stringstream line_regex_stream;
-    line_regex_stream << IDENT_REGEX_STR << "(?:"s << WHITESPACE_MAT_ELEMENT_REGEX_STR << ")"s << "{"s << seq_count << "}"s;
+    line_regex_stream << IDENT_REGEX_STR << "(?:"s << WHITESPACE_MAT_ELEMENT_REGEX_STR << ")"s << "{"s << seq_count << "}"s << "\\s*"s;
     std::regex line_regex{line_regex_stream.str()};
     std::regex whitespace_mat_element_regex{WHITESPACE_MAT_ELEMENT_REGEX_STR};
     std::smatch results;
