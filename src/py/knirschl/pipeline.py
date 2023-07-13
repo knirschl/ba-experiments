@@ -1,7 +1,7 @@
-import sys
 import os
+import sys
 import time
-import random
+
 sys.path.insert(0, 'scripts')
 sys.path.insert(0, 'scripts/programs')
 sys.path.insert(0, 'tools/families')
@@ -15,7 +15,6 @@ import launch_raxml
 import launch_generax
 import launch_fastme
 import launch_ba
-import rescale_bl
 import dist_matrix_converter
 import compare_trees
 import metrics
@@ -40,6 +39,7 @@ class RunFilter():
         self.compare = False
     
     def sim(self):
+        self.generate = True
         self.force_overwrite = False
         self.raxml = False
         self.generax = False
@@ -52,6 +52,8 @@ class RunFilter():
         self.raxml = False
         self.generax = False
         self.fastme = False
+        self.ba = True
+        self.compare = True
 
     def comp(self):
         self.generate = False
@@ -59,6 +61,7 @@ class RunFilter():
         self.generax = False
         self.fastme = False
         self.ba = False
+        self.compare = True
 
     def run_methods(self, datadir, subst_model, cores):
         if (self.generate):
@@ -99,9 +102,16 @@ class RunFilter():
         if (self.ba):
             utils.printFlush("Run ba...")
             try:
+                # fastme -dp -f17
+                start = time.time()
                 dist_matrix_converter.convert_input(datadir)
+                print("======\nConverting all 101 trees takes {}s\n======".format(
+                    time.time() - start))
                 species_tree = fam.get_true_species_tree_matrix_sorted(datadir)
+                start = time.time()
                 launch_ba.run_ba_on_families(datadir, "exp", species_tree, cores)
+                end = time.time() - start
+                print("Running takes {}s ({}s per tree)".format(end, end / 1500))
             except Exception as exc:
                 utils.printFlush("Failed running bachelor thesis script\n" + str(exc))
         # COMPARE INFERRED TREES WITH TRUE TREE
@@ -118,8 +128,8 @@ class RunFilter():
 run_filter = RunFilter() # all enabled
 #run_filter.force_overwrite = True # regenerate old dataset
 run_filter.bacomp() # only ba script
-#run_filter.compare = False
-#run_filter.comp() # only compare inferred trees
+# run_filter.comp() # only compare inferred trees
+# run_filter.disable_all() # collect avgs
 # ====== ! CAREFUL ! ======
 
 root_output = paths.families_datasets_root # output/families/
@@ -143,7 +153,6 @@ for seed in seeds:
     simphy_parameters = simphy.SimphyParameters(tag=tag, seed=seed, dup_rate=d, loss_rate=l, species_taxa=s)
     datadir = simphy.get_output_dir(simphy_parameters, root_output)
     replicates.append(datadir)
-    print(datadir)
 
     # RUN PIPELINE
     rep_start = time.time()
@@ -167,7 +176,7 @@ for rep in replicates[1:]:
     cur_rel = metrics.get_metrics(rep, rel_name)
     cur_rt = metrics.get_metrics(rep, rt_name)
 #    abs_avgs_dico = {x: (float(abs_avgs_dico[x]) * rep_counter + float(cur_abs[x])) / (rep_counter + 1) for x in set(abs_avgs_dico).union(cur_abs)}
-#    rel_avgs_dico = {x: (float(rel_avgs_dico[x]) * rep_counter + float(cur_rel[x])) / (rep_counter + 1) for x in set(rel_avgs_dico).union(cur_rel)}
+    #    rel_avgs_dico = {x: (float(rel_avgs_dico[x]) * rep_counter + float(cur_rel[x])) / (rep_counter + 1) for x in set(rel_avgs_dico).union(cur_rel)}
     for x in set(abs_avgs_dico).union(cur_abs):
         if not x in abs_avgs_dico:
             abs_avgs_dico[x] = 0
@@ -175,10 +184,20 @@ for rep in replicates[1:]:
         if not x in cur_abs:
             cur_abs[x] = 0
             cur_rel[x] = 0
-        abs_avgs_dico[x] = (float(abs_avgs_dico[x]) * rep_counter + float(cur_abs[x])) / (rep_counter + 1)
-        rel_avgs_dico[x] = (float(rel_avgs_dico[x]) * rep_counter + float(cur_rel[x])) / (rep_counter + 1)
-        rt_avgs_dico[x] = float(rt_avgs_dico[x] * rep_counter + float(cur_rt[x])) / (rep_counter + 1)
+        abs_avgs_dico[x] = (float(abs_avgs_dico[x]) * rep_counter + float(cur_abs[x])) / (
+                    rep_counter + 1)
+        rel_avgs_dico[x] = (float(rel_avgs_dico[x]) * rep_counter + float(cur_rel[x])) / (
+                    rep_counter + 1)
+    for x in set(rt_avgs_dico).union(cur_rt):
+        if not x in rt_avgs_dico:
+            rt_avgs_dico[x] = 0
+        if not x in cur_rt:
+            cur_rt[x] = 0
+        rt_avgs_dico[x] = (float(rt_avgs_dico[x]) * rep_counter + float(cur_rt[x])) / (
+                    rep_counter + 1)
     rep_counter += 1
+
+rt_avgs_dico = {k: v for k, v in rt_avgs_dico.items() if not 'pipeline' in k}
 metrics.save_dico(root_output, abs_avgs_dico, tag + "_global__rf_distance_avg-abs")
 metrics.save_dico(root_output, rel_avgs_dico, tag + "_global__rf_distance_avg-rel")
 metrics.save_dico(root_output, rt_avgs_dico, tag + "_global__runtimes_avg")

@@ -2,6 +2,7 @@ import itertools
 import numpy as np
 import os
 import sys
+import time
 from Bio import AlignIO
 from Bio.Phylo.TreeConstruction import DistanceCalculator
 from phylodm import PhyloDM
@@ -63,8 +64,13 @@ def write_phylip(dist_matrix, labels, handle):
         handle.write(row_fmt.format(*fields))
 
 def convert_input(datadir):
-     # species tree
+    # species tree
+    start = time.time()
     from_newick(fam.get_true_species_tree(datadir))
+    print("Converting the species trees takes {}s".format(time.time() - start))
     # gene alignments
+    start = time.time()
     for family in fam.get_families_list(datadir):
         from_fasta(fam.get_alignment(datadir, family))
+    end = time.time() - start
+    print("Converting the species trees takes {}s ({}s per tree)".format(end, end / 100))

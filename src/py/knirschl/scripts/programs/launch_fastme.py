@@ -1,8 +1,8 @@
 import os
-import sys
 import shutil
+import sys
 import time
-import ete3
+
 sys.path.insert(0, 'scripts')
 sys.path.insert(0, os.path.join("tools", "families"))
 sys.path.insert(0, os.path.join("tools", "msa"))
@@ -51,8 +51,6 @@ def generate_scheduler_commands_file(datadir, subst_model, is_dna, cores, output
       command.append(fastme_output)
       command.append("-O")
       command.append(fastme_matrix)
-      command.append("--seed")
-      command.append("40")
       command.append("--spr")
       writer.write(" ".join(command) + "\n")
   return scheduler_commands_file
