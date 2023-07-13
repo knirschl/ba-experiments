@@ -157,12 +157,15 @@ for seed in seeds:
 # AVERAGE OVER ALL REPLICATES
 abs_name = "rf_distance_avg-abs"
 rel_name = "rf_distance_avg-rel"
+rt_name = "runtimes"
 abs_avgs_dico = metrics.get_metrics(replicates[0], abs_name)
 rel_avgs_dico = metrics.get_metrics(replicates[0], rel_name)
+rt_avgs_dico = metrics.get_metrics(replicates[0], rt_name)
 rep_counter = 1
 for rep in replicates[1:]:
     cur_abs = metrics.get_metrics(rep, abs_name)
     cur_rel = metrics.get_metrics(rep, rel_name)
+    cur_rt = metrics.get_metrics(rep, rt_name)
 #    abs_avgs_dico = {x: (float(abs_avgs_dico[x]) * rep_counter + float(cur_abs[x])) / (rep_counter + 1) for x in set(abs_avgs_dico).union(cur_abs)}
 #    rel_avgs_dico = {x: (float(rel_avgs_dico[x]) * rep_counter + float(cur_rel[x])) / (rep_counter + 1) for x in set(rel_avgs_dico).union(cur_rel)}
     for x in set(abs_avgs_dico).union(cur_abs):
@@ -174,8 +177,10 @@ for rep in replicates[1:]:
             cur_rel[x] = 0
         abs_avgs_dico[x] = (float(abs_avgs_dico[x]) * rep_counter + float(cur_abs[x])) / (rep_counter + 1)
         rel_avgs_dico[x] = (float(rel_avgs_dico[x]) * rep_counter + float(cur_rel[x])) / (rep_counter + 1)
+        rt_avgs_dico[x] = float(rt_avgs_dico[x] * rep_counter + float(cur_rt[x])) / (rep_counter + 1)
     rep_counter += 1
 metrics.save_dico(root_output, abs_avgs_dico, tag + "_global__rf_distance_avg-abs")
 metrics.save_dico(root_output, rel_avgs_dico, tag + "_global__rf_distance_avg-rel")
+metrics.save_dico(root_output, rt_avgs_dico, tag + "_global__runtimes_avg")
 
 print("seeds = ", seeds)
