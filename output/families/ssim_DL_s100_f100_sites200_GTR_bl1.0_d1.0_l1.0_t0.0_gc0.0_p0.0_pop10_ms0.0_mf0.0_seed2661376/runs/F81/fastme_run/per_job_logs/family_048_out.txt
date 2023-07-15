@@ -1,0 +1,21 @@
+
+
+#  Analysing dataset 1
+
+ . Computing pairwise distances...
+
+ . Warning: Triangular inequality violation.
+
+ . You may ask for triangular inequality correction using the '-q' option.
+
+ . Computing tree...
+
+ . Tree length is 4.643667.
+
+ . Performing SPR...
+
+ . Warning: 
+	Explained variance = 0.881 (<0.90).
+	Check your input data.
+
+ . Time used 0h00m00s

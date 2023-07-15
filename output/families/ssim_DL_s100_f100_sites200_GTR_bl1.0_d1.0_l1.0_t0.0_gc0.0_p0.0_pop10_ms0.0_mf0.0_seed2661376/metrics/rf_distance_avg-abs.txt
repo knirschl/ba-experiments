@@ -1,0 +1,16 @@
+fastme.f81.genetree.newick : 73.18710670453264
+ba.exp.1.3s~g.genetree.newick : 104.76423056229156
+ba.exp.1.1s~g.genetree.newick : 107.9480326217033
+ba.exp.1.9s~g.genetree.newick : 109.44675482955785
+ba.exp.1.6s~g.genetree.newick : 110.35814312187196
+ba.exp.3s~g.genetree.newick : 110.67904113252672
+ba.exp.2.5s~g.genetree.newick : 110.71913599185706
+ba.exp.1.4s~g.genetree.newick : 111.11536264532111
+ba.exp.1.5s~g.genetree.newick : 111.77780574005875
+ba.exp.1.8s~g.genetree.newick : 112.16087325364666
+ba.exp.2.25s~g.genetree.newick : 113.9328501681727
+ba.exp.2s~g.genetree.newick : 114.6701188690544
+ba.exp.5s~g.genetree.newick : 120.90930204937409
+ba.exp.10s~g.genetree.newick : 121.28613171224721
+ba.exp.1.2s~g.genetree.newick : 127.80611113500754
+ba.exp.1.7s~g.genetree.newick : 129.98786203481544

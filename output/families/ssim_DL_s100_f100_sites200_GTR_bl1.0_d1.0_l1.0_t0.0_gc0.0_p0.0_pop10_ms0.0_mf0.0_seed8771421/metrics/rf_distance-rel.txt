@@ -1,0 +1,6 @@
+family_056	ba.exp.1.4s~g.genetree.newick : 0.371212
+family_056	ba.exp.2s~g.genetree.newick : 0.386364
+family_023	ba.exp.2s~g.genetree.newick : 0.421053
+family_008	ba.exp.2s~g.genetree.newick : 0.440678
+family_023	ba.exp.1.4s~g.genetree.newick : 0.447368
+family_003	ba.exp.2s~g.genetree.newick : 0.529412
