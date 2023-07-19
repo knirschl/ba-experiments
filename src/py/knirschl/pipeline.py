@@ -123,7 +123,6 @@ class RunFilter():
 run_filter = RunFilter() # all enabled
 #run_filter.force_overwrite = True # regenerate old dataset
 run_filter.bacomp() # only ba script
-run_filter.fastme = True
 # run_filter.comp() # only compare inferred trees
 # run_filter.disable_all() # collect avgs
 # ====== ! CAREFUL ! ======
