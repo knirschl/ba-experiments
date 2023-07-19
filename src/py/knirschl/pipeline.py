@@ -1,7 +1,6 @@
 import os
 import sys
 import time
-
 sys.path.insert(0, 'scripts')
 sys.path.insert(0, 'scripts/programs')
 sys.path.insert(0, 'tools/families')
@@ -205,6 +204,8 @@ def global_compare(root_output, replicates, tag):
     metrics.save_dico(root_output, rt_avgs_dico, tag + "_global__runtimes_avg")
 
 if (__name__ == "__main__"):
+    start = time.time()
     root_output, seeds, tag, reps = run_pipeline()
     global_compare(root_output, reps, tag)
     print("seeds = ", seeds)
+    print("End of pipeline. Elapsed time:", time.time() - start)
