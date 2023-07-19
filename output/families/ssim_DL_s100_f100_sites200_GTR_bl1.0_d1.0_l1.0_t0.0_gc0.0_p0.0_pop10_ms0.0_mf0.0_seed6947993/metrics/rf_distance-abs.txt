@@ -1,6 +1,0 @@
-family_024	ba.exp.2s~g.genetree.newick : 98.0
-family_084	ba.exp.2s~g.genetree.newick : 134.0
-family_040	ba.exp.1.4s~g.genetree.newick : 210.0
-family_040	ba.exp.2s~g.genetree.newick : 230.0
-family_028	ba.exp.2s~g.genetree.newick : 240.0
-family_077	ba.exp.2s~g.genetree.newick : 396.0
