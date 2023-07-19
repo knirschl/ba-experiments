@@ -158,6 +158,9 @@ def get_family_path(datadir, family):
 def get_gene_tree_dir(datadir, family):
   return os.path.join(get_family_path(datadir, family), "gene_trees")
 
+def get_gene_tree_list(datadir, family):
+  return os.listdir(get_gene_tree_dir(datadir, family))
+
 def get_amalgamation_dir(datadir, family):
   return os.path.join(get_family_path(datadir, family), "amalgamation")
 
@@ -177,12 +180,15 @@ def get_reconciliations_dir(datadir, family):
 # per-family files
 #####################
 
+def get_true_gene_tree_name():
+  return "true.true.geneTree.newick"
+
 def build_gene_tree_path_from_run(datadir, family, run):
   return os.path.join(get_gene_tree_dir(datadir, family), run + ".geneTree.newick")
 
 def build_gene_tree_path(datadir, subst_model, family, method):
   if (method == "true" or subst_model == "true"):
-    return os.path.join(get_gene_tree_dir(datadir, family), "true.true.geneTree.newick")
+    return os.path.join(get_gene_tree_dir(datadir, family), get_true_gene_tree_name())
   else:
     return os.path.join(get_gene_tree_dir(datadir, family), method + "." + subst_model + ".geneTree.newick")
 
@@ -250,7 +256,6 @@ def get_dicotree_tree(datadir, subst_model, family):
 def get_fasttree_tree(datadir, subst_model, family):
   return build_gene_tree_path(datadir, subst_model, family, "fasttree")
 
-
 def get_fasttreepoly_tree(datadir, subst_model, family):
   return build_gene_tree_path(datadir, subst_model, family, "fasttreepoly")
 
@@ -307,7 +312,6 @@ def get_raw_rf_cells_file(datadir, rooted = False):
 
 def get_raw_kf_cells_file(datadir, rooted = False):
   return os.path.join(datadir, "misc", "kf_cells.pickle")
-
 
 def get_gene_tree(datadir, subst_model, family, tree):
   gene_trees_dir = get_gene_tree_dir(datadir, family)
