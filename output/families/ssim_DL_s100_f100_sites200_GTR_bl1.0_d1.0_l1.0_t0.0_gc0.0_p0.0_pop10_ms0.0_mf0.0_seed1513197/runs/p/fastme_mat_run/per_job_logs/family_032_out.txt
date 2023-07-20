@@ -8,4 +8,4 @@
 
  . You may ask for triangular inequality correction using the '-q' option.
 
- . Time used 0h00m01s
+ . Time used 0h00m00s
