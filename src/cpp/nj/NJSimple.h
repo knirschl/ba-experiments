@@ -157,6 +157,9 @@ int neighborJoining(matrix_t<T> const &distMatrix, std::shared_ptr<Tree> const &
         std::pair<T, T> branchLengths = calculateBranchLengths(
                 distMatrix[minDistPos.first][minDistPos.second], r[minDistPos.first],
                 r[minDistPos.second]);
+        //if (branchLengths.first < 0 || branchLengths.second < 0) {
+        //    std::cout << "Negative branch length detected.\n";
+        //}
         // add joined trees (neighbors)
         // delete minDistPos and add new node idx to activeNodes
         active_nodes.emplace_back(

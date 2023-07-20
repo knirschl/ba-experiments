@@ -411,8 +411,28 @@ public:
                            tree[tree[cur].right_child_idx].branch_length);
     }
 
+    std::string to_string() const {
+        std::string out{"{}"};
+        for (int i{1}; i < size(tree); i++) {
+            if (tree[i].parent_idx < 0) {
+            out += ", {" + to_string(i) + "}";
+            }
+        }
+        return out;
+    }
+
     std::string to_newick() const {
         return std::format("{};", to_string(root));
+    }
+
+    std::string node_info() const {
+        std::string out{"{}"};
+        for (int i{1}; i < size(tree); i++) {
+            if (tree[i].parent_idx < 0) {
+                out += ", {" + node_info(i) + "}";
+            }
+        }
+        return out;
     }
 
     std::string node_info(int cur) const {
