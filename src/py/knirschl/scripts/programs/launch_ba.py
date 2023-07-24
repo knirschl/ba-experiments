@@ -63,6 +63,7 @@ def extract_ba_trees(datadir, subst_model):
     print("Extracted " + str(valid) + " trees")
     if (invalid > 0):
         print("WARNING! " + str(invalid) + " trees were skipped")
+    return valid
     
 def build_ba_families_file(datadir, output):
     families_dir = os.path.join(datadir, "families")
@@ -97,4 +98,4 @@ def run_ba_on_families(datadir, subst_model, species_tree, cores):
     metrics.save_metrics(datadir, fam.get_run_name("ba", subst_model), (time.time() - start), "runtimes") 
     lb = fam.get_lb_from_run(output_dir)
     metrics.save_metrics(datadir, fam.get_run_name("ba", subst_model), (time.time() - start) * lb, "seqtimes") 
-    extract_ba_trees(datadir, subst_model)
+    return extract_ba_trees(datadir, subst_model)

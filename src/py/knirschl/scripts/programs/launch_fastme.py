@@ -12,7 +12,8 @@ import fam
 import metrics
 import msa_converter
 
-def generate_scheduler_commands_file(datadir, subst_model, is_dna, only_mat, cores, output_dir):
+
+def generate_scheduler_commands_file(datadir, subst_model, is_dna, algo, use_spr, only_mat, output_dir):
   results_dir = os.path.join(output_dir, "results")
   scheduler_commands_file = os.path.join(output_dir, "commands.txt")
   gamma = False
@@ -21,6 +22,7 @@ def generate_scheduler_commands_file(datadir, subst_model, is_dna, only_mat, cor
   if (len(sp) > 1 and sp[1] == "G"):
     fastme_model = sp[0]
     gamma = True
+  fastme_model.removeprefix('F8')
   with open(scheduler_commands_file, "w") as writer:
     for family in fam.get_families_list(datadir):
       fastme_dir = fam.get_family_misc_dir(datadir, family)
@@ -34,24 +36,38 @@ def generate_scheduler_commands_file(datadir, subst_model, is_dna, only_mat, cor
       command.append(family)
       command.append("1")
       command.append("1")
+      # input file (relaxed phylip format)
       command.append("-i")
-      phylip = fam.get_alignment_phylip(datadir, family)
-      if (not os.path.isfile(phylip)):
-        ali = fam.get_alignment(datadir, family)
-        msa_converter.msa_convert(ali, phylip, None, "iphylip_relaxed")
-      command.append(phylip)
-      if (is_dna):
-        command.append("-d" + fastme_model)
+      if (fastme_model == ""):
+        # msa
+        phylip = fam.get_alignment_phylip(datadir, family)
+        if (not os.path.isfile(phylip)):
+          ali = fam.get_alignment(datadir, family)
+          msa_converter.msa_convert(ali, phylip, None, "iphylip_relaxed")
+        command.append(phylip)
+        # dna or protein model
+        if (is_dna):
+         command.append("-d" + fastme_model)
+        else:
+          command.append("-p" + fastme_model)
+        if (gamma):
+          command.append("1.0")
       else:
-        command.append("-p" + fastme_model)
-      if (gamma):
-        command.append("1.0")
+        # precomputed distance matrix
+        command.append(fam.get_alignment_matrix(datadir, family))
+      # output tree & matrix
       command.append("-o")
       command.append(fastme_output)
       command.append("-O")
       command.append(fastme_matrix)
-      command.append("--spr")
+      # distance algorithm (B: BME, I: BIONJ (def), N: NJ)
+      command.append("-m")
+      command.append(algo)
+      if (use_spr):
+        # use spr moves
+        command.append("--spr")
       if (only_mat):
+        # no tree building
         command.append("-c") # only mat
         #command.append("-q") # triangular inequality correction
         command.append("-f") # precision (max=17)
@@ -83,6 +99,7 @@ def extract_fastme_trees(datadir, subst_model):
   if (invalid > 0):
     print("WARNING! " + str(invalid) + " trees were skipped")
 
+
 def extract_fastme_mats(datadir, subst_model):
   families_dir = os.path.join(datadir, "families")
   valid = 0
@@ -106,12 +123,12 @@ def extract_fastme_mats(datadir, subst_model):
     print("WARNING! " + str(invalid) + " trees were skipped")
 
 
-def run_fastme_on_families(datadir, subst_model, is_dna, only_mat, cores):
+def run_fastme_on_families(datadir, subst_model, is_dna, algo, use_spr, only_mat, cores):
   fastme_name = ["fastme", "fastme_mat"][only_mat]
   output_dir = fam.get_run_dir(datadir, subst_model, fastme_name + "_run")
   shutil.rmtree(output_dir, True)
   os.makedirs(output_dir)
-  scheduler_commands_file = generate_scheduler_commands_file(datadir, subst_model, is_dna, only_mat, cores, output_dir)
+  scheduler_commands_file = generate_scheduler_commands_file(datadir, subst_model, is_dna, algo, use_spr, only_mat, output_dir)
   start = time.time()
   utils.run_with_scheduler(paths.fastme_exec, scheduler_commands_file, "fork", cores, output_dir, "logs.txt")
   metrics.save_metrics(datadir, fam.get_run_name(fastme_name, subst_model), (time.time() - start), "runtimes") 
@@ -123,27 +140,7 @@ def run_fastme_on_families(datadir, subst_model, is_dna, only_mat, cores):
     extract_fastme_mats(datadir, subst_model)
 
 def run_fastme_matrix(datadir, subst_model="p", is_dna=True, cores=1):
-  run_fastme_on_families(datadir, subst_model, is_dna, True, cores)
-
-def calculate_dist_matrix(datadir, family, is_dna, out_file):
-  command = []
-  command.append(paths.fastme_exec)
-  command.append("-i")
-  phylip = fam.get_alignment_phylip(datadir, family)
-  if (not os.path.isfile(phylip)):
-    ali = fam.get_alignment(datadir, family)
-    msa_converter.msa_convert(ali, phylip, None, "iphylip_relaxed")
-  command.append(phylip)
-  if (is_dna):
-    command.append("-dp")
-  else:
-    command.append("-pp")
-  command.append("-O")
-  command.append(out_file)
-  command.append("-c") # only mat
-  command.append("-q") # triangular inequality correction
-  command.append("-f 17") # precision (max=17)
-  subprocess.check_call(command)
+  run_fastme_on_families(datadir, subst_model, is_dna, "I", False, True, cores)
 
 
 if (__name__== "__main__"):

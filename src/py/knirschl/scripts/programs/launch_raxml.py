@@ -10,7 +10,7 @@ import utils
 import fam
 import metrics
 
-def generate_scheduler_commands_file(datadir, subst_model, cores, output_dir):
+def generate_scheduler_commands_file(datadir, subst_model, output_dir):
     results_dir = os.path.join(output_dir, "results")
     scheduler_commands_file = os.path.join(output_dir, "commands.txt")
     #gamma = False
@@ -70,7 +70,7 @@ def run_raxmlng_on_families(datadir, subst_model, cores, mpi = False):
     output_dir = fam.get_run_dir(datadir, subst_model, "raxml_run")
     shutil.rmtree(output_dir, True)
     os.makedirs(output_dir)
-    scheduler_commands_file = generate_scheduler_commands_file(datadir, subst_model, cores, output_dir)
+    scheduler_commands_file = generate_scheduler_commands_file(datadir, subst_model, output_dir)
     start = time.time()
     utils.run_with_scheduler(paths.raxml_exec, scheduler_commands_file, "fork", cores, output_dir, "logs.txt")   
     metrics.save_metrics(datadir, fam.get_run_name("raxml", subst_model), (time.time() - start), "runtimes") 

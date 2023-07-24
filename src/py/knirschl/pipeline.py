@@ -89,23 +89,23 @@ class RunFilter():
             try:
                 species_tree = fam.get_species_tree(datadir)
                 resultsdir = fam.get_run_dir(datadir, subst_model, "generax_run")
-                launch_generax.run(datadir, subst_model, "SPR", species_tree, "random", cores, "", resultsdir)#, do_analyze=False)
+                launch_generax.run(datadir, subst_model, "SPR", species_tree, "random", cores, "", resultsdir)
             except Exception as exc:
                 utils.printFlush("Failed running GeneRax\n" + str(exc))
         if (self.fastme):
             utils.printFlush("Run fastme...")
             try:
-                launch_fastme.run_fastme_on_families(datadir, subst_model, True, False, cores)
+                launch_fastme.run_fastme_on_families(datadir, subst_model, is_dna=True, algo="I", use_spr=True, only_mat=False, cores=cores)
             except Exception as exc:
                 utils.printFlush("Failed running FastME\n" + str(exc))
         if (self.ba):
             utils.printFlush("Run ba...")
             try:
+                start = time.time()
                 dist_matrix_converter.convert_input(datadir, cores)
                 species_tree = fam.get_true_species_tree_matrix(datadir)
-                start = time.time()
-                launch_ba.run_ba_on_families(datadir, "exp", species_tree, cores)
-                print("=#=#= BA-Code takes {}s per tree =#=#=".format(time.time() - start))
+                inferred_trees = launch_ba.run_ba_on_families(datadir, "exp", species_tree, cores)
+                print("=#=#= BA-Code took {}s per tree =#=#=".format((time.time() - start) / ((int)(simphy.get_param_from_dataset_name("families", datadir)) * inferred_trees)))
             except Exception as exc:
                 utils.printFlush("Failed running bachelor thesis script\n" + str(exc))
         # COMPARE INFERRED TREES WITH TRUE TREE

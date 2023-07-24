@@ -152,12 +152,11 @@ def extract_events(datadir, results_family_dir, additional_arguments):
     event_counts = extract_event_number.extract(results_family_dir)
     events.update_event_counts(datadir, rec_model, radius, event_counts)
 
-def run(datadir, subst_model, strategy, species_tree, starting_tree, cores, additional_arguments, resultsdir, do_extract = True, do_analyze = False):
+def run(datadir, subst_model, strategy, species_tree, starting_tree, cores, additional_arguments, resultsdir, do_extract=True):
   run_name = utils.getAndDelete("--run", additional_arguments, None) 
   if (None == run_name):
       run_name = get_run_name(species_tree, starting_tree, subst_model, strategy, additional_arguments)
   arg_analyze = utils.getAndDelete("--analyze", additional_arguments, "yes")
-  do_analyze = do_analyze and (arg_analyze == "yes") and (strategy != "EVAL")
   print("Run name " + run_name)
   shutil.rmtree(resultsdir, True)
   os.makedirs(resultsdir)
@@ -170,18 +169,8 @@ def run(datadir, subst_model, strategy, species_tree, starting_tree, cores, addi
   metrics.save_metrics(datadir, run_name, (time.time() - start), "runtimes") 
   metrics.save_metrics(datadir, run_name, (time.time() - start), "seqtimes") 
   radius = int(utils.getArg("--max-spr-radius", additional_arguments, "5"))
-  #if (radius == 0):
-  #  print("Warning, not extracting trees when --max-spr-radius 0 is set")
-  #  do_extract = False
-  #  do_analyze = False
   if (do_extract):
     extract_trees(datadir, os.path.join(resultsdir, "generax"), run_name, subst_model)
-  #try:
-  #  if (do_analyze):
-  #    fast_rf_cells.analyze(datadir, "all", cores, run_name)
-  #except:
-  #  print("Analyze failed!!!!")
-  #extract_events(datadir, os.path.join(resultsdir, "generax"), additional_arguments)
   print("Output in " + resultsdir)
   return resultsdir
 
