@@ -67,7 +67,7 @@ def build_generax_families_file(datadir, starting_tree, subst_model, output):
         writer.write("subst_model = " + sequence_model.get_raxml_model(subst_model) + "\n")
 
 
-def build_generax_families_file_eval(datadir, subst_model, ouput, tree_prefix=""):
+def build_generax_families_file_eval(datadir, subst_model, output, tree_prefix=""):
   families_dir = fam.get_families_dir(datadir)
   with open(output, "w") as writer:
     writer.write("[FAMILIES]\n")
@@ -93,7 +93,7 @@ def get_generax_command(generax_families_file, species_tree, strategy, rec_model
       executable = paths.generax_scalasca_exec
     if (old):
       executable += "old"
-    generax_output = os.path.join(output_dir, "generax")
+    #generax_output = os.path.join(output_dir, "generax")
     command = []
     command.append("mpirun")
     command.append("-np")
@@ -106,7 +106,7 @@ def get_generax_command(generax_families_file, species_tree, strategy, rec_model
     command.append("--strategy")
     command.append(strategy)
     command.append("-p")
-    command.append(generax_output)
+    command.append(output_dir)
     command.extend(additional_arguments)
     return " ".join(command)
 
@@ -191,7 +191,8 @@ def eval_and_pick(datadir, results_dir):
   for family in best_tree:
     pick = best_tree[family]
     old_name = [f for f in fam.get_gene_tree_list(datadir, family) if f.startswith(pick)][0]
-    os.rename(os.path.join(fam.get_gene_tree_dir(datadir, family), old_tree), os.path.join(fam.get_gene_tree_dir(datadir, family), pick + "generax_pick.geneTree.newick"))
+    if (not ".generax_pick" in old_name):
+      os.rename(os.path.join(fam.get_gene_tree_dir(datadir, family), old_name), os.path.join(fam.get_gene_tree_dir(datadir, family), pick + ".generax_pick.geneTree.newick"))
 
 def extract_events(datadir, results_family_dir, additional_arguments):
   #try:
@@ -213,19 +214,18 @@ def run(datadir, subst_model, strategy, species_tree, starting_tree, cores, addi
   rec_model = utils.getArg("--rec-model", additional_arguments, "UndatedDTL")
   generax_families_file = os.path.join(resultsdir, "families-generax.txt")
   if (strategy == "EVAL"):
-    build_generax_families_file_eval(datadir, subst_model, ouput, tree_prefix=starting_tree)
+    build_generax_families_file_eval(datadir, subst_model, generax_families_file, tree_prefix=starting_tree)
   else:
     build_generax_families_file(datadir, starting_tree, subst_model, generax_families_file)
   start = time.time()
   run_generax(datadir, subst_model, strategy, rec_model, species_tree, generax_families_file, mode, cores, resultsdir, additional_arguments)
   metrics.save_metrics(datadir, run_name, (time.time() - start), "runtimes") 
-  metrics.save_metrics(datadir, run_name, (time.time() - start), "seqtimes") 
+  metrics.save_metrics(datadir, run_name, (time.time() - start), "seqtimes")
   if (strategy == "EVAL"):
     eval_and_pick(datadir, os.path.join(resultsdir, "results"))
   if (do_extract):
-    # TODO why path.join??
-    extract_trees(datadir, os.path.join(resultsdir, "generax"), run_name, subst_model)
-  print("Output in " + resultsdir)
+    extract_trees(datadir, resultsdir, run_name, subst_model)
+  #print("Output in " + resultsdir)
   return resultsdir
 
 def launch(datadir, subst_model, strategy, species_tree, starting_tree, cluster, cores, additional_arguments):
