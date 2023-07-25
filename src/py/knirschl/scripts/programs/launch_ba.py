@@ -88,8 +88,8 @@ def run_ba_on_families(datadir, subst_model, species_tree, cores):
     shutil.rmtree(output_dir, True)
     os.makedirs(output_dir)
     # config file -- UNUSED -- 
-    ba_families_file = os.path.join(output_dir, "families-ba.txt")
-    build_ba_families_file(datadir, ba_families_file)
+    #ba_families_file = os.path.join(output_dir, "families-ba.txt")
+    #build_ba_families_file(datadir, ba_families_file)
     # run
     scheduler_commands_file = generate_scheduler_commands_file(datadir, subst_model, species_tree, ba_families_file, cores, output_dir)
     start = time.time()

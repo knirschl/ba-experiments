@@ -48,7 +48,6 @@ def build_generax_families_file(datadir, starting_tree, subst_model, output):
   families_dir = os.path.join(datadir, "families")
   with open(output, "w") as writer:
     writer.write("[FAMILIES]\n")
-    plop = 0
     print("starting gene tree " + starting_tree)
     for family in os.listdir(families_dir):
       family_path = os.path.join(families_dir, family)
@@ -67,7 +66,25 @@ def build_generax_families_file(datadir, starting_tree, subst_model, output):
       else:
         writer.write("subst_model = " + sequence_model.get_raxml_model(subst_model) + "\n")
 
-def get_generax_command(generax_families_file, species_tree, strategy, additional_arguments, output_dir, mode, cores):
+
+def build_generax_families_file_eval(datadir, subst_model, ouput, tree_prefix=""):
+  families_dir = fam.get_families_dir(datadir)
+  with open(output, "w") as writer:
+    writer.write("[FAMILIES]\n")
+    for family in fam.get_families_list(datadir):
+      alignment = fam.get_alignment(datadir, family)
+      mapping = fam.get_mappings(datadir, family)
+      raxml_model = sequence_model.get_raxml_model(subst_model)
+      for tree in fam.get_gene_tree_list(datadir, family):
+        if (not tree.startswith(tree_prefix)):
+          continue
+        writer.write("- " + family + ">" + tree.replace(".geneTree.newick", "") + "\n")
+        writer.write("starting_gene_tree = " + os.path.join(fam.get_gene_tree_dir(datadir, family), tree) + "\n")
+        writer.write("alignment = " + alignment + "\n")
+        writer.write("mapping = " + mapping + "\n")
+        writer.write("subst_model = " + raxml_model + "\n")
+
+def get_generax_command(generax_families_file, species_tree, strategy, rec_model, additional_arguments, output_dir, mode, cores):
     executable = paths.generax_exec
     old = utils.checkAndDelete("--old", additional_arguments) 
     if (mode == "gprof"):
@@ -89,15 +106,12 @@ def get_generax_command(generax_families_file, species_tree, strategy, additiona
     command.append("--strategy")
     command.append(strategy)
     command.append("-p")
-    #if (rec_model == "UndatedDL" or rec_model == "UndatedDTL" or rec_model == "Auto"):
-    #  command.append("-r")
-    #  command.append(rec_model)
     command.append(generax_output)
     command.extend(additional_arguments)
     return " ".join(command)
 
-def run_generax(datadir,  subst_model,  strategy, species_tree, generax_families_file, mode, cores, resultsdir, additional_arguments = ""):
-  command = get_generax_command(generax_families_file, species_tree, strategy, additional_arguments, resultsdir, mode, cores)
+def run_generax(datadir,  subst_model,  strategy, rec_model, species_tree, generax_families_file, mode, cores, resultsdir, additional_arguments = ""):
+  command = get_generax_command(generax_families_file, species_tree, strategy, rec_model, additional_arguments, resultsdir, mode, cores)
   print(command)
   subprocess.check_call(command.split(" "), stdout = sys.stdout)
 
@@ -145,6 +159,40 @@ def get_run_name(species_tree, gene_trees, subst_model, strategy, additional_arg
     run_name += "." + subst_model
     return run_name
 
+def eval(results_dir, family):
+  lines = open(os.path.join(results_dir, family, "stats.txt")).readlines()
+  stats = {}
+  logls = lines[0].split()
+  stats["raxmlLogL"] = (float)(logls[0])
+  stats["otherLogL"] = (float)(logls[1])
+  stats["sumLogL"] = (float)(logls[0]) + (float)(logls[1])
+  dlt = lines[1].split()
+  stats["dup"] = (float)(dtl[3])
+  stats["loss"] = (float)(dtl[4])
+  stats["transfer"] = (float)(dtl[5])
+  return stats
+
+def eval_sumLogL(results_dir, family):
+  logls = open(os.path.join(results_dir, family, "stats.txt")).readlines()[0].split()
+  return (float)(logls[0]) + (float)(logls[1])
+
+def eval_and_pick(datadir, results_dir):
+  best_tree = {}
+  best_logL = {}
+  for family in os.listdir(results_dir):
+    true_family, tree = family.split(">")
+    if (true_family not in best_tree):
+      best_tree[true_family] = ""
+      best_logL[true_family] = float("-inf")
+    logL = eval_sumLogL(results_dir, family)
+    if (logL > best_logL[true_family]):
+      best_tree[true_family] = tree
+      best_logL[true_family] = logL
+  for family in best_tree:
+    pick = best_tree[family]
+    old_name = [f for f in fam.get_gene_tree_list(datadir, family) if f.startswith(pick)][0]
+    os.rename(os.path.join(fam.get_gene_tree_dir(datadir, family), old_tree), os.path.join(fam.get_gene_tree_dir(datadir, family), pick + "generax_pick.geneTree.newick"))
+
 def extract_events(datadir, results_family_dir, additional_arguments):
   #try:
     rec_model = utils.getArg("--rec-model", additional_arguments, "UndatedDTL")
@@ -162,14 +210,20 @@ def run(datadir, subst_model, strategy, species_tree, starting_tree, cores, addi
   os.makedirs(resultsdir)
   sys.stdout.flush()
   mode = get_mode_from_additional_arguments(additional_arguments)
+  rec_model = utils.getArg("--rec-model", additional_arguments, "UndatedDTL")
   generax_families_file = os.path.join(resultsdir, "families-generax.txt")
-  build_generax_families_file(datadir, starting_tree, subst_model, generax_families_file)
+  if (strategy == "EVAL"):
+    build_generax_families_file_eval(datadir, subst_model, ouput, tree_prefix=starting_tree)
+  else:
+    build_generax_families_file(datadir, starting_tree, subst_model, generax_families_file)
   start = time.time()
-  run_generax(datadir, subst_model, strategy, species_tree, generax_families_file, mode, cores, resultsdir, additional_arguments)
+  run_generax(datadir, subst_model, strategy, rec_model, species_tree, generax_families_file, mode, cores, resultsdir, additional_arguments)
   metrics.save_metrics(datadir, run_name, (time.time() - start), "runtimes") 
   metrics.save_metrics(datadir, run_name, (time.time() - start), "seqtimes") 
-  radius = int(utils.getArg("--max-spr-radius", additional_arguments, "5"))
+  if (strategy == "EVAL"):
+    eval_and_pick(datadir, os.path.join(resultsdir, "results"))
   if (do_extract):
+    # TODO why path.join??
     extract_trees(datadir, os.path.join(resultsdir, "generax"), run_name, subst_model)
   print("Output in " + resultsdir)
   return resultsdir

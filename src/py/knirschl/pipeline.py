@@ -89,7 +89,7 @@ class RunFilter():
             try:
                 species_tree = fam.get_species_tree(datadir)
                 resultsdir = fam.get_run_dir(datadir, subst_model, "generax_run")
-                launch_generax.run(datadir, subst_model, "SPR", species_tree, "random", cores, "", resultsdir)
+                launch_generax.run(datadir, subst_model, "SPR", species_tree, "random", cores, "--rec-model UndatedDL", resultsdir)
             except Exception as exc:
                 utils.printFlush("Failed running GeneRax\n" + str(exc))
         if (self.fastme):
@@ -102,9 +102,18 @@ class RunFilter():
             utils.printFlush("Run ba...")
             try:
                 start = time.time()
+                # convert species tree and alignments to distance matrix
                 dist_matrix_converter.convert_input(datadir, cores)
+                # precomput values
                 species_tree = fam.get_true_species_tree_matrix(datadir)
+                resultsdir = fam.get_run_dir(datadir, subst_model, "generax_eval_run")
+                # run ba script
                 inferred_trees = launch_ba.run_ba_on_families(datadir, "exp", species_tree, cores)
+                # run fastme on ba corrected matrices
+                # TODO
+                # run generax evaluation and select best tree
+                launch_generax.run(datadir, subst_model, "EVAL", species_tree, "ba", cores, "--rec-model UndatedDL", resultsdir, False)
+
                 print("=#=#= BA-Code took {}s per tree =#=#=".format((time.time() - start) / ((int)(simphy.get_param_from_dataset_name("families", datadir)) * inferred_trees)))
             except Exception as exc:
                 utils.printFlush("Failed running bachelor thesis script\n" + str(exc))
