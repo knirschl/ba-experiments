@@ -95,7 +95,7 @@ class RunFilter():
         if (self.fastme):
             utils.printFlush("Run fastme...")
             try:
-                launch_fastme.run_fastme_on_families(datadir, subst_model, is_dna=True, algo="I", use_spr=True, only_mat=False, cores=cores)
+                launch_fastme.run_fastme_on_families(datadir, subst_model, is_dna=True, algo="B", use_spr=True, only_mat=False, cores=cores)
             except Exception as exc:
                 utils.printFlush("Failed running FastME\n" + str(exc))
         if (self.ba):
@@ -106,9 +106,7 @@ class RunFilter():
                 dist_matrix_converter.convert_input(datadir, cores)
                 species_tree = fam.get_true_species_tree_matrix(datadir)
                 # run ba script
-                inferred_trees = launch_ba.run_ba_on_families(datadir, "exp", species_tree, cores)
-                # run fastme on ba corrected matrices
-                # TODO
+                inferred_trees = launch_ba.run_ba_on_families(datadir, "exp", species_tree, only_mat=True, cores=cores)
                 # run generax evaluation and select best tree
                 species_tree = fam.get_species_tree(datadir)
                 resultsdir = fam.get_run_dir(datadir, subst_model, "generax_eval_run")

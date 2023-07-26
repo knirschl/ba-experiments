@@ -38,23 +38,19 @@ def generate_scheduler_commands_file(datadir, subst_model, is_dna, algo, use_spr
       command.append("1")
       # input file (relaxed phylip format)
       command.append("-i")
-      if (fastme_model == ""):
-        # msa
-        phylip = fam.get_alignment_phylip(datadir, family)
-        if (not os.path.isfile(phylip)):
-          ali = fam.get_alignment(datadir, family)
-          msa_converter.msa_convert(ali, phylip, None, "iphylip_relaxed")
-        command.append(phylip)
-        # dna or protein model
-        if (is_dna):
-         command.append("-d" + fastme_model)
-        else:
-          command.append("-p" + fastme_model)
-        if (gamma):
-          command.append("1.0")
+      # msa
+      phylip = fam.get_alignment_phylip(datadir, family)
+      if (not os.path.isfile(phylip)):
+        ali = fam.get_alignment(datadir, family)
+        msa_converter.msa_convert(ali, phylip, None, "iphylip_relaxed")
+      command.append(phylip)
+      # dna or protein model
+      if (is_dna):
+       command.append("-d" + fastme_model)
       else:
-        # precomputed distance matrix
-        command.append(fam.get_alignment_matrix(datadir, family))
+        command.append("-p" + fastme_model)
+      if (gamma):
+        command.append("1.0")
       # output tree & matrix
       command.append("-o")
       command.append(fastme_output)
@@ -63,6 +59,8 @@ def generate_scheduler_commands_file(datadir, subst_model, is_dna, algo, use_spr
       # distance algorithm (B: BME, I: BIONJ (def), N: NJ)
       command.append("-m")
       command.append(algo)
+      command.append("-n")
+      command.append("B")
       if (use_spr):
         # use spr moves
         command.append("--spr")
@@ -73,6 +71,41 @@ def generate_scheduler_commands_file(datadir, subst_model, is_dna, algo, use_spr
         command.append("-f") # precision (max=17)
         command.append("17")
       writer.write(" ".join(command) + "\n")
+  return scheduler_commands_file
+
+def generate_scheduler_commands_file_matrices(datadir, mat_prefix, algo, use_spr, output_dir):
+  results_dir = os.path.join(output_dir, "results")
+  scheduler_commands_file = os.path.join(output_dir, "commands.txt")
+  with open(scheduler_commands_file, "w") as writer:
+    for family in fam.get_families_list(datadir):
+      misc_dir = fam.get_family_misc_dir(datadir, family)
+      try:
+        os.mkdir(misc_dir)
+      except:
+        pass
+      output_prefix = mat_prefix + "fastme_output."
+      glob_command = []
+      glob_command.append(family)
+      glob_command.append("1")
+      glob_command.append("1")
+      # distance algorithm (B: BME, I: BIONJ (def), N: NJ)
+      glob_command.append("-m")
+      glob_command.append(algo)
+      glob_command.append("-n")
+      glob_command.append("B")
+      if (use_spr):
+        # use spr moves
+        command.append("--spr")
+      # write every single matrix into own command 
+      for miscfile in os.listdir(misc_dir):
+        command = glob_command
+        if (not miscfile.startswith(mat_prefix)):
+          continue
+        command.append("-i")
+        command.append(miscfile)
+        command.append("-o")
+        command.append(os.path.join(misc_dir, miscfile.replace(mat_prefix, output_prefix).replace("matrix.phy", "geneTree.newick")))
+        writer.write(" ".join(command) + "\n")
   return scheduler_commands_file
 
 
@@ -142,6 +175,18 @@ def run_fastme_on_families(datadir, subst_model, is_dna, algo, use_spr, only_mat
 def run_fastme_matrix(datadir, subst_model="p", is_dna=True, cores=1):
   run_fastme_on_families(datadir, subst_model, is_dna, "I", False, True, cores)
 
+def run_fastme_on_families_matrices(datadir, mat_prefix, algo, use_spr, cores):
+  fastme_name = "fastme." + mat_prefix[:-1]
+  subst_model = mat_prefix.replace("ba", "").replace(".", "")
+  output_dir = fam.get_run_dir(datadir, subst_model, fastme_name + "_run")
+  shutil.rmtree(output_dir, True)
+  os.makedirs(output_dir)
+  scheduler_commands_file = generate_scheduler_commands_file_matrices(datadir, mat_prefix, algo, use_spr, output_dir)
+  start = time.time()
+  utils.run_with_scheduler(paths.fastme_exec, scheduler_commands_file, "fork", cores, output_dir, "logs.txt")
+  metrics.save_metrics(datadir, fam.get_run_name(fastme_name, subst_model), (time.time() - start), "runtimes") 
+  lb = fam.get_lb_from_run(output_dir)
+  metrics.save_metrics(datadir, fam.get_run_name(fastme_name, subst_model), (time.time() - start) * lb, "seqtimes")
 
 if (__name__== "__main__"):
   max_args_number = 5
