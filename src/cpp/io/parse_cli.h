@@ -43,6 +43,11 @@ auto build_parser(std::string const& name, std::string const& version) {
             .default_value(std::string{"/"})
             .help("specify the output prefix");
 
+    program.add_argument("-c")
+            .default_value(false)
+            .implicit_value(true)
+            .help("if set, only the corrected matrices are written out. No trees are calculated");
+
     return program;
 }
 
@@ -94,6 +99,10 @@ std::string getP(argparse::ArgumentParser &program) {
 
 std::tuple<std::string, bool, std::string> getMappingConfig(argparse::ArgumentParser &program) {
     return {program.get("-m"), program.get<bool>("-l"), program.get("-d")};
+}
+
+bool getC(argparse::ArgumentParser &program) {
+    return program.get<bool>("-c");
 }
 
 #endif //BA_PARSE_CLI_H

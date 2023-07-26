@@ -6,7 +6,7 @@
 #include <iomanip>
 #include "io/parse_cli.h"
 #include "io/parse_file.h"
-#include "io/write_tree.h"
+#include "io/write_file.h"
 #include "nj/tree.h"
 #include "nj/matrix.h"
 #include "nj/NJSimple.h"
@@ -56,9 +56,10 @@ std::string to_string(const matrix_t<double> &mat) {
     }) + "]";
 }
 
-void run(double scale, const std::shared_ptr<Tree> &tree, std::vector<int> &active,
-         const std::vector<std::vector<double>> &species_tree_mat,
-         const std::vector<std::vector<double>> &alignment_mat,
+bool run(double scale, const std::shared_ptr<Tree> &tree, std::vector<int> &active,
+         const dist_matrix_t &species_tree_mat,
+         const dist_matrix_t &alignment_mat,
+         const vector_t<std::string> &alignment_ids,
          argparse::ArgumentParser &cli_parser) {
 
     //std::cout << "Start tree: " << tree->to_string()
@@ -78,15 +79,19 @@ void run(double scale, const std::shared_ptr<Tree> &tree, std::vector<int> &acti
         corrected_matrix[ai][aj] /= scale + 1;
         corrected_matrix[aj][ai] = corrected_matrix[ai][aj];
     }
-    //std::cout << "\nCorrected matrix:\n" << to_string(corrected_matrix) << "\n";
-    neighborJoining<>(corrected_matrix, tree, active);
-
     // double to string without trailing zeros
     std::ostringstream oss;
     oss << std::setprecision(8) << std::noshowpoint << scale;
-    write_newick(*tree, getP(cli_parser) + oss.str() + "S~G.geneTree.newick");
+    // matrix or tree
+    if (getC(cli_parser)) {
+        return write_phylip(corrected_matrix, alignment_ids, getP(cli_parser) + oss.str() + "S~G.matrix.phy");
+    }
+    //std::cout << "\nCorrected matrix:\n" << to_string(corrected_matrix) << "\n";
+    neighborJoining<>(corrected_matrix, tree, active);
+
     std::cout << "Neighbor-joined tree (" << oss.str() << "S~G): " << tree->to_newick()
               << std::endl;
+    return write_newick(*tree, getP(cli_parser) + oss.str() + "S~G.geneTree.newick");
 }
 /*
 -s
@@ -149,7 +154,7 @@ int main(int argc, char *argv[]) {
             tree = reset(species_tree_ids, alignment_ids, map_config, backup_tree);
             active = leaf_indices;
 
-            run(i / div, tree, active, species_tree_mat, alignment_mat, cli_parser);
+            run(i / div, tree, active, species_tree_mat, alignment_mat, alignment_ids, cli_parser);
 
         }
         double scales[] = {2.25, 2.5, 3, 5, 10};
@@ -157,7 +162,7 @@ int main(int argc, char *argv[]) {
             tree = reset(species_tree_ids, alignment_ids, map_config);
             active = leaf_indices;
 
-            run(scale, tree, active, species_tree_mat, alignment_mat, cli_parser);
+            run(scale, tree, active, species_tree_mat, alignment_mat, alignment_ids, cli_parser);
         }
         /*
         for (int i{int(2.5 * div)}; i <= 10 * div; i *= 2) {
