@@ -65,11 +65,8 @@ def write_phylip(dist_matrix, labels, handle):
         handle.write(row_fmt.format(*fields))
 
 def convert_input(datadir, cores):
+    # TODO only if doesn't already exist
     # species tree
-    #start = time.time()
     from_newick(fam.get_true_species_tree(datadir))
-    #print("Converting the species trees takes {}s".format(time.time() - start))
     # gene alignments
-    #start = time.time()
     launch_fastme.run_fastme_matrix(datadir, cores=cores)
-    #print("Converting all gene trees takes {}s".format(time.time() - start))

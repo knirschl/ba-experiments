@@ -10,7 +10,7 @@ import utils
 import fam
 import metrics
 
-def generate_scheduler_commands_file(datadir, subst_model, species_tree, only_mat, output_dir):
+def generate_scheduler_commands_file(datadir, subst_model, species_tree, mat_out, output_dir):
     results_dir = os.path.join(output_dir, "results")
     scheduler_commands_file = os.path.join(output_dir, "commands.txt")
     with open(scheduler_commands_file, "w") as writer:
@@ -34,8 +34,9 @@ def generate_scheduler_commands_file(datadir, subst_model, species_tree, only_ma
             command.append(ba_output_prefix)
             command.append("-m")
             command.append(fam.get_mappings(datadir, family))
-            if (only_mat):
+            if (mat_out):
                 command.append("-c")
+                command.append(str(mat_out))
             writer.write(" ".join(command) + "\n")
     return scheduler_commands_file
 
@@ -65,20 +66,18 @@ def extract_ba_trees(datadir, subst_model):
     return valid
 
 
-def run_ba_on_families(datadir, subst_model, species_tree, only_mat, cores):
+def run_ba_on_families(datadir, subst_model, species_tree, mat_out, cores):
     # output dir
     output_dir = fam.get_run_dir(datadir, subst_model, "ba_run")
     shutil.rmtree(output_dir, True)
     os.makedirs(output_dir)
     # run
-    scheduler_commands_file = generate_scheduler_commands_file(datadir, subst_model, species_tree, only_mat, output_dir)
+    scheduler_commands_file = generate_scheduler_commands_file(datadir, subst_model, species_tree, mat_out, output_dir)
     start = time.time()
     utils.run_with_scheduler(paths.ba_exec, scheduler_commands_file, "fork", cores, output_dir, "logs.txt")
     # metrics
     metrics.save_metrics(datadir, fam.get_run_name("ba", subst_model), (time.time() - start), "runtimes") 
     lb = fam.get_lb_from_run(output_dir)
     metrics.save_metrics(datadir, fam.get_run_name("ba", subst_model), (time.time() - start) * lb, "seqtimes")
-    if only_mat:
-        # run fastme on ba corrected matrices
-        launch_fastme.run_fastme_on_families_matrices(datadir, "ba." + subst_model + ".", algo="B", use_spr=True, cores=cores)
-    return extract_ba_trees(datadir, subst_model)
+    if (mat_out < 2):
+        return extract_ba_trees(datadir, subst_model)

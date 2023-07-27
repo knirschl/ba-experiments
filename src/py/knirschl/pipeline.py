@@ -26,15 +26,19 @@ class RunFilter():
         self.generax = True
         self.fastme = True
         self.ba = True
+        self.ba_fastme = True
+        self.generax_pick = True
         self.compare = True
     
     def disable_all(self):
         self.generate = False
+        self.force_overwrite = False
         self.raxml = False
         self.generax = False
         self.fastme = False
         self.ba = False
-        self.force_overwrite = False
+        self.ba_fastme = False
+        self.generax_pick = False
         self.compare = False
     
     def sim(self):
@@ -46,12 +50,23 @@ class RunFilter():
         self.ba = False
         self.compare = False
 
-    def bacomp(self):
+    def bacomp_full(self):
         self.generate = False
         self.raxml = False
         self.generax = False
         self.fastme = False
         self.ba = True
+        self.ba_fastme = True
+        self.generax_pick = True
+        self.compare = True
+    
+    def pick_comp(self):
+        self.generate = False
+        self.raxml = False
+        self.generax = False
+        self.fastme = False
+        self.ba = False
+        self.generax_pick = True
         self.compare = True
 
     def comp(self):
@@ -60,6 +75,7 @@ class RunFilter():
         self.generax = False
         self.fastme = False
         self.ba = False
+        self.generax_pick = False
         self.compare = True
 
     def run_methods(self, datadir, subst_model, cores):
@@ -106,15 +122,31 @@ class RunFilter():
                 dist_matrix_converter.convert_input(datadir, cores)
                 species_tree = fam.get_true_species_tree_matrix(datadir)
                 # run ba script
-                inferred_trees = launch_ba.run_ba_on_families(datadir, "exp", species_tree, only_mat=True, cores=cores)
+                inferred_trees = launch_ba.run_ba_on_families(datadir, "exp", species_tree, mat_out=int(self.ba_fastme), cores=cores)
+                print("=#=#= BA-Code took {}s per tree =#=#=".format((time.time() - start) / ((int)(simphy.get_param_from_dataset_name("families", datadir)) * inferred_trees)))
+            except Exception as exc:
+                utils.printFlush("Failed running bachelor thesis script\n" + str(exc))
+        if (self.ba_fastme):
+            utils.printFlush("Run ba matrix with fastme trees...")
+            try:
+                if (not self.ba):
+                    # convert species tree and alignments to distance matrix
+                    dist_matrix_converter.convert_input(datadir, cores)
+                    species_tree = fam.get_true_species_tree_matrix(datadir)
+                    # run ba script
+                    inferred_trees = launch_ba.run_ba_on_families(datadir, "exp", species_tree, mat_out=2, cores=cores)
+                launch_fastme.run_fastme_on_families_matrices(datadir, "ba.exp.", algo="B", use_spr=True, cores=cores)
+            except Exception as exc:
+                utils.printFlush("Failed running bachelor thesis matrix correction with FastME\n" + str(exc))
+        if (self.generax_pick):
+            utils.printFlush("Run picking...")
+            try:
                 # run generax evaluation and select best tree
                 species_tree = fam.get_species_tree(datadir)
                 resultsdir = fam.get_run_dir(datadir, subst_model, "generax_eval_run")
                 launch_generax.run(datadir, subst_model, "EVAL", species_tree, "ba", cores, ["--rec-model", "UndatedDL", "--per-family-rates"], resultsdir, False)
-
-                print("=#=#= BA-Code took {}s per tree =#=#=".format((time.time() - start) / ((int)(simphy.get_param_from_dataset_name("families", datadir)) * inferred_trees)))
             except Exception as exc:
-                utils.printFlush("Failed running bachelor thesis script\n" + str(exc))
+                utils.printFlush("Failed running compare\n" + str(exc))
         # COMPARE INFERRED TREES WITH TRUE TREE
         if (self.compare):
             utils.printFlush("Run compare...")
@@ -141,9 +173,10 @@ def run_pipeline(enabled = True):
     #run_filter.raxml = False
     #run_filter.generax = False
     #run_filter.force_overwrite = False
-    #run_filter.bacomp() # only ba script
-    run_filter.comp() # only compare inferred trees
-    # run_filter.disable_all() # collect avgs
+    #run_filter.bacomp_full() # only ba script
+    run_filter.disable_all() # collect avgs
+    run_filter.ba_fastme = True
+    #run_filter.comp() # only compare inferred trees
     # ====== ! CAREFUL ! ======
 
     root_output = paths.families_datasets_root # output/families/
