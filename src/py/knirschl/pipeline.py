@@ -66,6 +66,7 @@ class RunFilter():
         self.generax = False
         self.fastme = False
         self.ba = False
+        self.ba_fastme = False
         self.generax_pick = True
         self.compare = True
 
@@ -75,6 +76,7 @@ class RunFilter():
         self.generax = False
         self.fastme = False
         self.ba = False
+        self.ba_fastme = False
         self.generax_pick = False
         self.compare = True
 
@@ -131,7 +133,7 @@ class RunFilter():
             try:
                 if (not self.ba):
                     # convert species tree and alignments to distance matrix
-                    dist_matrix_converter.convert_input(datadir, cores)
+                    #dist_matrix_converter.convert_input(datadir, cores)
                     species_tree = fam.get_true_species_tree_matrix(datadir)
                     # run ba script
                     inferred_trees = launch_ba.run_ba_on_families(datadir, "exp", species_tree, mat_out=2, cores=cores)
@@ -146,7 +148,7 @@ class RunFilter():
                 resultsdir = fam.get_run_dir(datadir, subst_model, "generax_eval_run")
                 launch_generax.run(datadir, subst_model, "EVAL", species_tree, "ba", cores, ["--rec-model", "UndatedDL", "--per-family-rates"], resultsdir, False)
             except Exception as exc:
-                utils.printFlush("Failed running compare\n" + str(exc))
+                utils.printFlush("Failed running pick\n" + str(exc))
         # COMPARE INFERRED TREES WITH TRUE TREE
         if (self.compare):
             utils.printFlush("Run compare...")
@@ -173,10 +175,12 @@ def run_pipeline(enabled = True):
     #run_filter.raxml = False
     #run_filter.generax = False
     #run_filter.force_overwrite = False
-    #run_filter.bacomp_full() # only ba script
+    #run_filter.bacomp_full()
+    #run_filter.ba = False
+    #run_filter.generax_pick = False
+    #run_filter.pick_comp() # only compare inferred trees
     run_filter.disable_all() # collect avgs
-    run_filter.ba_fastme = True
-    #run_filter.comp() # only compare inferred trees
+    run_filter.generax_pick = True
     # ====== ! CAREFUL ! ======
 
     root_output = paths.families_datasets_root # output/families/
