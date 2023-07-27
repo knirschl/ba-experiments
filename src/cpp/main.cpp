@@ -83,15 +83,19 @@ bool run(double scale, const std::shared_ptr<Tree> &tree, std::vector<int> &acti
     std::ostringstream oss;
     oss << std::setprecision(8) << std::noshowpoint << scale;
     // matrix or tree
-    if (getC(cli_parser)) {
-        return write_phylip(corrected_matrix, alignment_ids, getP(cli_parser) + oss.str() + "S~G.matrix.phy");
+    bool ret{true};
+    if (int c{getC(cli_parser)}) {
+        ret = write_phylip(corrected_matrix, alignment_ids, getP(cli_parser) + oss.str() + "S~G.matrix.phy");
+        if (c == 2) {
+            return ret;
+        }
     }
     //std::cout << "\nCorrected matrix:\n" << to_string(corrected_matrix) << "\n";
     neighborJoining<>(corrected_matrix, tree, active);
 
     std::cout << "Neighbor-joined tree (" << oss.str() << "S~G): " << tree->to_newick()
               << std::endl;
-    return write_newick(*tree, getP(cli_parser) + oss.str() + "S~G.geneTree.newick");
+    return ret & write_newick(*tree, getP(cli_parser) + oss.str() + "S~G.geneTree.newick");
 }
 /*
 -s
@@ -149,7 +153,7 @@ int main(int argc, char *argv[]) {
 
         // NJ gene tree with corrected values
         double div{100.0};
-        int step{10};
+        int step{5};
         for (int i{0}; i <= 200; i += step) {
             tree = reset(species_tree_ids, alignment_ids, map_config, backup_tree);
             active = leaf_indices;

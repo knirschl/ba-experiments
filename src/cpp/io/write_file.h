@@ -49,8 +49,8 @@ bool write_phylip(const dist_matrix_t &matrix, const vector_t<std::string> &name
 
 bool write_phylip(const dist_matrix_t &matrix, const vector_t<std::string> &names, const std::string &out_file) {
     std::ofstream streamed_file{out_file};
-    // number precision after comma << keep word on left, fill chars to right
-    streamed_file << std::setprecision(17) << std::left;
+    // decimal places           << keep word on left, fill chars to right
+    streamed_file << std::fixed << std::setprecision(17) << std::left;
     bool is_written = write_phylip(matrix, names, streamed_file);
     streamed_file.close();
     return is_written;

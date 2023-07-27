@@ -308,12 +308,12 @@ public:
             // TODO Make it work without rerooting the tree all the time
             reroot(test_root);
             int score{tag_APro(test_root)};
-            if (score == best_score) {
+            /*if (score == best_score) {
                 best_counter++;
                 if (rand() % best_counter == 0) {
                     best_root = test_root;
                 }
-            } else if (score < best_score) {
+            } else */if (score < best_score) {
                 best_score = score;
                 best_root = test_root;
                 best_counter = 1;

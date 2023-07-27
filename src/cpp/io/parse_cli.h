@@ -44,8 +44,8 @@ auto build_parser(std::string const& name, std::string const& version) {
             .help("specify the output prefix");
 
     program.add_argument("-c")
-            .default_value(false)
-            .implicit_value(true)
+            .default_value(0)
+            .scan<'i', int>()
             .help("if set, only the corrected matrices are written out. No trees are calculated");
 
     return program;
@@ -101,8 +101,8 @@ std::tuple<std::string, bool, std::string> getMappingConfig(argparse::ArgumentPa
     return {program.get("-m"), program.get<bool>("-l"), program.get("-d")};
 }
 
-bool getC(argparse::ArgumentParser &program) {
-    return program.get<bool>("-c");
+int getC(argparse::ArgumentParser &program) {
+    return program.get<int>("-c");
 }
 
 #endif //BA_PARSE_CLI_H
