@@ -1,9 +1,0 @@
-
-
-#  Analysing dataset 1
-
- . Computing pairwise distances...
-
- . Warning: Cannot compute tree with less than 4 taxa.
-
- . Time used 0h00m00s

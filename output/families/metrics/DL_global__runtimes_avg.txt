@@ -1,7 +1,0 @@
-generax-eval-undateddl-r5.f81 : 0.15244266986846924
-fastme.f84 : 4.110570054054261
-fastme_mat.p : 5.183328413963318
-fastme.f81 : 8.315999460220336
-fastme.ba.exp.exp : 64.16652200222016
-ba.exp : 84.24033985614774
-generax-eval-undateddl-r5-famrates.f81 : 104.43022808074952
