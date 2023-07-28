@@ -152,22 +152,27 @@ int main(int argc, char *argv[]) {
         //return 0;
 
         // NJ gene tree with corrected values
+        double scales[] = {0, 0.5, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8,
+                           1.9, 2.0, 2.05, 2.1, 2.15, 2.2, 2.25, 2.3, 2.35, 2.4,
+                           2.45, 2.5, 2.55, 2.6, 2.65, 2.7, 2.75, 2.85, 2.95,
+                           3.1, 3.2, 3.3, 3.4, 3.5, 4, 4.5, 5, 7.5, 10};
+        for (double scale: scales) {
+            tree = reset(species_tree_ids, alignment_ids, map_config);
+            active = leaf_indices;
+
+            run(scale, tree, active, species_tree_mat, alignment_mat, alignment_ids, cli_parser);
+        }
+        /*
         double div{100.0};
         int step{5};
-        for (int i{0}; i <= 200; i += step) {
+        for (int i{150}; i <= 200; i += step) {
             tree = reset(species_tree_ids, alignment_ids, map_config, backup_tree);
             active = leaf_indices;
 
             run(i / div, tree, active, species_tree_mat, alignment_mat, alignment_ids, cli_parser);
 
         }
-        double scales[] = {2.25, 2.5, 3, 5, 10};
-        for (double scale : scales) {
-            tree = reset(species_tree_ids, alignment_ids, map_config);
-            active = leaf_indices;
-
-            run(scale, tree, active, species_tree_mat, alignment_mat, alignment_ids, cli_parser);
-        }
+         */
         /*
         for (int i{int(2.5 * div)}; i <= 10 * div; i *= 2) {
             tree = reset(species_tree_ids, alignment_ids, map_config);
