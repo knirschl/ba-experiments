@@ -37,6 +37,14 @@ def save_dico(dataset_dir, dico, metric_name):
     for key, value in sorted(dico.items(), key=lambda x: float(x[1])):
       writer.write(key.lower() + " : " + str(value) + "\n")
 
+def update_dico(dataset_dir, dico, metric_name):
+  try:
+    old_dico = get_metrics(dataset_dir, metric_name)
+    old_dico.update(dico)
+    save_dico(dataset_dir, old_dico, metric_name)
+  except:
+    pass
+
 def save_metrics(dataset_dir, method_key, metric_value, metric_name):
   method_key = method_key.lower()
   dico = get_metrics(dataset_dir,  metric_name)

@@ -37,7 +37,7 @@ def rf_compare(tree1, tree2):
     #print(rf_abs, rf_rel)
     return [float(rf_abs), float(rf_rel)]
 
-def ttask(datadir, tree, avg_abs_dico, avg_rel_dico):
+def ttask(datadir, tree, avg_abs_dico, avg_rel_dico, families_dico):
     fam_counter = 0
     for family in fam.get_families_list(datadir):
         true_tree = fam.get_true_tree(datadir, family)
@@ -55,6 +55,11 @@ def ttask(datadir, tree, avg_abs_dico, avg_rel_dico):
             # distance error
             #print("I've catched an error, maybe look into this?\n", dist_rel, "\n")
             continue
+        # single distance
+        if not tree in families_dico[family]:
+            families_dico[family][tree] = 0
+        # This should be thread-safe
+        families_dico[family][tree] = dist_rel
         # method average
         if not tree in avg_abs_dico:
             # if tree (= method) not in dico, add
@@ -63,22 +68,19 @@ def ttask(datadir, tree, avg_abs_dico, avg_rel_dico):
         avg_abs_dico[tree] = (avg_abs_dico[tree] * fam_counter + dist_abs) / (fam_counter + 1)
         avg_rel_dico[tree] = (avg_rel_dico[tree] * fam_counter + dist_rel) / (fam_counter + 1)
         fam_counter += 1
-        
-        # SAVING TO FILE
-        # save single distance
-        # TODO !! RACE CONDITION WHILE WRITING !!
-        #metrics.save_metrics(datadir, make_key(family, tree), dist_abs, "rf_distance-abs")
-        #metrics.save_metrics(datadir, make_key(family, tree), dist_rel, "rf_distance-rel")
 
 def compare_all(datadir):
     avg_abs_dico = {}
     avg_rel_dico = {}
+    families_dico = {}
+    for family in fam.get_families_list(datadir):
+        families_dico[family] = {}
     threads = []
     for tree in fam.get_gene_tree_list(datadir, fam.get_families_list(datadir)[0]):
         if (tree == fam.get_true_gene_tree_name()):
             continue
         tree = tree.replace(".generax_pick", "")
-        fam_thread = Thread(target=ttask, args=(datadir, tree, avg_abs_dico, avg_rel_dico))
+        fam_thread = Thread(target=ttask, args=(datadir, tree, avg_abs_dico, avg_rel_dico, families_dico))
         threads.append(fam_thread)
     for t in threads:
         t.start()
@@ -87,3 +89,5 @@ def compare_all(datadir):
     # save method average distance
     metrics.save_dico(datadir, avg_abs_dico, "rf_distance_avg-abs")
     metrics.save_dico(datadir, avg_rel_dico, "rf_distance_avg-rel")
+    for family in fam.get_families_list(datadir):
+        metrics.save_dico(fam.get_family_path(datadir, family), families_dico[family], "rf_distance-rel")
