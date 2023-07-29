@@ -97,13 +97,13 @@ class RunFilter():
         sys.stdout.flush()
         # RUN
         if(self.raxml):
-            utils.printFlush("Run raxml-ng...")
+            utils.printFlush("Run raxml-ng...\n***************")
             try:
                 launch_raxml.run_raxmlng_on_families(datadir, subst_model, cores)
             except Exception as exc:
                 utils.printFlush("Failed running RAxML-NG\n" + str(exc))
         if (self.generax):
-            utils.printFlush("Run generax...")
+            utils.printFlush("Run generax...\n**************")
             try:
                 species_tree = fam.get_species_tree(datadir)
                 resultsdir = fam.get_run_dir(datadir, subst_model, "generax_run")
@@ -111,13 +111,13 @@ class RunFilter():
             except Exception as exc:
                 utils.printFlush("Failed running GeneRax\n" + str(exc))
         if (self.fastme):
-            utils.printFlush("Run fastme...")
+            utils.printFlush("Run fastme...\n*************")
             try:
                 launch_fastme.run_fastme_on_families(datadir, subst_model, is_dna=True, algo="B", use_spr=True, only_mat=False, cores=cores)
             except Exception as exc:
                 utils.printFlush("Failed running FastME\n" + str(exc))
         if (self.ba):
-            utils.printFlush("Run ba...")
+            utils.printFlush("Run ba...\n*********")
             try:
                 start = time.time()
                 # convert species tree and alignments to distance matrix
@@ -129,7 +129,7 @@ class RunFilter():
             except Exception as exc:
                 utils.printFlush("Failed running bachelor thesis script\n" + str(exc))
         if (self.ba_fastme):
-            utils.printFlush("Run ba matrix with fastme trees...")
+            utils.printFlush("Run ba matrix with fastme trees...\n**********************************")
             try:
                 if (not self.ba):
                     # convert species tree and alignments to distance matrix
@@ -141,7 +141,7 @@ class RunFilter():
             except Exception as exc:
                 utils.printFlush("Failed running bachelor thesis matrix correction with FastME\n" + str(exc))
         if (self.generax_pick):
-            utils.printFlush("Run picking...")
+            utils.printFlush("Run picking...\n**************")
             try:
                 # run generax evaluation and select best tree
                 species_tree = fam.get_species_tree(datadir)
@@ -151,7 +151,7 @@ class RunFilter():
                 utils.printFlush("Failed running pick\n" + str(exc))
         # COMPARE INFERRED TREES WITH TRUE TREE
         if (self.compare):
-            utils.printFlush("Run compare...")
+            utils.printFlush("Run compare...\n**************")
             try:
                 compare_trees.compare_all(datadir)
             except Exception as exc:
