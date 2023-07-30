@@ -81,9 +81,14 @@ def build_generax_families_file_eval(datadir, subst_model, output, tree_prefix="
         if (not tree.startswith(tree_prefix)):
           continue
         scale = float(re.search(r'(\d+(?:\.\d+)?)S~G', tree)[1])
-        if (scale < 1.5 or scale > 3.5):
+        #if (scale < 1 or scale > 4.5):
+        #  continue
+        treefam = family + ">" + tree.replace(".geneTree.newick", "")
+        if (os.path.isfile(os.path.join(fam.get_run_dir(datadir, subst_model, "generax_eval_run"), "results", treefam, "stats.txt"))):
+          # already evaluated
+          print("~~~~~ Skipping already evaluated tree ~~~~~")
           continue
-        writer.write("- " + family + ">" + tree.replace(".geneTree.newick", "") + "\n")
+        writer.write("- " + treefam + "\n")
         writer.write("starting_gene_tree = " + os.path.join(fam.get_gene_tree_dir(datadir, family), tree) + "\n")
         writer.write("alignment = " + alignment + "\n")
         writer.write("mapping = " + mapping + "\n")
@@ -172,9 +177,9 @@ def eval(results_dir, family):
   stats["otherLogL"] = (float)(logls[1])
   stats["sumLogL"] = (float)(logls[0]) + (float)(logls[1])
   dlt = lines[1].split()
-  stats["dup"] = (float)(dtl[3])
-  stats["loss"] = (float)(dtl[4])
-  stats["transfer"] = (float)(dtl[5])
+  stats["dup"] = (float)(dlt[3])
+  stats["loss"] = (float)(dlt[4])
+  #stats["transfer"] = (float)(dlt[5])
   return stats
 
 def eval_sumLogL(results_dir, family):
@@ -212,8 +217,11 @@ def run(datadir, subst_model, strategy, species_tree, starting_tree, cores, addi
       run_name = get_run_name(species_tree, starting_tree, subst_model, strategy, additional_arguments)
   arg_analyze = utils.getAndDelete("--analyze", additional_arguments, "yes")
   print("Run name " + run_name)
-  shutil.rmtree(resultsdir, True)
-  os.makedirs(resultsdir)
+  if (strategy == "EVAL"):
+    os.makedirs(resultsdir, exist_ok=True)
+  else:
+    shutil.rmtree(resultsdir, True)
+    os.makedirs(resultsdir)
   sys.stdout.flush()
   mode = get_mode_from_additional_arguments(additional_arguments)
   rec_model = utils.getArg("--rec-model", additional_arguments, "UndatedDTL")
