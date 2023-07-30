@@ -1,23 +1,24 @@
 import os
 import sys
 import time
-import re
 sys.path.insert(0, 'scripts')
 sys.path.insert(0, 'scripts/programs')
 sys.path.insert(0, 'tools/families')
 sys.path.insert(0, 'tools/simulation')
 sys.path.insert(0, 'tools/trees')
-import utils
-import paths
+import evaluate
+import compare_trees
+import dist_matrix_converter
 import fam
 import generate_with_simphy as simphy
-import launch_raxml
-import launch_generax
-import launch_fastme
 import launch_ba
-import dist_matrix_converter
-import compare_trees
+import launch_fastme
+import launch_generax
+import launch_raxml
 import metrics
+import paths
+import utils
+
 
 class RunFilter():
     def __init__(self, generate = True):
@@ -176,9 +177,8 @@ def run_pipeline(enabled = True):
     # run_filter.raxml = False
     # run_filter.generax = False
     # run_filter.force_overwrite = False
-    #run_filter.bacomp_full()
-    # run_filter.ba = False
-    run_filter.comp()
+    run_filter.bacomp_full()
+    run_filter.ba = False
     # run_filter.pick_comp() # only compare inferred trees
     #run_filter.disable_all() # collect avgs
     # run_filter.generax_pick = True
@@ -220,119 +220,11 @@ def run_pipeline(enabled = True):
             pipeline(datadir, run_filter, seed, tag)
     return root_output, seeds, tag, replicates
 
-def global_compare(root_output, replicates, tag):
-    # AVERAGE OVER ALL REPLICATES
-    abs_name = "rf_distance_avg-abs"
-    rel_name = "rf_distance_avg-rel"
-    rt_name = "runtimes"
-    abs_avgs_dico = metrics.get_metrics(replicates[0], abs_name)
-    rel_avgs_dico = metrics.get_metrics(replicates[0], rel_name)
-    rt_avgs_dico = metrics.get_metrics(replicates[0], rt_name)
-    rep_counter = 1
-    best_tree_avg = 0
-    best_tree_counter = 0
-    for rep in replicates[1:]:
-        # compute global averages
-        cur_abs = metrics.get_metrics(rep, abs_name)
-        cur_rel = metrics.get_metrics(rep, rel_name)
-        cur_rt = metrics.get_metrics(rep, rt_name)
-        for x in set(abs_avgs_dico).union(cur_abs):
-            if not x in abs_avgs_dico:
-                abs_avgs_dico[x] = 0
-                rel_avgs_dico[x] = 0
-            if not x in cur_abs:
-                cur_abs[x] = 0
-                cur_rel[x] = 0
-            abs_avgs_dico[x] = (float(abs_avgs_dico[x]) * rep_counter + float(cur_abs[x])) / (
-                        rep_counter + 1)
-            rel_avgs_dico[x] = (float(rel_avgs_dico[x]) * rep_counter + float(cur_rel[x])) / (
-                        rep_counter + 1)
-        for x in set(rt_avgs_dico).union(cur_rt):
-            if not x in rt_avgs_dico:
-                rt_avgs_dico[x] = 0
-            if not x in cur_rt:
-                cur_rt[x] = 0
-            rt_avgs_dico[x] = (float(rt_avgs_dico[x]) * rep_counter + float(cur_rt[x])) / (
-                        rep_counter + 1)
-        rep_counter += 1
-        # get best tree distance per family and compute average over this
-        for family in fam.get_families_list(rep):
-            with open(os.path.join(fam.get_family_path(rep, family), "metrics", "rf_distance-rel.txt"), 'r') as reader:
-                line = reader.readline()
-                if (line == ''):
-                    continue
-                best_dist = float(line.split(" : ")[1].replace("\n", ''))
-                best_tree_avg = (best_tree_avg * best_tree_counter + best_dist) / (best_tree_counter + 1)
-                best_tree_counter += 1
-    rt_avgs_dico = {k: v for k, v in rt_avgs_dico.items() if not 'pipeline' in k}
-    metrics.save_dico(root_output, abs_avgs_dico, tag + "_global__rf_distance_avg-abs")
-    metrics.save_dico(root_output, rel_avgs_dico, tag + "_global__rf_distance_avg-rel")
-    metrics.save_dico(root_output, rt_avgs_dico, tag + "_global__runtimes_avg")
-    metrics.update_dico(root_output, {"best_tree_avg" : best_tree_avg}, "misc")
-    print("Avg best distance:", best_tree_avg)
-
-def collect_generax_picks(root_output, tag, replicates, compare):
-    try:
-        os.makedirs(os.path.join(root_output, "metrics"))
-    except:
-        pass
-    dico = {}
-    pos = 1
-    try:
-        with open(os.path.join(root_output, "metrics", tag + "_global__rf_distance_avg-rel.txt")) as writer:
-            for line in writer.readlines():
-                split = line.split(" : ")
-                dico[split[0].lower()] = (split[1].replace("\n", ""), pos)
-                pos += 1
-    except:
-        dico = None
-    poss = [0 for _ in range(len(dico))]
-    dists = [0 for _ in range(101)]
-    pick_avg_rel_dist = 1.0
-    pick_ctr = 0
-    with open(os.path.join(root_output, "metrics", "generax_picks.txt"), "w") as writer:
-        for rep in replicates:
-            seed = re.search(r'.*?seed([0-9]+)', rep)[1]
-            writer.write(seed + '\n')
-            for family in fam.get_families_list(rep):
-                true_tree = fam.get_true_tree(rep, family)
-                for gt in fam.get_gene_tree_list(rep, family):
-                    match = re.search(r'(.*).generax_pick.*', gt)
-                    if (match):
-                        writer.write(family + "  " + match[1])
-                        if (dico or compare):
-                            writer.write("  (")
-                            if (dico):
-                                pos = dico[gt.replace(".generax_pick", '').lower()][1]
-                                writer.write("pos=" + str(pos))
-                                poss[pos - 1] += 1
-                            if (compare):
-                                if (dico):
-                                    writer.write(", ")
-                                dist = compare_trees.rf_compare(os.path.join(fam.get_gene_tree_dir(rep, family), gt), true_tree)
-                                if (dist[0] == "abort"):
-                                    #print(seed, family, gt, '\n', dist)
-                                    writer.write(")\n")
-                                    continue
-                                dist = dist[1]
-                                writer.write("dist=" + str(dist))
-                                dists[int(dist * 100)] += 1
-                                if (dist < 0.6):
-                                    pick_avg_rel_dist = (pick_avg_rel_dist * pick_ctr + dist) / (pick_ctr + 1)
-                                    pick_ctr += 1
-                            writer.write(")")
-                        writer.write('\n')
-    #metrics.update_dico(root_output, {"rank-distribution.rk" + str(i + 1) : poss[i] for i in range(len(poss))}, "misc")
-    #metrics.update_dico(root_output, {"distance-distribution.dist" + str(i + 1): dists[i] for i in range(len(dists))}, "misc")
-    print("Rank distribution:", poss)
-    print("Distance distribution:", dists)
-    metrics.update_dico(root_output, {"pick_tree_avg" : pick_avg_rel_dist}, "misc")
-    print("Avg pick distance:", pick_avg_rel_dist)
-
 if (__name__ == "__main__"):
     start = time.time()
-    root_output, seeds, tag, reps = run_pipeline(False)
-    global_compare(root_output, reps, tag)
-    collect_generax_picks(root_output, tag, reps, True)
+    root_output, seeds, tag, reps = run_pipeline(True)
+    best_avg_tree, _ = evaluate.global_compare(root_output, reps, tag)
+    evaluate.collect_generax_picks(root_output, reps, tag, True)
+    evaluate.generax_likelihood_comp(root_output, reps, best_avg_tree, os.path.join("runs", "F81", "generax_eval_run"))
     print("seeds = ", seeds)
     print("End of pipeline. Elapsed time:", time.time() - start)
