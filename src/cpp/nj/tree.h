@@ -250,9 +250,12 @@ public:
             leaf_indices.push_back(leaf_idx);
             // give associated groupname an id or use existing one to set bitset
             std::string groupname = leafname2groupname[leafnames[leaf_idx]];
-            if (!(groupname2id.contains(groupname))) {
-                groupname2id.emplace(groupname, groupname2id.size());
-            }
+#pragma omp critical
+            {
+                if (!(groupname2id.contains(groupname))) {
+                    groupname2id.emplace(groupname, groupname2id.size());
+                }
+            };
             tree[leaf_idx].covered_groups.set(groupname2id[groupname]);
         }
     }

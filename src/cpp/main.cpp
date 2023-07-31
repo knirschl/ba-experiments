@@ -2,6 +2,7 @@
 // Created by knirschl on 18.04.23.
 //
 
+#include <omp.h>
 #include <sstream>
 #include <iomanip>
 #include "io/parse_cli.h"
@@ -129,8 +130,12 @@ int main(int argc, char *argv[]) {
             1.65, 1.75, 1.85, .95, 2.8, 2.9, 3.0, 3.05, 3.15, 3.25, 3.35, 3.45, 3.55, 3.6, 3.65,
             3.7, 3.75, 3.8, 3.85, 3.9, 3.95, 4.05, 4.1, 4.15, 4.2, 4.25, 4.3, 4.35, 4.4, 4.45, 4.55,
             4.6, 4.65, 4.7, 4.75, 4.8, 4.85, 4.9, 4.95};
-    // parallelize?: #pragma omp parallel for
+    std::string out_prefix{get_output_prefix(cli_parser)};
+    int c{get_c(cli_parser)};
+#pragma omp parallel for default(shared) private(tree, active, idx2leafname)
     for (double scale: scales) {
+        std::cout
+                << "t" + std::to_string(omp_get_thread_num()) + ":" + std::to_string(scale) + "\n";
         // correct with scaling
         dist_matrix_t corrected_matrix{
                 correct_matrix(scale, species_tree_mat, alignment_mat, speciation_pairs)};
@@ -142,10 +147,10 @@ int main(int argc, char *argv[]) {
 
         // output/compute depending on "-c"
         bool success{true};;
-        if (int c{get_c(cli_parser)}) {
+        if (c) {
             // output matrix
             success = write_phylip(corrected_matrix, alignment_ids,
-                                   get_output_prefix(cli_parser).append(scale_id).append(
+                                   out_prefix + scale_id.append(
                                            MATRX_PHY_FILE));
             if (c == 2) {
                 // no tree
@@ -156,8 +161,8 @@ int main(int argc, char *argv[]) {
         tree = reset(alignment_ids);
         active = leaf_indices;
         neighborJoining(corrected_matrix, tree, active);
-        std::cout << "Neighbor-joined tree (" << scale_id << "): " << tree->to_newick() << '\n';
-        success &= write_newick(*tree, get_output_prefix(cli_parser).append(scale_id).append(
+        //std::cout << "Neighbor-joined tree (" << scale_id << "): " << tree->to_newick() << '\n';
+        success &= write_newick(*tree, out_prefix + scale_id.append(
                 GTREE_NWK_FILE));
         if (!success) {
             std::cout << "Failed to complete " << scale_id << " task\n";
