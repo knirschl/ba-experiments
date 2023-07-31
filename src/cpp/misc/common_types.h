@@ -7,10 +7,10 @@
 
 #include <vector>
 
-template <typename T>
+template<typename T>
 using vector_t = std::vector<T>;
 
-template <typename T>
+template<typename T>
 using matrix_t = std::vector<vector_t<T>>;
 
 using dist_t = double;

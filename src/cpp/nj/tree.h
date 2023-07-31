@@ -109,7 +109,7 @@ private:
         }
     }
 
-    vector_t<std::string> nwk_split(const std::string &str) {
+    static vector_t<std::string> nwk_split(const std::string &str) {
         vector_t<std::string> vec;
         size_t from{};
         for (size_t i{}; i < str.length(); i++) {
@@ -180,10 +180,12 @@ private:
                 }
                 // as only two children are supported this could be moved to if (continue) and else (break)
                 // this way, future expansion is a bit easier
-                if (vec[pos] == ",")
+                if (vec[pos] == ",") {
                     continue;
-                else
+                }
+                else {
                     break;
+                }
             }
         }
         // no name or branch length
@@ -214,11 +216,11 @@ public:
      *
      * @param leafnames the names of the leafs
      */
-    Tree(const std::vector<std::string> &leafnames) {
+    explicit Tree(const std::vector<std::string> &leafnames) {
         make_tree(leafnames);
     }
 
-    Tree(const std::string &newick) {
+    explicit Tree(const std::string &newick) {
         make_tree_nwk(newick);
     }
 
@@ -499,7 +501,7 @@ public:
         return pairs;
     }
 
-    std::string to_string(int cur) const {
+    [[nodiscard]] std::string to_string(int cur) const {
         if (tree[cur].is_leaf) {
             return idx2leafname[cur];
         }
@@ -510,7 +512,7 @@ public:
                            to_string(rc), tree[rc].is_leaf ? "" : get_name(rc), tree[rc].branch_length);
     }
 
-    std::string to_string() const {
+    [[nodiscard]] std::string to_string() const {
         std::string out{"{}"};
         for (int i{1}; i < size(tree); i++) {
             if (tree[i].parent_idx < 0) {
@@ -520,11 +522,11 @@ public:
         return out;
     }
 
-    std::string to_newick() const {
+    [[nodiscard]] std::string to_newick() const {
         return std::format("{};", to_string(root));
     }
 
-    std::string node_info() const {
+    [[nodiscard]] std::string node_info() const {
         std::string out{"{}"};
         for (int i{1}; i < size(tree); i++) {
             if (tree[i].parent_idx < 0) {
@@ -534,7 +536,7 @@ public:
         return out;
     }
 
-    std::string node_info(int cur) const {
+    [[nodiscard]] std::string node_info(int cur) const {
         if (tree[cur].is_leaf) {
             return std::format("LEAF {}[par= {}, bl= {}, dup= {}]", idx2leafname[cur],
                                get_name_or_idx(tree[cur].parent_idx), tree[cur].branch_length,

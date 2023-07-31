@@ -11,37 +11,29 @@
 #include "nj/NJSimple.h"
 #include "misc/meta.h"
 
+static const std::string CORRECTION_IDENT{"S~G"};
+static const std::string MATRX_PHY_FILE{".matrix.phy"};
+static const std::string GTREE_NWK_FILE{".geneTree.newick"};
+
 /**
- * Resets tree and mappings that need to be reset.
+ * Resets tree to a set of leafs.
  *
- * ==========
- * INFO: Only needed for figuring out what settings are best
- * ==========
- *
- * @param map_config
- * @return
+ * @param alignment_ids locus identifier of every leaf
+ * @return the forest of leafs
  */
-auto reset(const std::vector<std::string> &alignment_ids,
-           const std::shared_ptr<Tree> &old_tree = nullptr) {
+auto reset(const std::vector<std::string> &alignment_ids) {
     // create tree
     std::shared_ptr<Tree> tree = std::make_shared<Tree>();
     tree->make_leafs(alignment_ids);
-    tree = old_tree != nullptr ? old_tree : tree;
     return tree;
 }
 
-bool run(double scale, const std::shared_ptr<Tree> &tree, std::vector<int> &active,
-         const dist_matrix_t &species_tree_mat,
-         const dist_matrix_t &alignment_mat,
-         const vector_t<std::string> &alignment_ids,
-         argparse::ArgumentParser &cli_parser) {
-
-    //std::cout << "Start tree: " << tree->to_string()
-    //          << "\nSpecies tree matrix:\n" << to_string(species_tree_mat)
-    //        << "\nAlignment matrix:\n" << to_string(alignment_mat) << "\n";
-
+dist_matrix_t correct_matrix(const double scale, const dist_matrix_t &species_tree_mat,
+                             const dist_matrix_t &alignment_mat,
+                             const vector_t<std::pair<int, int>> &speciation_pairs) {
     dist_matrix_t corrected_matrix{alignment_mat};
-    for (auto &pair: tree->get_speciation_pairs()) {
+    for (auto &pair : speciation_pairs) {
+        // lowest common ancestor was not dup
         std::string locus1 = idx2leafname[pair.first];
         std::string locus2 = idx2leafname[pair.second];
         int ai = leafname2matidx[locus1];
@@ -53,23 +45,7 @@ bool run(double scale, const std::shared_ptr<Tree> &tree, std::vector<int> &acti
         corrected_matrix[ai][aj] /= scale + 1;
         corrected_matrix[aj][ai] = corrected_matrix[ai][aj];
     }
-    // double to string without trailing zeros
-    std::ostringstream oss;
-    oss << std::setprecision(8) << std::noshowpoint << scale;
-    // matrix or tree
-    bool ret{true};
-    if (int c{get_c(cli_parser)}) {
-        ret = write_phylip(corrected_matrix, alignment_ids, get_output_prefix(cli_parser) + oss.str() + "S~G.matrix.phy");
-        if (c == 2) {
-            return ret;
-        }
-    }
-    //std::cout << "\nCorrected matrix:\n" << to_string(corrected_matrix) << "\n";
-    neighborJoining<>(corrected_matrix, tree, active);
-
-    std::cout << "Neighbor-joined tree (" << oss.str() << "S~G): " << tree->to_newick()
-              << std::endl;
-    return ret & write_newick(*tree, get_output_prefix(cli_parser) + oss.str() + "S~G.geneTree.newick");
+    return corrected_matrix;
 }
 
 /*
@@ -81,6 +57,14 @@ bool run(double scale, const std::shared_ptr<Tree> &tree, std::vector<int> &acti
 /home/fili/Documents/KIT/2023/BA/code/src/test/output/ba.exp.
 -m
 /home/fili/Documents/KIT/2023/BA/code/output/families/ssim_DL_s100_f100_sites200_GTR_bl1.0_d1.0_l1.0_t0.0_gc0.0_p0.0_pop10_ms0.0_mf0.0_seed1650734/families/family_042/mappings/mapping.link
+ */
+/**
+ * Main entry point of this project. Reads the input in and computes either a corrected
+ * gene alignment distance matrix or a neighbor-joined gene tree.
+ *
+ * @param argc  argument count
+ * @param argv  arguments
+ * @return 0
  */
 int main(int argc, char *argv[]) {
     // --- parse ---
@@ -122,24 +106,53 @@ int main(int argc, char *argv[]) {
     }
     //std::cout << "Start tree : " << tree->to_newick() << "\n" << tree->node_info() << "\n";
     tree->reroot_APro();
-    std::shared_ptr<Tree> backup_tree{tree}; // need to reset tree after each iteration
+    auto speciation_pairs{tree->get_speciation_pairs()};
     //std::cout << "A-Pro tree: " << tree->to_newick() << "\n" << tree->node_info() << "\n";
 
     // --- calculate ---
     // NJ gene tree with corrected values
     double scales[] = { /*
-            0, 0.5, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8,1.9, 2.0, 2.05, 2.1, 2.15, 2.2, 2.25, 2.3, 2.35, 2.4,
-            2.45, 2.5, 2.55, 2.6, 2.65, 2.7, 2.75, 2.85, 2.95, 3.1, 3.2, 3.3, 3.4, 3.5, 4, 4.5, 5, 7.5, 10
+            0, 0.5, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8,1.9, 2.0, 2.05,
+            2.1, 2.15, 2.2, 2.25, 2.3, 2.35, 2.4, 2.45, 2.5, 2.55, 2.6, 2.65,
+            2.7, 2.75, 2.85, 2.95, 3.1, 3.2, 3.3, 3.4, 3.5, 4, 4.5, 5, 7.5, 10
             */
-            0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95, 1.05, 1.15, 1.25, 1.35, 1.45, 1.55, 1.65, 1.75, 1.85,
-            1.95, 2.8, 2.9, 3.0, 3.05, 3.15, 3.25, 3.35, 3.45, 3.55, 3.6, 3.65, 3.7, 3.75, 3.8, 3.85, 3.9, 3.95, 4.05,
-            4.1, 4.15, 4.2, 4.25, 4.3, 4.35, 4.4, 4.45, 4.55, 4.6, 4.65, 4.7, 4.75, 4.8, 4.85, 4.9, 4.95
-            };
+            0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95, 1.05, 1.15, 1.25, 1.35, 1.45, 1.55,
+            1.65, 1.75, 1.85, .95, 2.8, 2.9, 3.0, 3.05, 3.15, 3.25, 3.35, 3.45, 3.55, 3.6, 3.65,
+            3.7, 3.75, 3.8, 3.85, 3.9, 3.95, 4.05, 4.1, 4.15, 4.2, 4.25, 4.3, 4.35, 4.4, 4.45, 4.55,
+            4.6, 4.65, 4.7, 4.75, 4.8, 4.85, 4.9, 4.95};
+    // parallelize?: #pragma omp parallel for
     for (double scale: scales) {
+        // correct with scaling
+        dist_matrix_t corrected_matrix{
+                correct_matrix(scale, species_tree_mat, alignment_mat, speciation_pairs)};
+
+        // convert double to string without trailing zeros and with a specified precision
+        std::ostringstream oss;
+        oss << std::setprecision(8) << std::noshowpoint << scale << CORRECTION_IDENT;
+        auto scale_id{oss.str()};
+
+        // output/compute depending on "-c"
+        bool success{true};;
+        if (int c{get_c(cli_parser)}) {
+            // output matrix
+            success = write_phylip(corrected_matrix, alignment_ids,
+                                   get_output_prefix(cli_parser).append(scale_id).append(
+                                           MATRX_PHY_FILE));
+            if (c == 2) {
+                // no tree
+                continue;
+            }
+        }
+        // compute NJ tree and output
         tree = reset(alignment_ids);
         active = leaf_indices;
-
-        run(scale, tree, active, species_tree_mat, alignment_mat, alignment_ids, cli_parser);
+        neighborJoining(corrected_matrix, tree, active);
+        std::cout << "Neighbor-joined tree (" << scale_id << "): " << tree->to_newick() << '\n';
+        success &= write_newick(*tree, get_output_prefix(cli_parser).append(scale_id).append(
+                GTREE_NWK_FILE));
+        if (!success) {
+            std::cout << "Failed to complete " << scale_id << " task\n";
+        }
     }
 
     return 0;
