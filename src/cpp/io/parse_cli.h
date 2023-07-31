@@ -23,8 +23,8 @@ auto build_parser(std::string const& name, std::string const& version) {
             .required()
             .help("specify the gene alignment distance matrix in PHYLIP format");
 
-    //program.add_argument("-f", "--families")
-    //        .help("specify the families file");
+    program.add_argument("-t", "--starting_tree")
+            .help("specify the gene tree to compute dup/loss on (NEWICK format");
 
     program.add_argument("-m", "--mapping")
             .default_value(std::string{""})
@@ -51,23 +51,6 @@ auto build_parser(std::string const& name, std::string const& version) {
     return program;
 }
 
-auto parse_and_get(argparse::ArgumentParser& program, int argc, char *argv[]) {
-    try {
-        program.parse_args(argc, argv);
-    }
-    catch (const std::runtime_error &err) {
-        std::cerr << err.what() << std::endl;
-        std::cerr << program;
-        exit(1);
-    }
-    std::vector<std::string> res{};
-    res.emplace_back(program.get("-s"));
-    res.emplace_back(program.get("-a"));
-    res.emplace_back(program.get("-p"));
-
-    return res;
-}
-
 auto parse(argparse::ArgumentParser& program, int argc, char *argv[]) {
     try {
         program.parse_args(argc, argv);
@@ -80,28 +63,31 @@ auto parse(argparse::ArgumentParser& program, int argc, char *argv[]) {
     return 0;
 }
 
-template<typename T>
-T get(argparse::ArgumentParser& program, std::string const& opt) {
-    return program.get<T>(opt);
-}
-
-std::string getS(argparse::ArgumentParser& program) {
+std::string get_species_matrix(argparse::ArgumentParser& program) {
     return program.get("-s");
 }
 
-std::string getA(argparse::ArgumentParser &program) {
+std::string get_alignment_matrix(argparse::ArgumentParser &program) {
     return program.get("-a");
 }
 
-std::string getP(argparse::ArgumentParser &program) {
+bool has_user_specified_tree(argparse::ArgumentParser &program) {
+    return program.is_used("-t");
+}
+
+std::string get_starting_tree(argparse::ArgumentParser &program) {
+    return program.get("-t");
+}
+
+std::string get_output_prefix(argparse::ArgumentParser &program) {
     return program.get("-p");
 }
 
-std::tuple<std::string, bool, std::string> getMappingConfig(argparse::ArgumentParser &program) {
+std::tuple<std::string, bool, std::string> get_mapping_config(argparse::ArgumentParser &program) {
     return {program.get("-m"), program.get<bool>("-l"), program.get("-d")};
 }
 
-int getC(argparse::ArgumentParser &program) {
+int get_c(argparse::ArgumentParser &program) {
     return program.get<int>("-c");
 }
 

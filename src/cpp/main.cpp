@@ -83,8 +83,8 @@ bool run(double scale, const std::shared_ptr<Tree> &tree, std::vector<int> &acti
     oss << std::setprecision(8) << std::noshowpoint << scale;
     // matrix or tree
     bool ret{true};
-    if (int c{getC(cli_parser)}) {
-        ret = write_phylip(corrected_matrix, alignment_ids, getP(cli_parser) + oss.str() + "S~G.matrix.phy");
+    if (int c{get_c(cli_parser)}) {
+        ret = write_phylip(corrected_matrix, alignment_ids, get_output_prefix(cli_parser) + oss.str() + "S~G.matrix.phy");
         if (c == 2) {
             return ret;
         }
@@ -94,8 +94,9 @@ bool run(double scale, const std::shared_ptr<Tree> &tree, std::vector<int> &acti
 
     std::cout << "Neighbor-joined tree (" << oss.str() << "S~G): " << tree->to_newick()
               << std::endl;
-    return ret & write_newick(*tree, getP(cli_parser) + oss.str() + "S~G.geneTree.newick");
+    return ret & write_newick(*tree, get_output_prefix(cli_parser) + oss.str() + "S~G.geneTree.newick");
 }
+
 /*
 -s
 /home/fili/Documents/KIT/2023/BA/code/output/families/ssim_DL_s100_f100_sites200_GTR_bl1.0_d1.0_l1.0_t0.0_gc0.0_p0.0_pop10_ms0.0_mf0.0_seed1650734/species_trees/speciesTree.matrix.phy
@@ -107,12 +108,14 @@ bool run(double scale, const std::shared_ptr<Tree> &tree, std::vector<int> &acti
 /home/fili/Documents/KIT/2023/BA/code/output/families/ssim_DL_s100_f100_sites200_GTR_bl1.0_d1.0_l1.0_t0.0_gc0.0_p0.0_pop10_ms0.0_mf0.0_seed1650734/families/family_042/mappings/mapping.link
  */
 int main(int argc, char *argv[]) {
-    auto cli_parser = build_parser("thesis", "0.1");
+    // --- parse ---
+    // get cli inputs
+    auto cli_parser = build_parser("thesis", "0.2");
     parse(cli_parser, argc, argv);
     //std::cout << getS(cli_parser) << "\n" << getA(cli_parser) << "\n" << getP(cli_parser) << "\n";
 
     // read species tree
-    auto species_tree_pair = parse_phylip_mat_from_file<dist_t>(getS(cli_parser));
+    auto species_tree_pair = parse_phylip_mat_from_file<dist_t>(get_species_matrix(cli_parser));
     auto species_tree_mat = species_tree_pair.first;
     auto species_tree_ids = species_tree_pair.second;
     int s_cnt{};
@@ -120,35 +123,27 @@ int main(int argc, char *argv[]) {
              [&s_cnt](auto &s) { groupname2matidx.emplace(s, s_cnt++); });
 
     // read alignment
-    auto alignment_pair = parse_phylip_mat_from_file<dist_t>(getA(cli_parser));
+    auto alignment_pair = parse_phylip_mat_from_file<dist_t>(get_alignment_matrix(cli_parser));
     auto alignment_mat = alignment_pair.first;
     auto alignment_ids = alignment_pair.second;
     int a_cnt{};
     for_each(alignment_ids.begin(), alignment_ids.end(),
              [&a_cnt](auto &s) { leafname2matidx.emplace(s, a_cnt++); });
 
-    auto map_config{getMappingConfig(cli_parser)};
+    // read mapping
+    auto map_config{get_mapping_config(cli_parser)};
 
     // calculate
     {
         std::shared_ptr<Tree> tree = reset(species_tree_ids, alignment_ids, map_config);
-        std::vector<int> active{leaf_indices};
-
-        // NJ gene tree with only alignment matrix -> old: 0S+G
+        active = leaf_indices;
+        // NJ gene tree with only alignment matrix (0S+G)
         neighborJoining<>(alignment_mat, tree, active);
-        //std::cout << "Start tree : " << tree->to_newick()
-        //                             << "\n" << tree->node_info() << "\n";
-        tree->reroot_APro();
-        std::shared_ptr<Tree> backup_tree{tree}; // need to reset tree after each iteration
-        //std::cout << "A-Pro tree: " << tree->to_newick()
-        //          << "\n" << tree->node_info() << "\n";
-        //for (auto& node : tree->tree) {
-        //    if (node.is_dup) {
-        //        std::cout << tree->node_info(node.idx) << ", ";
-        //    }
-        //}
-        //std::cout << "\n";
-        //return 0;
+    }
+    //std::cout << "Start tree : " << tree->to_newick() << "\n" << tree->node_info() << "\n";
+    tree->reroot_APro();
+    std::shared_ptr<Tree> backup_tree{tree}; // need to reset tree after each iteration
+    //std::cout << "A-Pro tree: " << tree->to_newick() << "\n" << tree->node_info() << "\n";
 
     // --- calculate ---
     // NJ gene tree with corrected values
@@ -164,27 +159,7 @@ int main(int argc, char *argv[]) {
         tree = reset(species_tree_ids, alignment_ids, map_config);
         active = leaf_indices;
 
-            run(scale, tree, active, species_tree_mat, alignment_mat, alignment_ids, cli_parser);
-        }
-        /*
-        double div{100.0};
-        int step{5};
-        for (int i{150}; i <= 200; i += step) {
-            tree = reset(species_tree_ids, alignment_ids, map_config, backup_tree);
-            active = leaf_indices;
-
-            run(i / div, tree, active, species_tree_mat, alignment_mat, alignment_ids, cli_parser);
-
-        }
-         */
-        /*
-        for (int i{int(2.5 * div)}; i <= 10 * div; i *= 2) {
-            tree = reset(species_tree_ids, alignment_ids, map_config);
-            active = leaf_indices;
-
-            run(i / div, tree, active, species_tree_mat, alignment_mat, cli_parser);
-        }
-         */
+        run(scale, tree, active, species_tree_mat, alignment_mat, alignment_ids, cli_parser);
     }
 
     return 0;
