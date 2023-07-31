@@ -21,38 +21,13 @@
  * @param map_config
  * @return
  */
-auto reset(const std::vector<std::string> &species_tree_ids,
-           const std::vector<std::string> &alignment_ids,
-           const std::tuple<std::string, bool, std::string> &map_config,
+auto reset(const std::vector<std::string> &alignment_ids,
            const std::shared_ptr<Tree> &old_tree = nullptr) {
-    // fill map
-    if (get<0>(map_config).empty()) {
-        // no mapping provided
-        for (int i{}; i < alignment_ids.size(); i++) {
-            leafname2groupname.emplace(alignment_ids[i], species_tree_ids[i]);
-        }
-    } else {
-        leafname2groupname = parse_mapping_from_cfg(map_config);
-    }
     // create tree
     std::shared_ptr<Tree> tree = std::make_shared<Tree>();
     tree->make_leafs(alignment_ids);
     tree = old_tree != nullptr ? old_tree : tree;
     return tree;
-}
-
-std::string to_string(const vector_t<double> &vec) {
-    return "[" + accumulate(vec.begin() + 1, vec.end(),
-                            std::to_string(vec[0]), [](const std::string &acc, double b) {
-                return acc + ", " + std::to_string(b);
-            }) + "]";
-}
-
-std::string to_string(const matrix_t<double> &mat) {
-    return "[" + accumulate(mat.begin() + 1, mat.end(),
-                            to_string(mat[0]), [](const std::string &acc, vector_t<double> b) {
-                return acc + ",\n" + to_string(b);
-            }) + "]";
 }
 
 bool run(double scale, const std::shared_ptr<Tree> &tree, std::vector<int> &active,
@@ -161,7 +136,7 @@ int main(int argc, char *argv[]) {
             4.1, 4.15, 4.2, 4.25, 4.3, 4.35, 4.4, 4.45, 4.55, 4.6, 4.65, 4.7, 4.75, 4.8, 4.85, 4.9, 4.95
             };
     for (double scale: scales) {
-        tree = reset(species_tree_ids, alignment_ids, map_config);
+        tree = reset(alignment_ids);
         active = leaf_indices;
 
         run(scale, tree, active, species_tree_mat, alignment_mat, alignment_ids, cli_parser);

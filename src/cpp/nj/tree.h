@@ -243,14 +243,14 @@ public:
             //if (idx2leafname.size() <= leaf_idx) {
             //    idx2leafname.resize(leaf_idx + 1);
             //}
-            idx2leafname[leaf_idx] = leafnames.at(leaf_idx);
-            leaf_indices.emplace_back(leaf_idx);
+            idx2leafname[leaf_idx] = leafnames[leaf_idx];
+            leaf_indices.push_back(leaf_idx);
             // give associated groupname an id or use existing one to set bitset
-            std::string groupname = leafname2groupname.at(leafnames.at(leaf_idx));
+            std::string groupname = leafname2groupname[leafnames[leaf_idx]];
             if (!(groupname2id.contains(groupname))) {
                 groupname2id.emplace(groupname, groupname2id.size());
             }
-            tree[leaf_idx].covered_groups.set(groupname2id.at(groupname));
+            tree[leaf_idx].covered_groups.set(groupname2id[groupname]);
         }
     }
 
@@ -501,7 +501,7 @@ public:
 
     std::string to_string(int cur) const {
         if (tree[cur].is_leaf) {
-            return idx2leafname.at(cur);
+            return idx2leafname[cur];
         }
         int lc{tree[cur].left_child_idx};
         int rc{tree[cur].right_child_idx};
@@ -536,7 +536,7 @@ public:
 
     std::string node_info(int cur) const {
         if (tree[cur].is_leaf) {
-            return std::format("LEAF {}[par= {}, bl= {}, dup= {}]", idx2leafname.at(cur),
+            return std::format("LEAF {}[par= {}, bl= {}, dup= {}]", idx2leafname[cur],
                                get_name_or_idx(tree[cur].parent_idx), tree[cur].branch_length,
                                tree[cur].is_dup);
         }
