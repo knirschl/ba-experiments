@@ -90,6 +90,15 @@ int main(int argc, char *argv[]) {
 
     // read mapping
     auto map_config{get_mapping_config(cli_parser)};
+    // fill map
+    if (get<0>(map_config).empty()) {
+        // no mapping provided
+        for (int i{}; i < alignment_ids.size(); i++) {
+            leafname2groupname.emplace(alignment_ids[i], species_tree_ids[i]);
+        }
+    } else {
+        leafname2groupname = parse_mapping_from_cfg(map_config);
+    }
 
     // --- pre-calculate ---
     // get starting tree
