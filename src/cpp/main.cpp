@@ -34,8 +34,8 @@ dist_matrix_t correct_matrix(const double scale, const dist_matrix_t &species_tr
     dist_matrix_t corrected_matrix{alignment_mat};
     for (auto &pair : speciation_pairs) {
         // lowest common ancestor was not dup
-        std::string locus1 = idx2leafname[pair.first];
-        std::string locus2 = idx2leafname[pair.second];
+        std::string locus1 = idx2nodename[pair.first];
+        std::string locus2 = idx2nodename[pair.second];
         int ai = leafname2matidx[locus1];
         int aj = leafname2matidx[locus2];
         int si = groupname2matidx[leafname2groupname[locus1]];

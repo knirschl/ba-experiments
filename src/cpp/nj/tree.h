@@ -5,6 +5,7 @@
 #ifndef BA_TREE_H
 #define BA_TREE_H
 
+#include <omp.h>
 #include <vector>
 #include <string>
 #include <format>
@@ -132,10 +133,10 @@ private:
 
     void nwk_name_bl(const vector_t<std::string> &vec, int idx, int &pos) {
         if (vec[pos] != ":") {
-            if (idx2leafname.size() <= idx) {
-                idx2leafname.resize(pos + 1);
+            if (idx2nodename.size() <= idx) {
+                idx2nodename.resize(pos + 1);
             }
-            idx2leafname[idx] = vec[pos++];
+            idx2nodename[idx] = vec[pos++];
         }
         if (vec[pos] == ":") {
             tree[idx].branch_length = stod(vec[pos + 1]);
@@ -161,7 +162,7 @@ private:
             nwk_name_bl(vec, ndi, pos);
             leaf_indices.push_back(ndi);
             // give associated groupname an id or use existing one to set bitset
-            std::string groupname = leafname2groupname[idx2leafname[ndi]];
+            std::string groupname = leafname2groupname[idx2nodename[ndi]];
             if (!(groupname2id.contains(groupname))) {
                 groupname2id.emplace(groupname, groupname2id.size());
             }
@@ -200,7 +201,7 @@ private:
     void make_tree_nwk(const std::string &newick) {
         vector_t<std::string> vec{nwk_split(newick)};
         std::cout << vec_to_string(vec) << "\n";
-        idx2leafname.resize(vec.size() / 4); // probably enough
+        idx2nodename.resize(vec.size() / 4); // probably enough
         int z{0};
         nwk_parse(vec, z);
     }
@@ -232,9 +233,9 @@ public:
      */
     void make_leafs(const std::vector<std::string> &leafnames) {
         // reset structs
-        idx2leafname.clear();
+        idx2nodename.clear();
         leaf_indices.clear();
-        idx2leafname.resize(leafnames.size());
+        idx2nodename.resize(leafnames.size());
         tree = std::vector<Node>{leafnames.size()};
         root = -1;
 
@@ -242,10 +243,10 @@ public:
             tree[leaf_idx].idx = leaf_idx;
             tree[leaf_idx].is_leaf = true;
             tree[leaf_idx].score = 0;
-            //if (idx2leafname.size() <= leaf_idx) {
-            //    idx2leafname.resize(leaf_idx + 1);
+            //if (idx2nodename.size() <= leaf_idx) {
+            //    idx2nodename.resize(leaf_idx + 1);
             //}
-            idx2leafname[leaf_idx] = leafnames[leaf_idx];
+            idx2nodename[leaf_idx] = leafnames[leaf_idx];
             leaf_indices.push_back(leaf_idx);
             // give associated groupname an id or use existing one to set bitset
             std::string groupname = leafname2groupname[leafnames[leaf_idx]];
@@ -497,13 +498,12 @@ public:
                 }
             }
         }
-
         return pairs;
     }
 
     [[nodiscard]] std::string to_string(int cur) const {
         if (tree[cur].is_leaf) {
-            return idx2leafname[cur];
+            return idx2nodename[cur];
         }
         int lc{tree[cur].left_child_idx};
         int rc{tree[cur].right_child_idx};
@@ -538,7 +538,7 @@ public:
 
     [[nodiscard]] std::string node_info(int cur) const {
         if (tree[cur].is_leaf) {
-            return std::format("LEAF {}[par= {}, bl= {}, dup= {}]", idx2leafname[cur],
+            return std::format("LEAF {}[par= {}, bl= {}, dup= {}]", idx2nodename[cur],
                                get_name_or_idx(tree[cur].parent_idx), tree[cur].branch_length,
                                tree[cur].is_dup);
         }
