@@ -38,7 +38,7 @@ std::pair<matrix_t<T>, vector_t<std::string>> parse_phylip(std::ifstream &reader
     std::string line{};
     int seq_count{};
     // first line := size
-    if (reader.is_open() && reader.good()) {
+    if (reader.good()) {
         std::getline(reader, line);
         seq_count = std::stoi(line);
         matrix.resize(seq_count);
@@ -87,11 +87,17 @@ std::pair<matrix_t<T>, vector_t<std::string>> parse_phylip_mat_from_file(std::st
     return read;
 }
 
-std::pair<std::shared_ptr<Tree>, std::vector<int>> parse_newick(std::ifstream &reader) {
-
+std::shared_ptr<Tree> parse_newick(std::ifstream &reader) {
+    // ignores everything after the first line
+    if (!reader.good()) {
+        return nullptr;
+    }
+    std::string line{};
+    std::getline(reader, line);
+    return std::make_shared<Tree>(line);
 }
 
-std::pair<std::shared_ptr<Tree>, std::vector<int>> parse_newick_from_file(std::string const &file) {
+std::shared_ptr<Tree> parse_newick_from_file(std::string const &file) {
     std::ifstream streamed_file{file};
     auto read = parse_newick(streamed_file);
     streamed_file.close();

@@ -137,11 +137,10 @@ int main(int argc, char *argv[]) {
     std::shared_ptr<Tree> tree;
     std::vector<int> active;
     if (has_user_specified_tree(cli_parser)) {
-        auto tree_pair = parse_newick_from_file(get_starting_tree(cli_parser));
-        tree = tree_pair.first;
-        active = tree_pair.second;
+        tree = parse_newick_from_file(get_starting_tree(cli_parser));
+        active = leaf_indices;
     } else {
-        std::shared_ptr<Tree> tree = reset(species_tree_ids, alignment_ids, map_config);
+        tree = reset(alignment_ids);
         active = leaf_indices;
         // NJ gene tree with only alignment matrix (0S+G)
         neighborJoining<>(alignment_mat, tree, active);

@@ -23,7 +23,7 @@ private:
     struct Node;
 public:
     std::vector<Node> tree;
-    int root;
+    int root{};
 
 private:
     /**
@@ -52,6 +52,7 @@ private:
     int make_node() {
         int node_idx = tree.size();
         tree.emplace_back();
+        tree[node_idx].idx = node_idx;
         return node_idx;
     }
 
@@ -108,6 +109,100 @@ private:
         }
     }
 
+    vector_t<std::string> nwk_split(const std::string &str) {
+        vector_t<std::string> vec;
+        size_t from{};
+        for (size_t i{}; i < str.length(); i++) {
+            if (str[i] == '\t' || str[i] == ' ' || str[i] == ';') {
+                continue;
+            } else if (str[i] == '(' || str[i] == ')' || str[i] == ':' || str[i] == ',') {
+                if (size_t count = i - from) {
+                    vec.emplace_back(str.substr(from, count));
+                }
+                vec.push_back(std::string() + str[i]);
+                from = i + 1;
+            }
+        }
+        if (size_t count = str.length() - 1 - from) { // -1 to skip ';'
+            vec.emplace_back(str.substr(from, count));
+        }
+
+        return vec;
+    }
+
+    void nwk_name_bl(const vector_t<std::string> &vec, int idx, int &pos) {
+        if (vec[pos] != ":") {
+            if (idx2leafname.size() <= idx) {
+                idx2leafname.resize(pos + 1);
+            }
+            idx2leafname[idx] = vec[pos++];
+        }
+        if (vec[pos] == ":") {
+            tree[idx].branch_length = stod(vec[pos + 1]);
+            pos += 2;
+        }
+    }
+
+    /**
+     * @link https://github.com/ANGSD/newick
+     * @param vec
+     * @param pos
+     * @return
+     */
+    int nwk_parse(const vector_t<std::string> &vec, int &pos) {
+        int ndi{make_node()};
+        if(pos > vec.size()) {
+            return ndi;
+        }
+        // leaf case
+        if (vec[pos] != "(") {
+            tree[ndi].is_leaf = true;
+            tree[ndi].score = 0;
+            nwk_name_bl(vec, ndi, pos);
+            leaf_indices.push_back(ndi);
+            // give associated groupname an id or use existing one to set bitset
+            std::string groupname = leafname2groupname[idx2leafname[ndi]];
+            if (!(groupname2id.contains(groupname))) {
+                groupname2id.emplace(groupname, groupname2id.size());
+            }
+            tree[ndi].covered_groups.set(groupname2id[groupname]);
+            return ndi;
+        }
+        // recursive cases
+        if (vec[pos] == "(") {
+            while (1) {
+                int nndi = nwk_parse(vec, ++pos);
+                tree[nndi].parent_idx = ndi;
+                if (tree[ndi].left_child_idx == -1) {
+                    tree[ndi].left_child_idx = nndi;
+                } else {
+                    tree[ndi].right_child_idx = nndi;
+                }
+                // as only two children are supported this could be moved to if (continue) and else (break)
+                // this way, future expansion is a bit easier
+                if (vec[pos] == ",")
+                    continue;
+                else
+                    break;
+            }
+        }
+        // no name or branch length
+        if (vec[pos] == ")") {
+            if (vec[++pos] == ")")
+                return ndi;
+        }
+        nwk_name_bl(vec, ndi, pos);
+        return ndi;
+    }
+
+    void make_tree_nwk(const std::string &newick) {
+        vector_t<std::string> vec{nwk_split(newick)};
+        std::cout << vec_to_string(vec) << "\n";
+        idx2leafname.resize(vec.size() / 4); // probably enough
+        int z{0};
+        nwk_parse(vec, z);
+    }
+
 public:
     /**
      * Constructs an empty tree.
@@ -121,6 +216,10 @@ public:
      */
     Tree(const std::vector<std::string> &leafnames) {
         make_tree(leafnames);
+    }
+
+    Tree(const std::string &newick) {
+        make_tree_nwk(newick);
     }
 
     /**
@@ -404,11 +503,11 @@ public:
         if (tree[cur].is_leaf) {
             return idx2leafname.at(cur);
         }
-        return std::format("({}:{}, {}:{})",
-                           to_string(tree[cur].left_child_idx),
-                           tree[tree[cur].left_child_idx].branch_length,
-                           to_string(tree[cur].right_child_idx),
-                           tree[tree[cur].right_child_idx].branch_length);
+        int lc{tree[cur].left_child_idx};
+        int rc{tree[cur].right_child_idx};
+        return std::format("({}:{}{}, {}:{}{})",
+                           to_string(lc), tree[lc].is_leaf ? "" : get_name(lc), tree[lc].branch_length,
+                           to_string(rc), tree[rc].is_leaf ? "" : get_name(rc), tree[rc].branch_length);
     }
 
     std::string to_string() const {
