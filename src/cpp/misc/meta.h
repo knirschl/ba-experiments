@@ -16,6 +16,13 @@ std::unordered_map<std::string, int> groupname2id{}; // map species name ("12") 
 std::unordered_map<std::string, int> leafname2matidx{};
 std::unordered_map<std::string, int> groupname2matidx{};
 
+std::string get_name(int node) {
+    if (node < 0 || node >= idx2leafname.size()) {
+        return "";
+    }
+    return idx2leafname[node];
+}
+
 std::string get_name_or_idx(int node) {
     if (node < 0 || node >= idx2leafname.size()) {
         return std::to_string(node);
