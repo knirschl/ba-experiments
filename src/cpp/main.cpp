@@ -44,15 +44,15 @@ auto reset(const std::vector<std::string> &species_tree_ids,
 std::string to_string(const vector_t<double> &vec) {
     return "[" + accumulate(vec.begin() + 1, vec.end(),
                             std::to_string(vec[0]), [](const std::string &acc, double b) {
-        return acc + ", " + std::to_string(b);
-    }) + "]";
+                return acc + ", " + std::to_string(b);
+            }) + "]";
 }
 
 std::string to_string(const matrix_t<double> &mat) {
     return "[" + accumulate(mat.begin() + 1, mat.end(),
                             to_string(mat[0]), [](const std::string &acc, vector_t<double> b) {
-        return acc + ",\n" + to_string(b);
-    }) + "]";
+                return acc + ",\n" + to_string(b);
+            }) + "]";
 }
 
 bool run(double scale, const std::shared_ptr<Tree> &tree, std::vector<int> &active,
@@ -112,7 +112,6 @@ int main(int argc, char *argv[]) {
     // get cli inputs
     auto cli_parser = build_parser("thesis", "0.2");
     parse(cli_parser, argc, argv);
-    //std::cout << getS(cli_parser) << "\n" << getA(cli_parser) << "\n" << getP(cli_parser) << "\n";
 
     // read species tree
     auto species_tree_pair = parse_phylip_mat_from_file<dist_t>(get_species_matrix(cli_parser));
@@ -133,8 +132,15 @@ int main(int argc, char *argv[]) {
     // read mapping
     auto map_config{get_mapping_config(cli_parser)};
 
-    // calculate
-    {
+    // --- pre-calculate ---
+    // get starting tree
+    std::shared_ptr<Tree> tree;
+    std::vector<int> active;
+    if (has_user_specified_tree(cli_parser)) {
+        auto tree_pair = parse_newick_from_file(get_starting_tree(cli_parser));
+        tree = tree_pair.first;
+        active = tree_pair.second;
+    } else {
         std::shared_ptr<Tree> tree = reset(species_tree_ids, alignment_ids, map_config);
         active = leaf_indices;
         // NJ gene tree with only alignment matrix (0S+G)

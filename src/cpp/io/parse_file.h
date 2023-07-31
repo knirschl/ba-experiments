@@ -11,8 +11,9 @@
 #include <regex>
 #include <iostream>
 #include <string>
-#include "../misc/common_types.h"
 #include <sstream>
+#include "../misc/common_types.h"
+#include "../nj/tree.h"
 
 using namespace std::literals;
 
@@ -86,6 +87,17 @@ std::pair<matrix_t<T>, vector_t<std::string>> parse_phylip_mat_from_file(std::st
     return read;
 }
 
+std::pair<std::shared_ptr<Tree>, std::vector<int>> parse_newick(std::ifstream &reader) {
+
+}
+
+std::pair<std::shared_ptr<Tree>, std::vector<int>> parse_newick_from_file(std::string const &file) {
+    std::ifstream streamed_file{file};
+    auto read = parse_newick(streamed_file);
+    streamed_file.close();
+    return read;
+}
+
 std::unordered_map<std::string, std::string>
 parse_mapping(std::ifstream &reader, bool is_locus_left, const std::string &ls_delim) {
     std::unordered_map<std::string, std::string> map{};
@@ -129,5 +141,7 @@ parse_mapping_from_cfg(const std::tuple<std::string, bool, std::string> &cfg) {
     streamed_file.close();
     return read;
 }
+
+
 
 #endif //BA_PARSE_FILE_H
