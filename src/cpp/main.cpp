@@ -8,7 +8,6 @@
 #include "io/parse_file.h"
 #include "io/write_file.h"
 #include "nj/tree.h"
-#include "nj/matrix.h"
 #include "nj/NJSimple.h"
 #include "misc/meta.h"
 
