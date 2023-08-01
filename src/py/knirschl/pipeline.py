@@ -178,7 +178,7 @@ def run_pipeline(enabled = True):
     # run_filter.generax = False
     # run_filter.force_overwrite = False
     run_filter.bacomp_full()
-    run_filter.ba = False
+    run_filter.ba = False  # keep this False
     # run_filter.pick_comp() # only compare inferred trees
     #run_filter.disable_all() # collect avgs
     # run_filter.generax_pick = True

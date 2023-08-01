@@ -34,9 +34,8 @@ def generate_scheduler_commands_file(datadir, subst_model, species_tree, mat_out
             command.append(ba_output_prefix)
             command.append("-m")
             command.append(fam.get_mappings(datadir, family))
-            if (mat_out):
-                command.append("-c")
-                command.append(str(mat_out))
+            command.append("-c")
+            command.append(str(mat_out))
             writer.write(" ".join(command) + "\n")
     return scheduler_commands_file
 
