@@ -9,7 +9,7 @@ import utils
 import fam
 import metrics
 
-def generate_scheduler_commands_file(datadir, subst_model, species_tree, mat_out, output_dir):
+def generate_scheduler_commands_file(datadir, subst_model, species_tree, algo, mat_out, output_dir):
     results_dir = os.path.join(output_dir, "results")
     scheduler_commands_file = os.path.join(output_dir, "commands.txt")
     with open(scheduler_commands_file, "w") as writer:
@@ -33,6 +33,13 @@ def generate_scheduler_commands_file(datadir, subst_model, species_tree, mat_out
             command.append(ba_output_prefix)
             command.append("-m")
             command.append(fam.get_mappings(datadir, family))
+            command.append("-r")
+            if (algo.lower() == "apro"):
+                command.append("0")
+            if (algo.lower() == "mad"):
+                command.append("1")
+            else:
+                command.append("2")
             command.append("-c")
             command.append(str(mat_out))
             writer.write(" ".join(command) + "\n")
@@ -64,13 +71,13 @@ def extract_ba_trees(datadir, subst_model):
     return valid
 
 
-def run_ba_on_families(datadir, subst_model, species_tree, mat_out, cores):
+def run_ba_on_families(datadir, subst_model, species_tree, algo, mat_out, cores):
     # output dir
     output_dir = fam.get_run_dir(datadir, subst_model, "ba_run")
     shutil.rmtree(output_dir, True)
     os.makedirs(output_dir)
     # run
-    scheduler_commands_file = generate_scheduler_commands_file(datadir, subst_model, species_tree, mat_out, output_dir)
+    scheduler_commands_file = generate_scheduler_commands_file(datadir, subst_model, species_tree, algo, mat_out, output_dir)
     start = time.time()
     utils.run_with_scheduler(paths.ba_exec, scheduler_commands_file, "fork", cores, output_dir, "logs.txt")
     # metrics

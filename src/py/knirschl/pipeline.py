@@ -141,7 +141,7 @@ class RunFilter():
                     species_tree = fam.get_true_species_tree_matrix(datadir)
                     # run ba script
                     inferred_trees = launch_ba.run_ba_on_families(datadir, "p", species_tree,
-                                                                  mat_out=2, cores=cores)
+                                                                  algo="APro", mat_out=2, cores=cores)
                 launch_fastme.run_fastme_on_families_matrices(datadir, "ba.p", algo="B",
                                                               use_spr=True, cores=cores)
             except Exception as exc:
