@@ -180,7 +180,7 @@ def run_pipeline(enabled = True):
     run_filter.ba = False  # keep this False
     # run_filter.pick_comp() # only compare inferred trees
     #run_filter.disable_all() # run selected
-    #run_filter.ba_fastme = True
+    #run_filter.generax_pick = True
     # ====== ! CAREFUL ! ======
 
     root_output = paths.families_datasets_root  # output/families/

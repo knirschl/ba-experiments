@@ -71,6 +71,8 @@ def build_generax_families_file(datadir, starting_tree, subst_model, output):
 
 def build_generax_families_file_eval(datadir, subst_model, output, tree_prefix=""):
   families_dir = fam.get_families_dir(datadir)
+  empty = True
+  skip = 0
   with open(output, "w") as writer:
     writer.write("[FAMILIES]\n")
     for family in fam.get_families_list(datadir):
@@ -86,13 +88,16 @@ def build_generax_families_file_eval(datadir, subst_model, output, tree_prefix="
         treefam = family + ">" + tree.replace(".geneTree.newick", "")
         if (os.path.isfile(os.path.join(fam.get_run_dir(datadir, subst_model, "generax_eval_run"), "results", treefam, "stats.txt"))):
           # already evaluated
-          print("~~~~~ Skipping already evaluated tree ~~~~~")
+          skip += 1
           continue
+        empty = False
         writer.write("- " + treefam + "\n")
         writer.write("starting_gene_tree = " + os.path.join(fam.get_gene_tree_dir(datadir, family), tree) + "\n")
         writer.write("alignment = " + alignment + "\n")
         writer.write("mapping = " + mapping + "\n")
         writer.write("subst_model = " + raxml_model + "\n")
+    print("~~~~ Skipped", skip, "trees from getting evaluated ~~~~")
+    return empty
 
 def get_generax_command(generax_families_file, species_tree, strategy, rec_model, additional_arguments, output_dir, mode, cores):
     executable = paths.generax_exec
@@ -215,7 +220,6 @@ def run(datadir, subst_model, strategy, species_tree, starting_tree, cores, addi
   run_name = utils.getAndDelete("--run", additional_arguments, None) 
   if (None == run_name):
       run_name = get_run_name(species_tree, starting_tree, subst_model, strategy, additional_arguments)
-  arg_analyze = utils.getAndDelete("--analyze", additional_arguments, "yes")
   print("Run name " + run_name)
   if (strategy == "EVAL"):
     os.makedirs(resultsdir, exist_ok=True)
@@ -226,14 +230,18 @@ def run(datadir, subst_model, strategy, species_tree, starting_tree, cores, addi
   mode = get_mode_from_additional_arguments(additional_arguments)
   rec_model = utils.getArg("--rec-model", additional_arguments, "UndatedDTL")
   generax_families_file = os.path.join(resultsdir, "families-generax.txt")
+  empty = False
   if (strategy == "EVAL"):
-    build_generax_families_file_eval(datadir, subst_model, generax_families_file, tree_prefix=starting_tree)
+    empty = build_generax_families_file_eval(datadir, subst_model, generax_families_file, tree_prefix=starting_tree)
   else:
     build_generax_families_file(datadir, starting_tree, subst_model, generax_families_file)
   start = time.time()
-  run_generax(datadir, subst_model, strategy, rec_model, species_tree, generax_families_file, mode, cores, resultsdir, additional_arguments)
-  metrics.save_metrics(datadir, run_name, (time.time() - start), "runtimes") 
-  metrics.save_metrics(datadir, run_name, (time.time() - start), "seqtimes")
+  if (not empty):
+    run_generax(datadir, subst_model, strategy, rec_model, species_tree, generax_families_file, mode, cores, resultsdir, additional_arguments)
+    metrics.save_metrics(datadir, run_name, (time.time() - start), "runtimes") 
+    metrics.save_metrics(datadir, run_name, (time.time() - start), "seqtimes")
+  else:
+    print("Skipping generax as no families are provided")
   if (strategy == "EVAL"):
     eval_and_pick(datadir, os.path.join(resultsdir, "results"))
   if (do_extract):

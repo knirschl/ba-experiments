@@ -201,7 +201,7 @@ def run_fastme_on_families_matrices(datadir, mat_prefix, algo, use_spr, cores):
   metrics.save_metrics(datadir, fam.get_run_name(fastme_name, subst_model), (time.time() - start), "runtimes") 
   lb = fam.get_lb_from_run(output_dir)
   metrics.save_metrics(datadir, fam.get_run_name(fastme_name, subst_model), (time.time() - start) * lb, "seqtimes")
-  #extract_fastme_trees(datadir, subst_model)
+  extract_fastme_trees(datadir, subst_model)
 
 if (__name__== "__main__"):
   max_args_number = 5
