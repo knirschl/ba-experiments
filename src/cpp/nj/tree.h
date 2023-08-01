@@ -431,6 +431,11 @@ public:
         return best_root;
     }
 
+    // TODO impl
+    int reroot_MAD() {
+        return -1;
+    }
+
     /**
      * Computes the depth of the node in the tree.
      * @link https://www.geeksforgeeks.org/lowest-common-ancestor-in-a-binary-tree-using-parent-pointer/

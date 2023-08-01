@@ -115,7 +115,17 @@ int main(int argc, char *argv[]) {
         neighborJoining<>(alignment_mat, tree, active);
     }
     //std::cout << "Start tree : " << tree->to_newick() << "\n" << tree->node_info() << "\n";
-    tree->reroot_APro();
+    switch (get_algo(cli_parser)) {
+        case 0:
+            tree->reroot_APro();
+            break;
+        case 1:
+            tree->tag_APro(tree->reroot_MAD());
+            break;
+        default:
+            // as dup is initialized with false this is the same as S+G (just a bit slower)
+            break;
+    }
     auto speciation_pairs{tree->get_speciation_pairs()};
     //std::cout << "A-Pro tree: " << tree->to_newick() << "\n" << tree->node_info() << "\n";
 

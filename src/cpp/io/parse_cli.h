@@ -15,38 +15,47 @@ auto build_parser(std::string const& name, std::string const& version) {
     program.add_description("");
     program.add_epilog("");
 
-    program.add_argument("-s", "--speciesmat")
+    program.add_argument("-s", "--species-mat")
             .required()
             .help("specify the species tree distance matrix in PHYLIP format");
 
-    program.add_argument("-a", "--alignmat")
+    program.add_argument("-a", "--align-mat")
             .required()
             .help("specify the gene alignment distance matrix in PHYLIP format");
 
-    program.add_argument("-t", "--starting_tree")
+    program.add_argument("-t", "--starting-tree")
             .help("specify the gene tree to compute dup/loss on (NEWICK format");
 
-    program.add_argument("-m", "--mapping")
-            .default_value(std::string{""})
-            .help("specify the mapping between species names and locus names");
+    // r := tag and reroot algorithm
+    program.add_argument("-r", "--tag-algo")
+            .default_value(0)
+            .scan<'i', int>()
+            .help("0: APro, 1: MAD, 2: none (everything gets corrected (S+G))");
 
-    program.add_argument("-l")
-            .default_value(false)
-            .implicit_value(true)
-            .help("if set, mapping file maps locus names to species names");
-
-    program.add_argument("-d", "--delimiter")
-            .default_value(std::string{":"})
-            .help("mapping separator");
+    // c := compute
+    program.add_argument("-c", "--compute-tree")
+            .default_value(2)
+            .scan<'i', int>()
+            .help("0: only tree, 1: both, 2: only matrix");
 
     program.add_argument("-p", "--prefix")
             .default_value(std::string{"/"})
             .help("specify the output prefix");
 
-    program.add_argument("-c")
-            .default_value(0)
-            .scan<'i', int>()
-            .help("if set, only the corrected matrices are written out. No trees are calculated");
+    program.add_argument("-m", "--map")
+            .default_value(std::string{""})
+            .help("specify the mapping between species names and locus names");
+
+    // direction s->l or l->s
+    program.add_argument("-l")
+            .default_value(false)
+            .implicit_value(true)
+            .help("if set, mapping file maps locus names to species names");
+
+    // delimiter between species and locus names
+    program.add_argument("-d", "--delimiter")
+            .default_value(std::string{":"})
+            .help("mapping separator");
 
     return program;
 }
@@ -79,16 +88,20 @@ std::string get_starting_tree(argparse::ArgumentParser &program) {
     return program.get("-t");
 }
 
+int get_algo(argparse::ArgumentParser &program) {
+    return program.get<int>("-r");
+}
+
+int get_c(argparse::ArgumentParser &program) {
+    return program.get<int>("-c");
+}
+
 std::string get_output_prefix(argparse::ArgumentParser &program) {
     return program.get("-p");
 }
 
 std::tuple<std::string, bool, std::string> get_mapping_config(argparse::ArgumentParser &program) {
     return {program.get("-m"), program.get<bool>("-l"), program.get("-d")};
-}
-
-int get_c(argparse::ArgumentParser &program) {
-    return program.get<int>("-c");
 }
 
 #endif //BA_PARSE_CLI_H
