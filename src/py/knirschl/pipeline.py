@@ -140,10 +140,8 @@ class RunFilter():
                     # dist_matrix_converter.convert_input(datadir, cores)
                     species_tree = fam.get_true_species_tree_matrix(datadir)
                     # run ba script
-                    inferred_trees = launch_ba.run_ba_on_families(datadir, "p", species_tree,
-                                                                  algo="APro", mat_out=2, cores=cores)
-                launch_fastme.run_fastme_on_families_matrices(datadir, "ba.p", algo="B",
-                                                              use_spr=True, cores=cores)
+                    inferred_trees = launch_ba.run_ba_on_families(datadir, "p", species_tree, algo="APro", mat_out=2, cores=cores)
+                launch_fastme.run_fastme_on_families_matrices(datadir, "ba.p", algo="B",        use_spr=True, cores=cores)
             except Exception as exc:
                 utils.printFlush("Failed running bachelor thesis matrix correction with FastME\n" + str(exc))
         if (self.generax_pick):
@@ -178,14 +176,11 @@ def run_pipeline(enabled = True):
     # ====== ! CAREFUL ! ======
     run_filter = RunFilter()  # all enabled
     # run_filter.force_overwrite = True # regenerate old dataset
-    # run_filter.raxml = False
-    # run_filter.generax = False
-    # run_filter.force_overwrite = False
     run_filter.bacomp_full()
     run_filter.ba = False  # keep this False
     # run_filter.pick_comp() # only compare inferred trees
-    #run_filter.disable_all() # collect avgs
-    # run_filter.generax_pick = True
+    #run_filter.disable_all() # run selected
+    #run_filter.ba_fastme = True
     # ====== ! CAREFUL ! ======
 
     root_output = paths.families_datasets_root  # output/families/

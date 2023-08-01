@@ -3,6 +3,7 @@ import shutil
 import sys
 import time
 import subprocess
+import re
 sys.path.insert(0, 'scripts')
 sys.path.insert(0, os.path.join("tools", "families"))
 sys.path.insert(0, os.path.join("tools", "msa"))
@@ -100,11 +101,11 @@ def generate_scheduler_commands_file_matrices(datadir, mat_prefix, algo, use_spr
         command = glob_command[:8]
         if (not (miscfile.startswith(mat_prefix) and miscfile.endswith("matrix.phy"))):
           continue
-        output_prefix = re.search(mat_prefix + "_.*[am+]\.", mat)[0] + "fastme."
+        output_prefix = re.search(mat_prefix + "_.*[am+]\\.", miscfile)[0]
         command.append("-i")
         command.append(os.path.join(misc_dir, miscfile))
         command.append("-o")
-        command.append(os.path.join(misc_dir, miscfile.replace(mat_prefix, output_prefix).replace("matrix.phy", "geneTree.newick")))
+        command.append(os.path.join(misc_dir, miscfile.replace(output_prefix, output_prefix + "fastme.").replace("matrix.phy", "geneTree.newick")))
         writer.write(" ".join(command) + "\n")
   return scheduler_commands_file
 
@@ -200,7 +201,7 @@ def run_fastme_on_families_matrices(datadir, mat_prefix, algo, use_spr, cores):
   metrics.save_metrics(datadir, fam.get_run_name(fastme_name, subst_model), (time.time() - start), "runtimes") 
   lb = fam.get_lb_from_run(output_dir)
   metrics.save_metrics(datadir, fam.get_run_name(fastme_name, subst_model), (time.time() - start) * lb, "seqtimes")
-  extract_fastme_trees(datadir, subst_model)
+  #extract_fastme_trees(datadir, subst_model)
 
 if (__name__== "__main__"):
   max_args_number = 5
