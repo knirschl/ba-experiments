@@ -111,8 +111,10 @@ int main(int argc, char *argv[]) {
     } else {
         tree = reset(alignment_ids);
         active = leaf_indices;
+        double spec_mat_scale{0.0}; // TODO change to 2.4
+        dist_matrix_t start_mat{mat_scaled_add(species_tree_mat, alignment_mat, spec_mat_scale)};
         // NJ gene tree with only alignment matrix (0S+G)
-        neighborJoining<>(alignment_mat, tree, active);
+        neighborJoining<>(start_mat, tree, active);
     }
     //std::cout << "Start tree : " << tree->to_newick() << "\n" << tree->node_info() << "\n";
     switch (get_algo(cli_parser)) {
