@@ -132,10 +132,8 @@ int main(int argc, char *argv[]) {
             4.6, 4.65, 4.7, 4.75, 4.8, 4.85, 4.9, 4.95};
     std::string out_prefix{get_output_prefix(cli_parser)};
     int c{get_c(cli_parser)};
-#pragma omp parallel for default(shared) private(tree, active, idx2leafname)
+#pragma omp parallel for default(shared) private(tree, active) //, idx2leafname, leaf_indices)
     for (double scale: scales) {
-        std::cout
-                << "t" + std::to_string(omp_get_thread_num()) + ":" + std::to_string(scale) + "\n";
         // correct with scaling
         dist_matrix_t corrected_matrix{
                 correct_matrix(scale, species_tree_mat, alignment_mat, speciation_pairs)};
@@ -146,7 +144,7 @@ int main(int argc, char *argv[]) {
         auto scale_id{oss.str()};
 
         // output/compute depending on "-c"
-        bool success{true};;
+        bool success{true};
         if (c) {
             // output matrix
             success = write_phylip(corrected_matrix, alignment_ids,
@@ -157,6 +155,7 @@ int main(int argc, char *argv[]) {
                 continue;
             }
         }
+        // TODO fix. prob because of the global maps
         // compute NJ tree and output
         tree = reset(alignment_ids);
         active = leaf_indices;
