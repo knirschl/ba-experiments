@@ -126,7 +126,9 @@ class RunFilter():
                 dist_matrix_converter.convert_input(datadir, cores)
                 species_tree = fam.get_true_species_tree_matrix(datadir)
                 # run ba script
-                inferred_trees = launch_ba.run_ba_on_families(datadir, "exp", species_tree, mat_out=int(self.ba_fastme), cores=cores)
+                inferred_trees = launch_ba.run_ba_on_families(datadir, "p", species_tree,
+                                                              mat_out=int(self.ba_fastme),
+                                                              cores=cores)
                 print("=#=#= BA-Code took {}s per tree =#=#=".format((time.time() - start) / ((int)(simphy.get_param_from_dataset_name("families", datadir)) * inferred_trees)))
             except Exception as exc:
                 utils.printFlush("Failed running bachelor thesis script\n" + str(exc))
@@ -135,11 +137,13 @@ class RunFilter():
             try:
                 if (not self.ba):
                     # convert species tree and alignments to distance matrix
-                    #dist_matrix_converter.convert_input(datadir, cores)
+                    # dist_matrix_converter.convert_input(datadir, cores)
                     species_tree = fam.get_true_species_tree_matrix(datadir)
                     # run ba script
-                    inferred_trees = launch_ba.run_ba_on_families(datadir, "exp", species_tree, mat_out=2, cores=cores)
-                launch_fastme.run_fastme_on_families_matrices(datadir, "ba.exp.", algo="B", use_spr=True, cores=cores)
+                    inferred_trees = launch_ba.run_ba_on_families(datadir, "p", species_tree,
+                                                                  mat_out=2, cores=cores)
+                launch_fastme.run_fastme_on_families_matrices(datadir, "ba.p", algo="B",
+                                                              use_spr=True, cores=cores)
             except Exception as exc:
                 utils.printFlush("Failed running bachelor thesis matrix correction with FastME\n" + str(exc))
         if (self.generax_pick):

@@ -2,7 +2,6 @@ import os
 import shutil
 import sys
 import time
-
 sys.path.insert(0, 'scripts')
 sys.path.insert(0, os.path.join("tools", "families"))
 import paths
@@ -21,7 +20,7 @@ def generate_scheduler_commands_file(datadir, subst_model, species_tree, mat_out
                 os.mkdir(ba_dir)
             except:
                 pass
-            ba_output_prefix = os.path.join(ba_dir, "ba." + subst_model + ".")
+            ba_output_prefix = os.path.join(ba_dir, "ba." + subst_model + "_")
             command = []
             command.append(family)
             command.append("1")

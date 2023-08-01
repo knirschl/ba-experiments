@@ -91,6 +91,7 @@ int main(int argc, char *argv[]) {
 
     // read mapping
     auto map_config{get_mapping_config(cli_parser)};
+    std::string out_prefix{get_output_prefix(cli_parser)};
     // fill map
     if (get<0>(map_config).empty()) {
         // no mapping provided
@@ -108,6 +109,7 @@ int main(int argc, char *argv[]) {
     if (has_user_specified_tree(cli_parser)) {
         tree = parse_newick_from_file(get_starting_tree(cli_parser));
         active = leaf_indices;
+        out_prefix.append("u");
     } else {
         tree = reset(alignment_ids);
         active = leaf_indices;
@@ -115,17 +117,23 @@ int main(int argc, char *argv[]) {
         dist_matrix_t start_mat{mat_scaled_add(species_tree_mat, alignment_mat, spec_mat_scale)};
         // NJ gene tree with only alignment matrix (0S+G)
         neighborJoining<>(start_mat, tree, active);
+        std::ostringstream oss;
+        oss << std::setprecision(4) << std::noshowpoint << spec_mat_scale;
+        out_prefix.append(oss.str());
     }
     //std::cout << "Start tree : " << tree->to_newick() << "\n" << tree->node_info() << "\n";
     switch (get_algo(cli_parser)) {
         case 0:
             tree->reroot_APro();
+            out_prefix.append("a.");
             break;
         case 1:
             tree->tag_APro(tree->reroot_MAD());
+            out_prefix.append("m.");
             break;
         default:
             // as dup is initialized with false this is the same as S+G (just a bit slower)
+            out_prefix.append("+.");
             break;
     }
     auto speciation_pairs{tree->get_speciation_pairs()};
@@ -142,7 +150,6 @@ int main(int argc, char *argv[]) {
             1.65, 1.75, 1.85, .95, 2.8, 2.9, 3.0, 3.05, 3.15, 3.25, 3.35, 3.45, 3.55, 3.6, 3.65,
             3.7, 3.75, 3.8, 3.85, 3.9, 3.95, 4.05, 4.1, 4.15, 4.2, 4.25, 4.3, 4.35, 4.4, 4.45, 4.55,
             4.6, 4.65, 4.7, 4.75, 4.8, 4.85, 4.9, 4.95};
-    std::string out_prefix{get_output_prefix(cli_parser)};
     int c{get_c(cli_parser)};
 #pragma omp parallel for default(shared) private(tree, active) //, idx2leafname, leaf_indices)
     for (double scale: scales) {

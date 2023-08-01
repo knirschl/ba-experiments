@@ -135,18 +135,17 @@ def generax_likelihood_comp(root_output, replicates, best_avg_tree, generax_run_
                 seed_num += 1
                 continue
             # same dataset as before
-            m = re.match(r'family_([0-9]+)\s+(.*?([0-9]+(?:.[0-9]*)).*?)\s+(.*)', line)
+            m = re.match(r'family_([0-9]+)\s+(\S*)\s+(.*)', line)
             family = m[1]
             tree_id = m[2]
-            scale = m[3]
             # dist == None if it didn't match
-            dist = re.search(r'dist=(1(?:\.0)|0(?:\.[0-9]+))', m[4])
+            dist = re.search(r'dist=(1(?:\.0)|0(?:\.[0-9]+))', m[3])
             if (dist):
                 dist = dist[1]
             # stats = [raxmlLogLi, otherLogLi, sumLogLi, dup, loss]
             stats_picked = launch_generax.eval(os.path.join(replicate, generax_run_dir, "results"), "family_" + family + ">" + tree_id)
             try:
-                stats_best_avg = launch_generax.eval(os.path.join(replicate, generax_run_dir, "results"), "family_" + family + ">" + best_avg_tree.replace("s~g.genetree.newick", 'S~G'))
+                stats_best_avg = launch_generax.eval(os.path.join(replicate, generax_run_dir, "results"), "family_" + family + ">" + best_avg_tree.replace("s~g", "S~G").replace("genetree.newick", ''))
             except FileNotFoundError as e:
                 stats_best_avg = []
             rf_rel = metrics.get_metrics(fam.get_family_path(replicate, "family_" + family), "rf_distance-rel")

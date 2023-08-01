@@ -83,7 +83,6 @@ def generate_scheduler_commands_file_matrices(datadir, mat_prefix, algo, use_spr
         os.mkdir(misc_dir)
       except:
         pass
-      output_prefix = mat_prefix + "fastme."
       glob_command = []
       glob_command.append(family)
       glob_command.append("1")
@@ -101,6 +100,7 @@ def generate_scheduler_commands_file_matrices(datadir, mat_prefix, algo, use_spr
         command = glob_command[:8]
         if (not (miscfile.startswith(mat_prefix) and miscfile.endswith("matrix.phy"))):
           continue
+        output_prefix = re.search(mat_prefix + "_.*[am+]\.", mat)[0] + "fastme."
         command.append("-i")
         command.append(os.path.join(misc_dir, miscfile))
         command.append("-o")
@@ -159,7 +159,11 @@ def extract_fastme_mats(datadir, subst_model):
         os.remove(fastme_matrix)
       except:
         pass
-    os.remove(fastme_matrix) 
+    os.remove(fastme_matrix)
+    try:
+      os.remove(fastme_matrix + "_fastme_stat.txt")
+    except:
+      pass
   print("Extracted " + str(valid) + " matrices")
   if (invalid > 0):
     print("WARNING! " + str(invalid) + " matrices were skipped")
