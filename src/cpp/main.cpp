@@ -2,7 +2,6 @@
 // Created by knirschl on 18.04.23.
 //
 
-#include <omp.h>
 #include <sstream>
 #include <iomanip>
 #include "io/parse_cli.h"
