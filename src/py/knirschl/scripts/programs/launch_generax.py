@@ -203,11 +203,13 @@ def eval_and_pick(datadir, results_dir):
     if (logL > best_logL[true_family]):
       best_tree[true_family] = tree
       best_logL[true_family] = logL
-  for family in best_tree:
-    pick = best_tree[family]
-    old_name = [f for f in fam.get_gene_tree_list(datadir, family) if f.startswith(pick)][0]
-    if (not ".generax_pick" in old_name):
-      os.rename(os.path.join(fam.get_gene_tree_dir(datadir, family), old_name), os.path.join(fam.get_gene_tree_dir(datadir, family), pick + ".generax_pick.geneTree.newick"))
+  with open(os.path.join(fam.get_metrics_dir(datadir), "generax_picks.txt"), "w") as writer:
+    for family in best_tree:
+      # pick = best_tree[family]
+      writer.write(family + "  " + best_tree[family] + "\n")
+      # old_name = [f for f in fam.get_gene_tree_list(datadir, family) if f.startswith(pick)][0]
+      # if (not ".generax_pick" in old_name):
+      # os.rename(os.path.join(fam.get_gene_tree_dir(datadir, family), old_name), os.path.join(fam.get_gene_tree_dir(datadir, family), pick + ".generax_pick.geneTree.newick"))
 
 def extract_events(datadir, results_family_dir, additional_arguments):
   #try:

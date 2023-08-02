@@ -74,17 +74,17 @@ def collect_generax_picks(root_output, replicates, tag, compare):
         os.makedirs(os.path.join(root_output, "metrics"))
     except:
         pass
-    dico = {}
+    glob = {}
     pos = 1
     try:
-        with open(os.path.join(root_output, "metrics", tag + "_global__rf_distance_avg-rel.txt")) as reader:
+        with open(os.path.join(root_output, "metrics",
+                               tag + "_global__rf_distance_avg-rel.txt")) as reader:
             for line in reader.readlines():
-                split = line.split(" : ")
-                dico[split[0].lower()] = (split[1].replace("\n", ""), pos)
+                glob[line.split(" : ")[0].lower()] = pos
                 pos += 1
     except:
-        dico = None
-    poss = [0 for _ in range(len(dico))]
+        glob = None
+    poss = [0 for _ in range(len(glob))]
     dists = [0 for _ in range(101)]
     pick_avg_rel_dist = 1.0
     pick_ctr = 0
@@ -92,38 +92,42 @@ def collect_generax_picks(root_output, replicates, tag, compare):
         for rep in replicates:
             seed = re.search(r'.*?seed([0-9]+)', rep)[1]
             writer.write(seed + '\n')
-            for family in fam.get_families_list(rep):
-                true_tree = fam.get_true_tree(rep, family)
-                for gt in fam.get_gene_tree_list(rep, family):
-                    match = re.search(r'(.*).generax_pick.*', gt)
-                    if (match):
-                        writer.write(family + "  " + match[1])
-                        if (dico or compare):
-                            writer.write("  (")
-                            if (dico):
-                                pos = dico[gt.replace(".generax_pick", '').lower()][1]
-                                writer.write("pos=" + str(pos))
-                                poss[pos - 1] += 1
-                            if (compare):
-                                dist = rf_distance.raxmlng_rf(os.path.join(fam.get_gene_tree_dir(rep, family), gt), true_tree)
-                                if (dist[0] == "abort"):
-                                    #print(seed, family, gt, '\n', dist)
-                                    writer.write(")\n")
-                                    continue
-                                dist = dist[1]
-                                # ", " if dico=True
-                                writer.write(", " * (dico != None) + "dist=" + str(dist))
-                                dists[int(dist * 100)] += 1
-                                if (dist < 0.6):
-                                    pick_avg_rel_dist = (pick_avg_rel_dist * pick_ctr + dist) / (pick_ctr + 1)
-                                    pick_ctr += 1
-                            writer.write(")")
-                        writer.write('\n')
-    #metrics.update_dico(root_output, {"rank-distribution.rk" + str(i + 1) : poss[i] for i in range(len(poss))}, "misc")
-    #metrics.update_dico(root_output, {"distance-distribution.dist" + str(i + 1): dists[i] for i in range(len(dists))}, "misc")
+            with open(os.path.join(fam.get_metrics_dir(rep), "generax_picks.txt"), "r") as reader:
+                for line in reader.readlines():
+                    writer.write(line)
+                    split = line.split("  ")
+                    family = split[0]
+                    tree_pick = split[1] + ".geneTree.newick"
+                    true_tree = fam.get_true_tree(rep, family)
+                    if (glob or compare):
+                        writer.write("  (")
+                        if (glob):
+                            pos = glob[tree_pick]
+                            writer.write("pos=" + str(pos))
+                            poss[pos - 1] += 1
+                        if (compare):
+                            dist = rf_distance.raxmlng_rf(
+                                os.path.join(fam.get_gene_tree_dir(rep, family), gt), true_tree)
+                            if (dist[0] == "abort"):
+                                # print(seed, family, gt, '\n', dist)
+                                writer.write(")\n")
+                                continue
+                            dist = dist[1]
+                            # ", " if glob=True
+                            writer.write(", " * (glob != None) + "dist=" + str(dist))
+                            dists[int(dist * 100)] += 1
+                            if (dist <= 1):  # threshold
+                                pick_avg_rel_dist = (pick_avg_rel_dist * pick_ctr + dist) / (
+                                            pick_ctr + 1)
+                                pick_ctr += 1
+                        writer.write(")")
+                    writer.write('\n')
+
+    # metrics.update_dico(root_output, {"rank-distribution.rk" + str(i + 1) : poss[i] for i in range(len(poss))}, "misc")
+    # metrics.update_dico(root_output, {"distance-distribution.dist" + str(i + 1): dists[i] for i in range(len(dists))}, "misc")
     print("Rank distribution:", poss)
     print("Distance distribution:", dists)
-    metrics.update_dico(root_output, {"pick_tree_avg" : pick_avg_rel_dist}, "misc")
+    metrics.update_dico(root_output, {"pick_tree_avg": pick_avg_rel_dist}, "misc")
     print("Avg pick distance:", pick_avg_rel_dist)
 
 def generax_likelihood_comp(root_output, replicates, best_avg_tree, generax_run_dir):
