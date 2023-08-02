@@ -36,7 +36,7 @@ def generate_scheduler_commands_file(datadir, subst_model, species_tree, algo, m
             command.append("-r")
             if (algo.lower() == "apro"):
                 command.append("0")
-            if (algo.lower() == "mad"):
+            elif (algo.lower() == "mad"):
                 command.append("1")
             else:
                 command.append("2")

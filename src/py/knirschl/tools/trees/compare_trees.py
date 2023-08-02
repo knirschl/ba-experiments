@@ -28,8 +28,6 @@ def ttask(datadir, tree, avg_abs_dico, avg_rel_dico, families_dico):
             #print("I've catched an error, maybe look into this?\n", dist_rel, "\n")
             continue
         # single distance
-        if not tree in families_dico[family]:
-            families_dico[family][tree] = 0
         # This should be thread-safe
         families_dico[family][tree] = dist_rel
         # method average
