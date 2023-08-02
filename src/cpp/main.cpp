@@ -84,6 +84,10 @@ int main(int argc, char *argv[]) {
     auto alignment_pair = parse_phylip_mat_from_file<dist_t>(get_alignment_matrix(cli_parser));
     auto alignment_mat = alignment_pair.first;
     auto alignment_ids = alignment_pair.second;
+    if (alignment_ids.size() < 4) {
+        std::cout << "Too few loci\n";
+        return 0;
+    }
     int a_cnt{};
     for_each(alignment_ids.begin(), alignment_ids.end(),
              [&a_cnt](auto &s) { leafname2matidx.emplace(s, a_cnt++); });
