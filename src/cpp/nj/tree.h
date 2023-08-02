@@ -6,12 +6,13 @@
 #define BA_TREE_H
 
 #include <omp.h>
+#include <utility>
 #include <vector>
 #include <string>
 #include <format>
-#include "../misc/DynamicBitset.h"
-#include "../misc/meta.h"
+#include "../misc/dynamic_bitset.h"
 #include "../misc/common_types.h"
+#include "metadata.h"
 
 /**
  * Representation of a tree as a vector.
@@ -32,11 +33,11 @@ private:
         int left_child_idx{-1};
         int right_child_idx{-1};
         int parent_idx{-1};
-        int score{-1};
+        bool is_leaf{}; // may be incorrect
         bool is_dup{};
-        bool is_leaf{}; // can be incorrect
-        DynamicBitset covered_groups{};
+        int score{-1};
         dist_t branch_length{-1};
+        dynamic_bitset covered_groups{};
     };
 public:
     std::vector<Node> tree;
@@ -361,9 +362,10 @@ public:
         if (tree[cur].is_leaf) {
             return tree[cur].score = 0;
         }
-        tree[cur].score = tag_APro(tree[cur].left_child_idx) + tag_APro(tree[cur].right_child_idx);
-        DynamicBitset &covered_left = tree[tree[cur].left_child_idx].covered_groups;
-        DynamicBitset &covered_right = tree[tree[cur].right_child_idx].covered_groups;
+        tree[cur].score = tag_APro(tree[cur].left_child_idx)
+                          + tag_APro(tree[cur].right_child_idx);
+        dynamic_bitset &covered_left = tree[tree[cur].left_child_idx].covered_groups;
+        dynamic_bitset &covered_right = tree[tree[cur].right_child_idx].covered_groups;
         tree[cur].covered_groups = covered_left | covered_right;
 
         // from astral-pro project

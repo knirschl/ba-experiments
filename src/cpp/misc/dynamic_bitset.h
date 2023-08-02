@@ -2,8 +2,8 @@
 // Created by knirschl on 06.07.23.
 //
 
-#ifndef BA_DYNAMICBITSET_H
-#define BA_DYNAMICBITSET_H
+#ifndef BA_DYNAMIC_BITSET_H
+#define BA_DYNAMIC_BITSET_H
 
 #include <vector>
 #include <stdint.h>
@@ -12,15 +12,15 @@
  * Implementation of a dynamic bitset by ASTER.
  * @link https://github.com/chaoszhang/ASTER/blob/master/src/astral-pro.cpp#L55
  */
-struct DynamicBitset {
+struct dynamic_bitset {
 private:
     int size{};
     std::vector<uint64_t> vec;
 
 public:
-    DynamicBitset() {}
+    dynamic_bitset() {}
 
-    DynamicBitset(int sz) : size(sz), vec((sz + 63) / 64) {}
+    dynamic_bitset(int sz) : size(sz), vec((sz + 63) / 64) {}
 
     /**
      * Set the i-th bit.
@@ -42,13 +42,13 @@ public:
      * the higher bits.
      *
      * @param b the other bitset
-     * @return a new DynamicBitset of the size of the bigger one
+     * @return a new dynamic_bitset of the size of the bigger one
      */
-    DynamicBitset operator|(const DynamicBitset &b) const {
+    dynamic_bitset operator|(const dynamic_bitset &b) const {
         if (size < b.size) {
             return b | *this;
         }
-        DynamicBitset res(size);
+        dynamic_bitset res(size);
         for (int i = 0; i < b.vec.size(); i++) {
             res.vec[i] = vec[i] | b.vec[i];
         }
@@ -63,13 +63,13 @@ public:
      * higher bits.
      *
      * @param b the other bitset
-     * @return a new DynamicBitset of the size of the smaller one
+     * @return a new dynamic_bitset of the size of the smaller one
      */
-    DynamicBitset operator&(const DynamicBitset &b) const {
+    dynamic_bitset operator&(const dynamic_bitset &b) const {
         if (size < b.size) {
             return b & *this;
         }
-        DynamicBitset res(b.size);
+        dynamic_bitset res(b.size);
         for (int i = 0; i < b.vec.size(); i++) {
             res.vec[i] = vec[i] & b.vec[i];
         }
@@ -81,13 +81,13 @@ public:
      * smaller bitset are copied from the bigger bitset.
      *
      * @param b the other bitset
-     * @return a new DynamicBitset of the size of the bigger one
+     * @return a new dynamic_bitset of the size of the bigger one
      */
-    DynamicBitset operator^(const DynamicBitset &b) const {
+    dynamic_bitset operator^(const dynamic_bitset &b) const {
         if (size < b.size) {
             return b ^ *this;
         }
-        DynamicBitset res(size);
+        dynamic_bitset res(size);
         for (int i = 0; i < b.vec.size(); i++) {
             res.vec[i] = vec[i] ^ b.vec[i];
         }
@@ -103,10 +103,10 @@ public:
      * @code a - b := a & ~b
      *
      * @param b the other bitset
-     * @return a new DynamicBitset of the size of the minuend (this)
+     * @return a new dynamic_bitset of the size of the minuend (this)
      */
-    DynamicBitset operator-(const DynamicBitset &b) const {
-        DynamicBitset res(size);
+    dynamic_bitset operator-(const dynamic_bitset &b) const {
+        dynamic_bitset res(size);
         for (int i = 0; i < vec.size(); i++) {
             if (i < b.vec.size()) {
                 res.vec[i] = vec[i] & ~b.vec[i];
@@ -120,10 +120,10 @@ public:
     /**
      * NEGates a bitset without changing it.
      *
-     * @return a new DynamicBitset of the size of this bitset
+     * @return a new dynamic_bitset of the size of this bitset
      */
-    DynamicBitset operator~() const {
-        DynamicBitset res(size);
+    dynamic_bitset operator~() const {
+        dynamic_bitset res(size);
         for (int i = 0; i < vec.size(); i++) {
             res.vec[i] = ~vec[i];
         }
@@ -138,7 +138,7 @@ public:
      * @param b the other bitset
      * @return true if the two DynamicBitsets are equal under the above definition, false otherwise
      */
-    bool operator==(const DynamicBitset &b) const {
+    bool operator==(const dynamic_bitset &b) const {
         if (size < b.size) {
             return b == *this;
         }
@@ -164,7 +164,7 @@ public:
      * @return true if the two DynamicBitsets are not equal under the above definition, false
      *          otherwise
      */
-    bool operator!=(const DynamicBitset &b) const {
+    bool operator!=(const dynamic_bitset &b) const {
         return !(*this == b);
     }
 
@@ -176,7 +176,7 @@ public:
      * @return true if the two DynamicBitsets are disjoint to one another under the above
      *          definition, false otherwise
      */
-    bool isDisjointTo(const DynamicBitset &b) const {
+    bool isDisjointTo(const dynamic_bitset &b) const {
         if (size < b.size) {
             return b.isDisjointTo(*this);
         }
@@ -189,4 +189,4 @@ public:
     }
 };
 
-#endif //BA_DYNAMICBITSET_H
+#endif //BA_DYNAMIC_BITSET_H
