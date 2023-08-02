@@ -150,7 +150,7 @@ int main(int argc, char *argv[]) {
             3.7, 3.75, 3.8, 3.85, 3.9, 3.95, 4.05, 4.1, 4.15, 4.2, 4.25, 4.3, 4.35, 4.4, 4.45, 4.55,
             4.6, 4.65, 4.7, 4.75, 4.8, 4.85, 4.9, 4.95};
     int c{get_c(cli_parser)};
-#pragma omp parallel for default(shared) private(tree, active) //, idx2leafname, leaf_indices)
+//#pragma omp parallel for default(shared) private(tree, active) //, idx2leafname, leaf_indices)
     for (double scale: scales) {
         // correct with scaling
         dist_matrix_t corrected_matrix{
