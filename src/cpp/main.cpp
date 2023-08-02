@@ -9,7 +9,7 @@
 #include "io/write_file.h"
 #include "nj/tree.h"
 #include "nj/NJSimple.h"
-#include "misc/meta.h"
+#include "nj/metadata.h"
 
 static const std::string CORRECTION_IDENT{"S~G"};
 static const std::string MATRX_PHY_FILE{".matrix.phy"};
@@ -21,25 +21,68 @@ static const std::string GTREE_NWK_FILE{".geneTree.newick"};
  * @param alignment_ids locus identifier of every leaf
  * @return the forest of leafs
  */
-auto reset(const std::vector<std::string> &alignment_ids) {
+auto reset(const std::vector<std::string> &alignment_ids, const metadata &mdata) {
     // create tree
-    std::shared_ptr<Tree> tree = std::make_shared<Tree>();
+    std::shared_ptr<Tree> tree = std::make_shared<Tree>(mdata);
     tree->make_leafs(alignment_ids);
     return tree;
 }
 
+/**
+ * Correct the distances between every two entries in {@param alignment_mat} with the corresponding
+ * scaled entry in {@param species_tree_mat}.
+ *
+ * @param scale
+ * @param species_tree_mat
+ * @param alignment_mat
+ * @param mdata
+ * @return the corrected matrix
+ */
+dist_matrix_t correct_matrix(const double scale, const dist_matrix_t &species_tree_mat,
+                             const dist_matrix_t &alignment_mat, metadata &mdata) {
+    const size_t n{alignment_mat.size()};
+    dist_matrix_t corrected_matrix(n, dist_vector_t(n));
+    for (int i{}; i < n; i++) {
+        for (int j{}; j < n; j++) {
+            std::string locus1 = mdata.idx2nodename[i];
+            std::string locus2 = mdata.idx2nodename[j];
+            int ai = mdata.leafname2matidx[locus1]; // probably always same as i, same for aj
+            int aj = mdata.leafname2matidx[locus2];
+            int si = glob_mdata.groupname2matidx[mdata.leafname2groupname[locus1]];
+            int sj = glob_mdata.groupname2matidx[mdata.leafname2groupname[locus2]];
+
+            corrected_matrix[ai][aj] += scale * species_tree_mat[si][sj];
+            corrected_matrix[ai][aj] /= scale + 1;
+            corrected_matrix[aj][ai] = corrected_matrix[ai][aj];
+        }
+    }
+    return corrected_matrix;
+}
+
+/**
+ * Correct the distances between two entries in {@param alignment_mat} with the corresponding scaled
+ * entry in {@param species_tree_mat} for every pair in {@param speciation_pairs}.
+ *
+ * @param scale
+ * @param species_tree_mat
+ * @param alignment_mat
+ * @param speciation_pairs
+ * @param mdata
+ * @return the corrected matrix
+ */
 dist_matrix_t correct_matrix(const double scale, const dist_matrix_t &species_tree_mat,
                              const dist_matrix_t &alignment_mat,
-                             const vector_t<std::pair<int, int>> &speciation_pairs) {
+                             const vector_t<std::pair<int, int>> &speciation_pairs,
+                             metadata &mdata) {
     dist_matrix_t corrected_matrix{alignment_mat};
-    for (auto &pair : speciation_pairs) {
+    for (auto &pair: speciation_pairs) {
         // lowest common ancestor was not dup
-        std::string locus1 = idx2nodename[pair.first];
-        std::string locus2 = idx2nodename[pair.second];
-        int ai = leafname2matidx[locus1];
-        int aj = leafname2matidx[locus2];
-        int si = groupname2matidx[leafname2groupname[locus1]];
-        int sj = groupname2matidx[leafname2groupname[locus2]];
+        std::string locus1 = mdata.idx2nodename[pair.first];
+        std::string locus2 = mdata.idx2nodename[pair.second];
+        int ai = mdata.leafname2matidx[locus1];
+        int aj = mdata.leafname2matidx[locus2];
+        int si = glob_mdata.groupname2matidx[mdata.leafname2groupname[locus1]];
+        int sj = glob_mdata.groupname2matidx[mdata.leafname2groupname[locus2]];
 
         corrected_matrix[ai][aj] += scale * species_tree_mat[si][sj];
         corrected_matrix[ai][aj] /= scale + 1;
@@ -78,7 +121,7 @@ int main(int argc, char *argv[]) {
     auto species_tree_ids = species_tree_pair.second;
     int s_cnt{};
     for_each(species_tree_ids.begin(), species_tree_ids.end(),
-             [&s_cnt](auto &s) { groupname2matidx.emplace(s, s_cnt++); });
+             [&s_cnt](auto &s) { glob_mdata.groupname2matidx.emplace(s, s_cnt++); });
 
     // read alignment
     auto alignment_pair = parse_phylip_mat_from_file<dist_t>(get_alignment_matrix(cli_parser));
@@ -89,8 +132,11 @@ int main(int argc, char *argv[]) {
         return 0;
     }
     int a_cnt{};
+    metadata starting_tree_mdata;
     for_each(alignment_ids.begin(), alignment_ids.end(),
-             [&a_cnt](auto &s) { leafname2matidx.emplace(s, a_cnt++); });
+             [&a_cnt, &starting_tree_mdata](auto &s) {
+                 starting_tree_mdata.leafname2matidx.emplace(s, a_cnt++);
+             });
 
     // read mapping
     auto map_config{get_mapping_config(cli_parser)};
@@ -99,39 +145,37 @@ int main(int argc, char *argv[]) {
     if (get<0>(map_config).empty()) {
         // no mapping provided
         for (int i{}; i < alignment_ids.size(); i++) {
-            leafname2groupname.emplace(alignment_ids[i], species_tree_ids[i]);
+            starting_tree_mdata.leafname2groupname.emplace(alignment_ids[i], species_tree_ids[i]);
         }
     } else {
-        leafname2groupname = parse_mapping_from_cfg(map_config);
+        starting_tree_mdata.leafname2groupname = parse_mapping_from_cfg(map_config);
     }
 
     // --- pre-calculate ---
     // get starting tree
-    std::shared_ptr<Tree> tree;
-    std::vector<int> active;
+    std::shared_ptr<Tree> tree_tagged;
     if (has_user_specified_tree(cli_parser)) {
-        tree = parse_newick_from_file(get_starting_tree(cli_parser));
-        active = leaf_indices;
+        tree_tagged = parse_newick_from_file(get_starting_tree(cli_parser), starting_tree_mdata);
         out_prefix.append("u");
     } else {
-        tree = reset(alignment_ids);
-        active = leaf_indices;
+        tree_tagged = reset(alignment_ids, starting_tree_mdata);
         double spec_mat_scale{0.0}; // TODO change to 2.4
-        dist_matrix_t start_mat{mat_scaled_add(species_tree_mat, alignment_mat, spec_mat_scale)};
+        dist_matrix_t start_mat{correct_matrix(spec_mat_scale, species_tree_mat, alignment_mat,
+                                               tree_tagged->mdata)};
         // NJ gene tree with only alignment matrix (0S+G)
-        neighborJoining<>(start_mat, tree, active);
+        neighborJoining<>(start_mat, tree_tagged, tree_tagged->mdata.leaf_indices);
         std::ostringstream oss;
         oss << std::setprecision(4) << std::noshowpoint << spec_mat_scale;
         out_prefix.append(oss.str());
     }
-    //std::cout << "Start tree : " << tree->to_newick() << "\n" << tree->node_info() << "\n";
+    //std::cout << "Start tree : " << tree_tagged->to_newick() << "\n" << tree_tagged->node_info() << "\n";
     switch (get_algo(cli_parser)) {
         case 0:
-            tree->reroot_APro();
+            tree_tagged->reroot_APro();
             out_prefix.append("a.");
             break;
         case 1:
-            tree->tag_APro(tree->reroot_MAD());
+            tree_tagged->tag_APro(tree_tagged->reroot_MAD());
             out_prefix.append("m.");
             break;
         default:
@@ -139,8 +183,8 @@ int main(int argc, char *argv[]) {
             out_prefix.append("+.");
             break;
     }
-    auto speciation_pairs{tree->get_speciation_pairs()};
-    //std::cout << "A-Pro tree: " << tree->to_newick() << "\n" << tree->node_info() << "\n";
+    auto speciation_pairs{tree_tagged->get_speciation_pairs()};
+    //std::cout << "Tagged tree: " << tree_tagged->to_newick() << "\n" << tree_tagged->node_info() << "\n";
 
     // --- calculate ---
     // NJ gene tree with corrected values
@@ -154,11 +198,12 @@ int main(int argc, char *argv[]) {
             3.7, 3.75, 3.8, 3.85, 3.9, 3.95, 4.05, 4.1, 4.15, 4.2, 4.25, 4.3, 4.35, 4.4, 4.45, 4.55,
             4.6, 4.65, 4.7, 4.75, 4.8, 4.85, 4.9, 4.95};
     int c{get_c(cli_parser)};
-//#pragma omp parallel for default(shared) private(tree, active) //, idx2leafname, leaf_indices)
+//#pragma omp parallel for default(shared)
     for (double scale: scales) {
         // correct with scaling
         dist_matrix_t corrected_matrix{
-                correct_matrix(scale, species_tree_mat, alignment_mat, speciation_pairs)};
+                correct_matrix(scale, species_tree_mat, alignment_mat, speciation_pairs,
+                               tree_tagged->mdata)};
 
         // convert double to string without trailing zeros and with a specified precision
         std::ostringstream oss;
@@ -177,13 +222,12 @@ int main(int argc, char *argv[]) {
                 continue;
             }
         }
-        // TODO fix. prob because of the global maps
-        // compute NJ tree and output
-        tree = reset(alignment_ids);
-        active = leaf_indices;
-        neighborJoining(corrected_matrix, tree, active);
-        //std::cout << "Neighbor-joined tree (" << scale_id << "): " << tree->to_newick() << '\n';
-        success &= write_newick(*tree, out_prefix + scale_id.append(
+        // TODO fix. prob because of the global maps -> prob fixed
+        // compute NJ tree_tagged and output
+        std::shared_ptr<Tree> tree_corrected{reset(alignment_ids, tree_tagged->mdata)};
+        neighborJoining(corrected_matrix, tree_corrected, tree_corrected->mdata.leaf_indices);
+        //std::cout << "Neighbor-joined tree_tagged (" << scale_id << "): " << tree_tagged->to_newick() << '\n';
+        success &= write_newick(*tree_corrected, out_prefix + scale_id.append(
                 GTREE_NWK_FILE));
         if (!success) {
             std::cout << "Failed to complete " << scale_id << " task\n";
@@ -192,5 +236,3 @@ int main(int argc, char *argv[]) {
 
     return 0;
 }
-
-

@@ -87,19 +87,19 @@ std::pair<matrix_t<T>, vector_t<std::string>> parse_phylip_mat_from_file(std::st
     return read;
 }
 
-std::shared_ptr<Tree> parse_newick(std::ifstream &reader) {
+std::shared_ptr<Tree> parse_newick(std::ifstream &reader, const metadata &mdata) {
     // ignores everything after the first line
     if (!reader.good()) {
         return nullptr;
     }
     std::string line{};
     std::getline(reader, line);
-    return std::make_shared<Tree>(line);
+    return std::make_shared<Tree>(line, mdata);
 }
 
-std::shared_ptr<Tree> parse_newick_from_file(std::string const &file) {
+std::shared_ptr<Tree> parse_newick_from_file(std::string const &file, const metadata &mdata) {
     std::ifstream streamed_file{file};
-    auto read = parse_newick(streamed_file);
+    auto read = parse_newick(streamed_file, mdata);
     streamed_file.close();
     return read;
 }

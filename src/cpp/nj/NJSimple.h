@@ -173,9 +173,9 @@ int neighborJoining(matrix_t<T> const &distMatrix, std::shared_ptr<Tree> const &
     } else if (n == 2) {
         // base case
         // connecting branch defined by two branches of same length to parent -> "rooted" tree...
-        tree->root = tree->make_node(active_nodes[0], distMatrix[0][1], active_nodes[1],
-                                     distMatrix[0][1]);
-        return tree->root;
+        tree->mdata.root = tree->make_node(active_nodes[0], distMatrix[0][1], active_nodes[1],
+                                           distMatrix[0][1]);
+        return tree->mdata.root;
     } else {
         // edge case, only one or none clusters
         return tree->tree[active_nodes[0]].idx;
