@@ -94,6 +94,7 @@ def collect_generax_picks(root_output, replicates, tag, compare):
             writer.write(seed + '\n')
             with open(os.path.join(fam.get_metrics_dir(rep), "generax_picks.txt"), "r") as reader:
                 for line in reader.readlines():
+                    line = line[:-1]
                     writer.write(line)
                     split = line.split("  ")
                     family = split[0]
@@ -102,12 +103,13 @@ def collect_generax_picks(root_output, replicates, tag, compare):
                     if (glob or compare):
                         writer.write("  (")
                         if (glob):
-                            pos = glob[tree_pick]
+                            pos = glob[tree_pick.lower()]
                             writer.write("pos=" + str(pos))
                             poss[pos - 1] += 1
                         if (compare):
                             dist = rf_distance.raxmlng_rf(
-                                os.path.join(fam.get_gene_tree_dir(rep, family), gt), true_tree)
+                                os.path.join(fam.get_gene_tree_dir(rep, family), tree_pick),
+                                true_tree)
                             if (dist[0] == "abort"):
                                 # print(seed, family, gt, '\n', dist)
                                 writer.write(")\n")
