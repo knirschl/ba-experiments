@@ -415,5 +415,29 @@ def generate_dataset(dataset, cores):
                   gene_conversion_rate, perturbation, population, miss_species, miss_fam, output, seed, cores)
   
 if (__name__ == "__main__"):
-  parameters = SimphyParameters()
-  generate_from_parameters(parameters, paths.families_datasets_root)
+  spec_yr = 0.000000005
+  extc_yr = 0.0000000049 # why not same as spec_yr
+  no_spec = [15, 25, 50, 75, 100]
+  no_faml = [10, 50, 100, 250]
+  no_sits = [50, 100, 250, 500]
+  br_leng = [0.01, 0.1, 1.0, 10.0, 100.0]
+  dup_rat = [0.0, 0.5, 1.0, 2.0, 3.0]
+  los_rat = dup_rat
+  trf_rat = [0.0]
+  gcv_rat = [0.0]
+  pop_siz = [5, 10, 50]
+  # ils?
+
+  vspec = 1
+  vfaml = 2
+  vsits = 1
+  vleng = 2
+  vdrat = 2
+  vlrat = 2
+  vtrat = 0
+  vgrat = 0
+  vpops = 1
+  for v in range(len([1])):
+    #vsits = v
+    parameters = SimphyParameters(speciations_per_year = spec_yr, extinction_per_year = extc_yr, species_taxa = no_spec[vspec], families_number = no_faml[vfaml], bl = br_leng[vleng], dup_rate = dup_rat[vdrat], loss_rate = los_rat[vlrat], transfer_rate = trf_rat[vtrat], gene_conversion_rate = gcv_rat[vgrat], perturbation = 0.0, sites = no_sits[vsits], model = "GTR", seed = 42, distance_hgt = False, population = pop_siz[vpops], miss_species = 0.0, miss_fam = 0.0)
+    generate_from_parameters(parameters, paths.families_datasets_root)
