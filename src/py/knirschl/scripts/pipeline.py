@@ -171,52 +171,72 @@ def pipeline(datadir, run_filter, seed, tag):
         print("End of single experiment. Elapsed time: " + str(elapsed) + "s")
         metrics.save_metrics(datadir, "pipeline_" + tag + str(seed), elapsed, "runtimes")
 
-def run_pipeline(enabled = True):
+def run_pipeline(reps = 50, tag = "DL", val=0, run_filter_str = "ba-cp", enabled = True):
     # TOGGLE PIPELINE ELEMENTS
     # ====== ! CAREFUL ! ======
     run_filter = RunFilter()  # all enabled
     # run_filter.force_overwrite = True # regenerate old dataset
-    run_filter.bacomp_full()
+    if (run_filter_str == "sim"):
+        run_filter.sim()
+    elif (run_filter_str == "full"):
+        run_filter.generate = False
+    elif (run_filter_str == "fm-ba-cp"):
+        run_filter.generate = False
+        run_filter.generax = False
+        run_filter.raxml = False
+    elif (run_filter_str == "ba-cp"):
+        run_filter.bacomp_full()
+    elif (run_filter_str == "pc"):
+        run_filter.pick_comp()
+    elif (run_filter_str == "comp"):
+        run_filter.comp()
+    # DEBUG
     run_filter.ba = False  # keep this False
-    # run_filter.pick_comp() # only compare inferred trees
     # run_filter.disable_all() # run selected
     # run_filter.generax_pick = True
-    # ====== ! CAREFUL ! ======
 
+    # SEEDS
+    seeds100 = [42, 1007, 39104, 45364, 121873, 178811, 254864, 364465, 422868, 592240, 710192, 733230, 785319, 1142238, 1158688, 1230166, 1381421, 1424996, 1472190, 1513197, 1650734, 1656898, 1690222, 1716696, 1886712, 1990093, 1994998, 2073911, 2133265, 2190362, 2289044, 2436736, 2615935, 2620431, 2661376, 2722114, 2895719, 2908180, 3044371, 3072898, 3245068, 3633308, 3799911, 4040147, 4156463, 4257503, 4413346, 4683309, 4788078, 5012216, 5019389, 5087218, 5182115, 5198455, 5287118, 5334140, 5355281, 5398355, 5536663, 5543415, 5574927, 5755677, 5942622, 5966994, 6063401, 6089587, 6317675, 6329094, 6396236, 6503199, 6783683, 6947993, 7132734, 7308089, 7406226, 7425579, 7555193, 7781467, 7966578, 8142353, 8197298, 8199273, 8534020, 8643158, 8726470, 8771421, 8821971, 8846466, 8850161, 9037043, 9133069, 9300400, 9316715, 9376940, 9387366, 9438631, 9481423, 9724682, 9824219, 19732311]
+    seeds = seeds100[:reps]
+    while (len(seeds) < reps):
+       seeds.append(random.randrange(0, 9999999))
+    
+    # DATASET PARAMETERS
+    # base
+    s = 25
+    f = 100
+    sites = 100
+    bl = 1.0
+    d = 1.0
+    l = 1.0
+    t = 0.0
+    pop = 10
+    if (tag == "SPECIES"):
+        s = int(val)
+    elif (tag == "FAM"):
+        f = int(val)
+    elif (tag == "SITES"):
+        sites = int(val)
+    elif (tag == "BRALEN"):
+        bl = float(val)
+    elif (tag == "DUPLOS" or tag == "DL"):
+        d = l = float(val)
+    elif (tag == "TRA" or tag == "T"):
+        t = float(val)
+    elif (tag == "DUPLOSTRA" or tag == "DTL"):
+        val = val.split(',')
+        d = l = float(val[0])
+        t = float(val[1])
+    elif (tag == "POP"): # ils
+        pop = int(val)
+    
     root_output = paths.families_datasets_root  # output/families/
-    # seeds 
-    seeds5 = [42, 1007, 19732311, 121873, 14976684177860080345]
-    seeds50 = [45364, 254864, 422868, 710192, 1142238, 1158688, 1424996, 1472190, 1513197, 1650734,
-               1716696, 1994998, 2190362, 2289044, 2436736, 2615935, 2620431, 2661376, 2722114,
-               2908180, 3044371, 3245068, 4040147, 4156463, 4257503, 4683309, 5087218, 5198455,
-               5355281, 5536663, 5543415, 5755677, 5942622, 6089587, 6329094, 6783683, 6947993,
-               7132734, 7308089, 7406226, 7781467, 8643158, 8726470, 8771421, 8846466, 9133069,
-               9376940, 9387366, 9481423, 9724682]
-    seeds100 = [42, 1007, 4229, 11872, 121873, 125546, 340025, 429510, 436633, 491587, 558959,
-                842036, 901464, 1058026, 1091512, 1105070, 1143740, 1316419, 1320646, 1570525,
-                1674005, 2181913, 2366262, 2453027, 2525498, 2530855, 2545197, 2622038, 2650353,
-                2835503, 2862791, 2967039, 2967641, 3174338, 3219882, 3279056, 3389159, 3547108,
-                3614207, 3686221, 3939144, 3959336, 4108907, 4130562, 4144379, 4193573, 4290505,
-                4354376, 4412646, 4602564, 4754615, 4771372, 4785291, 4824437, 5476033, 5597160,
-                5616680, 5749959, 6050422, 6077656, 6214982, 6382595, 6449414, 6645706, 6722758,
-                6734655, 7060210, 7265233, 7340707, 7342556, 7350931, 7538361, 7724757, 7927143,
-                7940684, 8039292, 8124350, 8386866, 8388955, 8438226, 8527944, 8563774, 8670475,
-                8710215, 8928866, 9070912, 9128753, 9179296, 9387015, 9442585, 9476398, 9488374,
-                9495297, 9510809, 9718279, 9919929, 9930269, 9955696, 19732311,
-                14976684177860080345]
-    seeds = seeds50
-    # while (len(seeds) != 50):
-    #    seeds.append(random.randrange(0, 9999999))
-    # simphy params
-    tag = "DL"
-    d = l = 1.0
-    s = 100  # def = 20
     replicates = []
-
     # Run multiple replicates
     for seed in seeds:
         # SET simphy PARAMETERS 
-        simphy_parameters = simphy.SimphyParameters(tag=tag, seed=seed, dup_rate=d, loss_rate=l, species_taxa=s)
+        simphy_parameters = simphy.SimphyParameters(tag=tag, species_taxa=s, families_number=f, 
+            sites=sites, bl=bl, dup_rate=d, loss_rate=l, transfer_rate=t, population=pop, seed=seed)
         datadir = simphy.get_output_dir(simphy_parameters, root_output)
         replicates.append(datadir)
         if enabled:
@@ -224,10 +244,20 @@ def run_pipeline(enabled = True):
     return root_output, seeds, tag, replicates
 
 if (__name__ == "__main__"):
+    if (len(sys.argv) != 7):
+        print("Syntax: python scripts/pipeline.py reps tag tag_val run_filter enable_pip compare_picks")
+        sys.exit(1)
+    reps = int(sys.argv[1])
+    tag = sys.argv[2]
+    tag_val = sys.argv[3]
+    run_filter_str = sys.argv[4]
+    enable_pip = int(sys.argv[5])
+    compare_picks = int(sys.argv[6])
+
     start = time.time()
-    root_output, seeds, tag, reps = run_pipeline(True)
+    root_output, seeds, tag, reps = run_pipeline(reps, tag, tag_val, run_filter_str, enable_pip)
     best_avg_tree, _ = evaluate.global_compare(root_output, reps, tag)
-    evaluate.collect_generax_picks(root_output, reps, tag, True)
+    evaluate.collect_generax_picks(root_output, reps, tag, compare_picks)
     evaluate.generax_likelihood_comp(root_output, reps, best_avg_tree, os.path.join("runs", "F81", "generax_eval_run"))
     print("seeds = ", seeds)
     print("End of pipeline. Elapsed time:", time.time() - start)
