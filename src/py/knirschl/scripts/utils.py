@@ -64,6 +64,79 @@ def getArg(arg, arguments, default_value):
   else:
     return default_value
 
+def submit_normal(submit_file_path, command, log_cout):
+    commands_list = command.split("\n")
+    logfile = os.path.join(os.path.dirname(submit_file_path), "logs.out")
+    for subcommand in commands_list:
+      if (log_cout):
+        subprocess.check_call(subcommand, shell=True)
+      else:
+        subprocess.check_call(subcommand + " &>> " + logfile , shell=True)
+
+def submit_haswell(submit_file_path, command, threads, debug):
+  threads = int(threads)
+  nodes = str((int(threads) - 1) // 16 + 1)
+  logfile = os.path.join(os.path.dirname(submit_file_path), "logs.out")
+  with open(submit_file_path, "w") as f:
+    f.write("#!/bin/bash\n")
+    f.write("#SBATCH -o " + logfile + "\n")
+    f.write("#SBATCH -B 2:8:1\n")
+    f.write("#SBATCH -N " + str(nodes) + "\n")
+    f.write("#SBATCH -n " + str(threads) + "\n")
+    f.write("#SBATCH --threads-per-core=1\n")
+    f.write("#SBATCH --cpus-per-task=1\n")
+    f.write("#SBATCH --hint=compute_bound\n")
+    if (debug):
+      f.write("#SBATCH -t 2:00:00\n")
+    else:
+      f.write("#SBATCH -t 24:00:00\n")
+
+    f.write("\n")
+    f.write(command)
+  command = []
+  command.append("sbatch")
+  if (debug):
+    command.append("--qos=debug")
+  command.append("-s")
+  command.append(submit_file_path)
+  out = open(historic, "a+")
+  subprocess.check_call(command, stdout = out)
+  out.write("Output in " + logfile + "\n")
+  print(open(historic).readlines()[-1][:-1])
+  out.write("\n")
+
+def submit_cascade(submit_file_path, command, threads, debug):
+  threads = int(threads)
+  nodes = str((int(threads) - 1) // 20 + 1)
+  logfile = os.path.join(os.path.dirname(submit_file_path), "logs.out")
+  with open(submit_file_path, "w") as f:
+    f.write("#!/bin/bash\n")
+    f.write("#SBATCH -o " + logfile + "\n")
+    #f.write("#SBATCH -B 2:8:1\n")
+    f.write("#SBATCH -N " + str(nodes) + "\n")
+    f.write("#SBATCH -n " + str(threads) + "\n")
+    f.write("#SBATCH --threads-per-core=1\n")
+    f.write("#SBATCH --cpus-per-task=20\n")
+    f.write("#SBATCH --hint=compute_bound\n")
+    if (debug):
+      f.write("#SBATCH -t 2:00:00\n")
+    else:
+      f.write("#SBATCH -t 24:00:00\n")
+
+    f.write("\n")
+    f.write(command)
+  command = []
+  command.append("sbatch")
+  if (debug):
+    command.append("--qos=debug")
+  command.append("-s")
+  command.append(submit_file_path)
+  out = open(historic, "a+")
+  subprocess.check_call(command, stdout = out)
+  out.write("Output in " + logfile + "\n")
+  print(open(historic).readlines()[-1][:-1])
+  out.write("\n")
+
 def submit(submit_file_path, command, threads, cluster):
   if (cluster == "normal"):
     submit_normal(submit_file_path, command, False)
