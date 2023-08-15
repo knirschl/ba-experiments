@@ -18,8 +18,8 @@ import sample_missing_data
 class SimphyParameters():
   def __init__(self, tag = "NE", prefix = "ssim", speciations_per_year = 0.000000005,
               extinction_per_year = 0.0000000049, species_taxa = 20,
-              families_number = 100, bl = 1.0, dup_rate = 0.0, loss_rate = 0.0,
-              transfer_rate = 0.0, gene_conversion_rate = 0.0, perturbation = 0.0, sites = 200,
+              families_number = 100, sites = 200, bl = 1.0, dup_rate = 0.0, loss_rate = 0.0,
+              transfer_rate = 0.0, gene_conversion_rate = 0.0, perturbation = 0.0,
               model = "GTR", seed = 42, distance_hgt = False, population = 10,
               miss_species = 0.0, miss_fam = 0.0):
     self.tag = tag
