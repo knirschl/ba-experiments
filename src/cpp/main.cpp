@@ -128,7 +128,7 @@ int main(int argc, char *argv[]) {
     auto alignment_mat = alignment_pair.first;
     auto alignment_ids = alignment_pair.second;
     if (alignment_ids.size() < 4) {
-        std::cout << "Too few loci\n";
+        std::cout << "Too few loci: " << std::to_string(alignment_ids.size()) << "\n";
         return 0;
     }
     int a_cnt{};

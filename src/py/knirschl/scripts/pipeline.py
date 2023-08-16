@@ -137,7 +137,7 @@ class RunFilter():
             try:
                 if (not self.ba):
                     # convert species tree and alignments to distance matrix
-                    # dist_matrix_converter.convert_input(datadir, cores)
+                    dist_matrix_converter.convert_input(datadir, cores)
                     species_tree = fam.get_true_species_tree_matrix(datadir)
                     # run ba script
                     inferred_trees = launch_ba.run_ba_on_families(datadir, "p", species_tree, algo="APro", mat_out=2, cores=cores)
