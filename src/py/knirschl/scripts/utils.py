@@ -99,10 +99,10 @@ def submit_haswell(submit_file_path, command, threads, debug):
     command.append("--qos=debug")
   command.append("-s")
   command.append(submit_file_path)
-  out = open(historic, "a+")
+  out = open(paths.historic, "a+")
   subprocess.check_call(command, stdout = out)
   out.write("Output in " + logfile + "\n")
-  print(open(historic).readlines()[-1][:-1])
+  print(open(paths.historic).readlines()[-1][:-1])
   out.write("\n")
 
 def submit_cascade(submit_file_path, command, threads, debug):
@@ -131,10 +131,10 @@ def submit_cascade(submit_file_path, command, threads, debug):
     command.append("--qos=debug")
   command.append("-s")
   command.append(submit_file_path)
-  out = open(historic, "a+")
+  out = open(paths.historic, "a+")
   subprocess.check_call(command, stdout = out)
   out.write("Output in " + logfile + "\n")
-  print(open(historic).readlines()[-1][:-1])
+  print(open(paths.historic).readlines()[-1][:-1])
   out.write("\n")
 
 def submit(submit_file_path, command, threads, cluster):

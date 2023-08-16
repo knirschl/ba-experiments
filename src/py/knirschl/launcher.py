@@ -6,9 +6,11 @@ import utils
 
 # SETTINGS
 cluster = "normal"
-if ("knirscls" in os.getcwd()):
+if ("basement" in os.getcwd()):
     cluster = "haswell" # + "d" if debug
-reps = 100
+elif ("fast" in os.getcwd()):
+    cluster = "cascade"
+reps = 1
 run_filter = "full"
 enable_pip = True
 compare_picks = True
@@ -40,6 +42,7 @@ for bmark in benchmarks:
         command.append(str(val)) # value to change
         command.append(run_filter) # run filter (sim, full, fm-ba-pc, ba-pc, pc, comp)
         command.append(str(int(enable_pip))) # enable pipeline
-        command.append(str((compare_picks))) # compare generax picks
+        command.append(str(int(compare_picks))) # compare generax picks
         command = " ".join(command)
         utils.submit(os.path.join(paths.output_root, "submit", "run_" + bmark + str(val) + ".sh"), command, 16, cluster)
+        exit() # TODO REMOVE

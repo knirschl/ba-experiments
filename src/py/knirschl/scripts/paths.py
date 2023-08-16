@@ -48,3 +48,4 @@ ba_exec = os.path.join(code_github_root, "cmake-build-debug", "BA")
 mpischeduler_exec = os.path.join(programs_root, "MPIScheduler", "build", "mpi-scheduler")
 # constants
 mpi_scheduler_heuristic = "--split-scheduler"
+historic = os.path.join(root, "historic.txt")
