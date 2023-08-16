@@ -5,3 +5,5 @@ __pycache__/
 .vscode/
 /cmake-build-debug-coverage/
 output/
+build/
+historic.txt
