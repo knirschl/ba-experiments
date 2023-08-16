@@ -5,12 +5,15 @@ import paths
 import utils
 
 # SETTINGS
+debug = False
+if (debug):
+    print("Running in DEBUG mode! Is this intended?\n")
 cluster = "normal"
 if ("basement" in os.getcwd()):
     cluster = "haswell" # + "d" if debug
 elif ("fast" in os.getcwd()):
     cluster = "cascade"
-reps = 1 # TODO 100
+reps = 100
 run_filter = "full"
 enable_pip = True
 compare_picks = True
@@ -45,4 +48,3 @@ for bmark in benchmarks:
         command.append(str(int(compare_picks))) # compare generax picks
         command = " ".join(command)
         utils.submit(os.path.join(paths.output_root, "submit", "run_" + bmark + str(val) + ".sh"), command, 16, cluster)
-        exit() # TODO REMOVE
