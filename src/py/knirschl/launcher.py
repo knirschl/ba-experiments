@@ -10,7 +10,7 @@ if ("basement" in os.getcwd()):
     cluster = "haswell" # + "d" if debug
 elif ("fast" in os.getcwd()):
     cluster = "cascade"
-reps = 1
+reps = 1 # TODO 100
 run_filter = "full"
 enable_pip = True
 compare_picks = True
