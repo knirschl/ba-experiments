@@ -125,6 +125,7 @@ def extract_fastme_trees(datadir, subst_model):
       if (os.path.isfile(fastmetree) and os.stat(fastmetree).st_size > 0):
         valid += 1
         shutil.copyfile(fastmetree, tree)
+        os.remove(fastmetree)
       else:
         invalid += 1
         try:
@@ -132,7 +133,6 @@ def extract_fastme_trees(datadir, subst_model):
           os.remove(fastme_matrix)
         except:
           pass
-      os.remove(fastmetree)
       try:
         os.remove(fastme_matrix + "_fastme_stat.txt")
         os.remove(fastmetree + "_fastme_stat.txt")

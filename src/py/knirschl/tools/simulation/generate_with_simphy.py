@@ -323,8 +323,8 @@ def generate_simphy(tag, species, families, sites, model, bl_factor, dup_rate, l
     return generate_from_parameters(p, root_output, cores)
 
 def get_param_from_dataset_name(parameter, dataset):
-  print(parameter)
-  print(dataset)
+  #print(parameter)
+  #print(dataset)
   if (parameter == "tag"):
     return dataset.split("_")[1]
   elif (parameter == "species"):

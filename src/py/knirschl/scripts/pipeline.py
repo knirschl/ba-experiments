@@ -44,42 +44,24 @@ class RunFilter():
         self.compare = False
     
     def sim(self):
+        self.disable_all()
         self.generate = True
         self.force_overwrite = False
-        self.raxml = False
-        self.generax = False
-        self.fastme = False
-        self.ba = False
-        self.compare = False
 
     def bacomp_full(self):
-        self.generate = False
-        self.raxml = False
-        self.generax = False
-        self.fastme = False
+        self.disable_all()
         self.ba = True
         self.ba_fastme = True
         self.generax_pick = True
         self.compare = True
     
     def pick_comp(self):
-        self.generate = False
-        self.raxml = False
-        self.generax = False
-        self.fastme = False
-        self.ba = False
-        self.ba_fastme = False
+        self.disable_all()
         self.generax_pick = True
         self.compare = True
 
     def comp(self):
-        self.generate = False
-        self.raxml = False
-        self.generax = False
-        self.fastme = False
-        self.ba = False
-        self.ba_fastme = False
-        self.generax_pick = False
+        self.disable_all()
         self.compare = True
 
     def run_methods(self, datadir, subst_model, cores):
@@ -109,7 +91,7 @@ class RunFilter():
             try:
                 species_tree = fam.get_species_tree(datadir)
                 resultsdir = fam.get_run_dir(datadir, subst_model, "generax_run")
-                launch_generax.run(datadir, subst_model, "SPR", species_tree, "random", cores, "--rec-model UndatedDL", resultsdir)
+                launch_generax.run(datadir, subst_model, "SPR", species_tree, "random", cores, ["--rec-model UndatedDL"], resultsdir)
             except Exception as exc:
                 utils.printFlush("Failed running GeneRax\n" + str(exc))
         if (self.fastme):
@@ -256,8 +238,9 @@ if (__name__ == "__main__"):
 
     start = time.time()
     root_output, seeds, tag, reps = run_pipeline(reps, tag, tag_val, run_filter_str, enable_pip)
-    best_avg_tree, _ = evaluate.global_compare(root_output, reps, tag)
-    evaluate.collect_generax_picks(root_output, reps, tag, compare_picks)
-    evaluate.generax_likelihood_comp(root_output, reps, best_avg_tree, os.path.join("runs", "F81", "generax_eval_run"))
+    if (run_filter_str != "sim"):
+        best_avg_tree, _ = evaluate.global_compare(root_output, reps, tag)
+        evaluate.collect_generax_picks(root_output, reps, tag, compare_picks)
+        evaluate.generax_likelihood_comp(root_output, reps, best_avg_tree, os.path.join("runs", "F81", "generax_eval_run"))
     print("seeds = ", seeds)
     print("End of pipeline. Elapsed time:", time.time() - start)

@@ -52,13 +52,13 @@ def extract_raxml_trees(datadir, subst_model):
         if (os.path.isfile(raxmltree) and os.stat(raxmltree).st_size > 0):
             valid += 1
             shutil.copyfile(raxmltree, tree)
+            os.remove(raxmltree) 
         else:
             invalid += 1
             try:
                 os.remove(tree)
             except:
                 pass
-        os.remove(raxmltree) 
     print("Extracted " + str(valid) + " trees")
     if (invalid > 0):
         print("WARNING! " + str(invalid) + " trees were skipped")
