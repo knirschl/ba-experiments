@@ -64,19 +64,19 @@ def getArg(arg, arguments, default_value):
   else:
     return default_value
 
-def submit_normal(submit_file_path, command, log_cout):
+def submit_normal(submit_file_path, submit_id, command, log_cout):
     commands_list = command.split("\n")
-    logfile = os.path.join(os.path.dirname(submit_file_path), "logs.out")
+    logfile = os.path.join(os.path.dirname(submit_file_path), submit_id + "_logs.out")
     for subcommand in commands_list:
       if (log_cout):
         subprocess.check_call(subcommand, shell=True)
       else:
         subprocess.check_call(subcommand + " &>> " + logfile , shell=True)
 
-def submit_haswell(submit_file_path, command, threads, debug):
+def submit_haswell(submit_file_path, submit_id, command, threads, debug):
   threads = int(threads)
   nodes = str((int(threads) - 1) // 16 + 1)
-  logfile = os.path.join(os.path.dirname(submit_file_path), "logs.out")
+  logfile = os.path.join(os.path.dirname(submit_file_path), submit_id + "_logs.out")
   with open(submit_file_path, "w") as f:
     f.write("#!/bin/bash\n")
     f.write("#SBATCH -o " + logfile + "\n")
@@ -105,10 +105,10 @@ def submit_haswell(submit_file_path, command, threads, debug):
   print(open(paths.historic).readlines()[-1][:-1])
   out.write("\n")
 
-def submit_cascade(submit_file_path, command, threads, debug):
+def submit_cascade(submit_file_path, submit_id, command, threads, debug):
   threads = int(threads)
   nodes = str((int(threads) - 1) // 20 + 1)
-  logfile = os.path.join(os.path.dirname(submit_file_path), "logs.out")
+  logfile = os.path.join(os.path.dirname(submit_file_path), submit_id + "_logs.out")
   with open(submit_file_path, "w") as f:
     f.write("#!/bin/bash\n")
     f.write("#SBATCH -o " + logfile + "\n")
@@ -138,20 +138,21 @@ def submit_cascade(submit_file_path, command, threads, debug):
   out.write("\n")
 
 def submit(submit_file_path, command, threads, cluster):
+  submit_id = os.path.basename(submit_file_path).replace("run_", '').replace(".sh", '')
   if (cluster == "normal"):
-    submit_normal(submit_file_path, command, False)
+    submit_normal(submit_file_path, submit_id, command, False)
   elif (cluster == "normald"):
-    submit_normal(submit_file_path, command, True)
+    submit_normal(submit_file_path, submit_id, command, True)
   elif (cluster == "haswell"):
-    submit_haswell(submit_file_path, command, threads, False)
+    submit_haswell(submit_file_path, submit_id, command, threads, False)
   elif (cluster == "haswelld"):
-    submit_haswell(submit_file_path, command, threads, True)
+    submit_haswell(submit_file_path, submit_id, command, threads, True)
   elif (cluster == "cascade"):
-    submit_cascade(submit_file_path, command, threads, False)
+    submit_cascade(submit_file_path, submit_id, command, threads, False)
   elif (cluster == "cascaded"):
-    submit_cascade(submit_file_path, command, threads, True)
+    submit_cascade(submit_file_path, submit_id, command, threads, True)
   elif (cluster == "magny"):
-    submit_magny(submit_file_path, command, threads)
+    submit_magny(submit_file_path, submit_id, command, threads)
   else:
     print("unknown cluster " + cluster)
     sys.exit(1)

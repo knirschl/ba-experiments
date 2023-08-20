@@ -14,7 +14,7 @@ if ("basement" in os.getcwd()):
 elif ("fast" in os.getcwd()):
     cluster = "cascade"
 reps = 100
-run_filter = "full"
+run_filter = "comp" # sim, full, fm-ba-pc, ba-pc, pc, comp 
 enable_pip = True
 compare_picks = True
 # VALUES
@@ -30,7 +30,7 @@ benchmarks_ext = {"SPECIES" : [],
             "DUPLOS" : [],
             "TRA" : [],
             "DUPLOSTRA" : [],
-            "POP" : [50, 1000, 470000000]}
+            "POPS" : [50, 1000, 470000000]}
 
 for bmark in benchmarks:
     for val in benchmarks[bmark]:
