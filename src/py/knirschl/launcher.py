@@ -13,8 +13,9 @@ elif ("fast" in os.getcwd()):
     cluster = "cascade"
 reps = 100
 parts = 4 # 10 should work in every case
-run_filter = "sim" # sim, full, fm-ba-pc, ba-pc, pc, comp 
-enable_pip = False
+run_filter = "full" # sim, full, fm-ba-pc, ba-pc, pc, comp 
+enable_pip = True
+enable_eval = parts == 1
 compare_picks = True
 
 # mistake?
@@ -22,6 +23,8 @@ if (debug):
     print("CAUTION: Running in DEBUG mode! Is this intended?")
 if (parts != 1 and run_filter == "comp"):
     print("CAUTION: Multiple parts while only comparing!")
+if (enable_pip and enable_eval):
+    print("INFO: Computing and evaluating at the same time.")
 
 # VALUES
 benchmarks = {"BASE" : [-1],
@@ -54,6 +57,7 @@ for bmark in benchmarks:
             command.append(str(val)) # value to change
             command.append(run_filter) # run filter (sim, full, fm-ba-pc, ba-pc, pc, comp)
             command.append(str(int(enable_pip))) # enable pipeline
+            command.append(str(int(enable_eval))) # enable evaluation
             command.append(str(int(compare_picks))) # compare generax picks
             command = " ".join(command)
             utils.submit(os.path.join(paths.output_root, "submit", "run_" + bmark + str(val) + "_part" + str(part) + ".sh"), command, 16, cluster)

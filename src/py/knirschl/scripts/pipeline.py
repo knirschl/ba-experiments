@@ -225,8 +225,8 @@ def run_pipeline(start_rep = 0, reps = 50, tag = "DL", val=0, run_filter_str = "
     return root_output, seeds, tag, replicates
 
 if (__name__ == "__main__"):
-    if (len(sys.argv) != 8):
-        print("Syntax: python scripts/pipeline.py start_rep reps tag tag_val run_filter enable_pip compare_picks")
+    if (len(sys.argv) != 9):
+        print("Syntax: python scripts/pipeline.py start_rep reps tag tag_val run_filter enable_pip enable_eval compare_picks")
         sys.exit(1)
     start_rep = int(sys.argv[1])
     rep_num = int(sys.argv[2])
@@ -234,11 +234,12 @@ if (__name__ == "__main__"):
     tag_val = sys.argv[4]
     run_filter_str = sys.argv[5]
     enable_pip = int(sys.argv[6])
-    compare_picks = int(sys.argv[7])
+    enable_eval = int(sys.argv[7])
+    compare_picks = int(sys.argv[8])
 
     start = time.time()
     root_output, seeds, tag, reps = run_pipeline(start_rep, rep_num, tag, tag_val, run_filter_str, enable_pip)
-    if (run_filter_str != "sim"):
+    if (run_filter_str != "sim" and enable_eval):
         tag = tag + tag_val + "_" + str(int(start_rep / rep_num)) # e.g. tag = SPECIES15_part1
         best_avg_tree, _ = evaluate.global_compare(root_output, reps, tag)
         evaluate.collect_generax_picks(root_output, reps, tag, compare_picks)
