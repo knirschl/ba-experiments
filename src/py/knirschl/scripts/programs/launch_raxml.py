@@ -64,15 +64,15 @@ def extract_raxml_trees(datadir, subst_model):
         print("WARNING! " + str(invalid) + " trees were skipped")
 
 def run_raxmlng_on_families(datadir, subst_model, cores, mpi = False):
-    if (mpi):
-        print("The MPI version of RAxML-NG is currently not supported!")
-        return
     output_dir = fam.get_run_dir(datadir, subst_model, "raxml_run")
     shutil.rmtree(output_dir, True)
     os.makedirs(output_dir)
     scheduler_commands_file = generate_scheduler_commands_file(datadir, subst_model, output_dir)
     start = time.time()
-    utils.run_with_scheduler(paths.raxml_exec, scheduler_commands_file, "fork", cores, output_dir, "logs.txt")   
+    if (mpi):
+        utils.run_with_scheduler(paths.raxml_mpi_exec, scheduler_commands_file, "fork", cores, output_dir, "logs.txt")
+    else:
+        utils.run_with_scheduler(paths.raxml_exec, scheduler_commands_file, "fork", cores, output_dir, "logs.txt")   
     metrics.save_metrics(datadir, fam.get_run_name("raxml", subst_model), (time.time() - start), "runtimes") 
     lb = fam.get_lb_from_run(output_dir)
     metrics.save_metrics(datadir, fam.get_run_name("raxml", subst_model), (time.time() - start) * lb, "seqtimes") 
