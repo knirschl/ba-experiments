@@ -22,10 +22,14 @@ def ttask(datadir, tree, avg_abs_dico, avg_rel_dico, families_dico):
             abs_path_tree = picked_abs_path_tree
             #print("Picked", tree, "  (path", abs_path_tree, ")")
         # CALCULATIONS
-        dist_abs, dist_rel = rf_distance.raxmlng_rf(abs_path_tree, true_tree)
-        if dist_abs == "abort":
-            # distance error
-            #print("I've catched an error, maybe look into this?\n", dist_rel, "\n")
+        try:
+            #dist_abs, dist_rel = rf_distance.raxmlng_rf(abs_path_tree, true_tree)
+            dist_abs, dist_rel = rf_distance.ete3_rf_files(abs_path_tree, true_tree)
+            #print(dist_abs, dist_rel)
+        except Exception as exc:
+            # during converting or computing
+            print("I've catched an excpetion, maybe look into this?\n", exc)
+            print(abs_path_tree, true_tree, dist_abs, dist_rel, "\n")
             continue
         # single distance
         # This should be thread-safe
@@ -46,7 +50,8 @@ def compare_all(datadir):
     for family in fam.get_families_list(datadir):
         families_dico[family] = {}
     threads = []
-    for tree in fam.get_gene_tree_list(datadir, fam.get_families_list(datadir)[0]):
+    possible_trees = set().union(*[fam.get_gene_tree_list(datadir, family) for family in fam.get_families_list(datadir)])
+    for tree in possible_trees:
         if (tree == fam.get_true_gene_tree_name()):
             continue
         tree = tree.replace(".generax_pick", "")
