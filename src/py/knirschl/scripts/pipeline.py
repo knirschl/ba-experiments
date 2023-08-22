@@ -19,7 +19,6 @@ import metrics
 import paths
 import utils
 
-
 class RunFilter():
     def __init__(self, generate = True):
         self.disable_all()
@@ -153,7 +152,7 @@ def pipeline(datadir, run_filter, seed, tag):
         print("End of single experiment. Elapsed time: " + str(elapsed) + "s")
         metrics.save_metrics(datadir, "pipeline_" + tag + str(seed), elapsed, "runtimes")
 
-def run_pipeline(reps = 50, tag = "DL", val=0, run_filter_str = "ba-cp", enabled = True):
+def run_pipeline(start_rep = 0, reps = 50, tag = "DL", val=0, run_filter_str = "ba-cp", enabled = True):
     # TOGGLE PIPELINE ELEMENTS
     # ====== ! CAREFUL ! ======
     run_filter = RunFilter()  # all enabled
@@ -162,11 +161,11 @@ def run_pipeline(reps = 50, tag = "DL", val=0, run_filter_str = "ba-cp", enabled
         run_filter.sim()
     elif (run_filter_str == "full"):
         run_filter.generate = False
-    elif (run_filter_str == "fm-ba-cp"):
+    elif (run_filter_str == "fm-ba-pc"):
         run_filter.generate = False
         run_filter.generax = False
         run_filter.raxml = False
-    elif (run_filter_str == "ba-cp"):
+    elif (run_filter_str == "ba-pc"):
         run_filter.bacomp_full()
     elif (run_filter_str == "pc"):
         run_filter.pick_comp()
@@ -179,7 +178,7 @@ def run_pipeline(reps = 50, tag = "DL", val=0, run_filter_str = "ba-cp", enabled
 
     # SEEDS
     seeds100 = [42, 1007, 39104, 45364, 121873, 178811, 254864, 364465, 422868, 592240, 710192, 733230, 785319, 1142238, 1158688, 1230166, 1381421, 1424996, 1472190, 1513197, 1650734, 1656898, 1690222, 1716696, 1886712, 1990093, 1994998, 2073911, 2133265, 2190362, 2289044, 2436736, 2615935, 2620431, 2661376, 2722114, 2895719, 2908180, 3044371, 3072898, 3245068, 3633308, 3799911, 4040147, 4156463, 4257503, 4413346, 4683309, 4788078, 5012216, 5019389, 5087218, 5182115, 5198455, 5287118, 5334140, 5355281, 5398355, 5536663, 5543415, 5574927, 5755677, 5942622, 5966994, 6063401, 6089587, 6317675, 6329094, 6396236, 6503199, 6783683, 6947993, 7132734, 7308089, 7406226, 7425579, 7555193, 7781467, 7966578, 8142353, 8197298, 8199273, 8534020, 8643158, 8726470, 8771421, 8821971, 8846466, 8850161, 9037043, 9133069, 9300400, 9316715, 9376940, 9387366, 9438631, 9481423, 9724682, 9824219, 19732311]
-    seeds = seeds100[:reps]
+    seeds = seeds100[start_rep:start_rep + reps]
     while (len(seeds) < reps):
        seeds.append(random.randrange(0, 9999999))
     
@@ -226,21 +225,23 @@ def run_pipeline(reps = 50, tag = "DL", val=0, run_filter_str = "ba-cp", enabled
     return root_output, seeds, tag, replicates
 
 if (__name__ == "__main__"):
-    if (len(sys.argv) != 7):
-        print("Syntax: python scripts/pipeline.py reps tag tag_val run_filter enable_pip compare_picks")
+    if (len(sys.argv) != 8):
+        print("Syntax: python scripts/pipeline.py start_rep reps tag tag_val run_filter enable_pip compare_picks")
         sys.exit(1)
-    reps = int(sys.argv[1])
-    tag = sys.argv[2]
-    tag_val = sys.argv[3]
-    run_filter_str = sys.argv[4]
-    enable_pip = int(sys.argv[5])
-    compare_picks = int(sys.argv[6])
+    start_rep = int(sys.argv[1])
+    rep_num = int(sys.argv[2])
+    tag = sys.argv[3]
+    tag_val = sys.argv[4]
+    run_filter_str = sys.argv[5]
+    enable_pip = int(sys.argv[6])
+    compare_picks = int(sys.argv[7])
 
     start = time.time()
-    root_output, seeds, tag, reps = run_pipeline(reps, tag, tag_val, run_filter_str, enable_pip)
+    root_output, seeds, tag, reps = run_pipeline(start_rep, rep_num, tag, tag_val, run_filter_str, enable_pip)
     if (run_filter_str != "sim"):
+        tag = tag + tag_val + "_" + str(int(start_rep / rep_num)) # e.g. tag = SPECIES15_part1
         best_avg_tree, _ = evaluate.global_compare(root_output, reps, tag)
         evaluate.collect_generax_picks(root_output, reps, tag, compare_picks)
         evaluate.generax_likelihood_comp(root_output, reps, best_avg_tree, os.path.join("runs", "F81", "generax_eval_run"))
-    print("seeds = ", seeds)
+    print("seeds =", seeds)
     print("End of pipeline. Elapsed time:", time.time() - start)

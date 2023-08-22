@@ -62,7 +62,7 @@ def global_compare(root_output, replicates, tag):
     metrics.save_dico(root_output, rt_avgs_dico, tag + "_global__runtimes_avg")
     metrics.update_dico(root_output, {"best_tree_avg": best_tree_avg}, "misc")
     print("Avg best distance:", best_tree_avg)
-    with open(os.path.join(fam.get_metrics_dir(root_output), "DL_global__rf_distance_avg-rel.txt"),
+    with open(os.path.join(fam.get_metrics_dir(root_output), tag + "_global__rf_distance_avg-rel.txt"),
               'r') as reader:
         line = reader.readline()
         if (line != ''):
@@ -88,7 +88,7 @@ def collect_generax_picks(root_output, replicates, tag, compare):
     dists = [0 for _ in range(101)]
     pick_avg_rel_dist = 1.0
     pick_ctr = 0
-    with open(os.path.join(root_output, "metrics", "generax_picks.txt"), "w") as writer:
+    with open(os.path.join(root_output, "metrics", tag + "_global__generax_picks.txt"), "w") as writer:
         for rep in replicates:
             seed = re.search(r'.*?seed([0-9]+)', rep)[1]
             writer.write(seed + '\n')
@@ -134,7 +134,7 @@ def collect_generax_picks(root_output, replicates, tag, compare):
 
 def generax_likelihood_comp(root_output, replicates, best_avg_tree, generax_run_dir):
     stats_out = []
-    with open(os.path.join(root_output, "metrics", "generax_picks.txt"), 'r') as reader:
+    with open(os.path.join(root_output, "metrics", tag + "_global__generax_picks.txt"), 'r') as reader:
         replicate = ""
         seed_num = 0
         for line in reader.readlines():
