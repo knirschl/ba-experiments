@@ -5,26 +5,44 @@ import paths
 import utils
 
 # SETTINGS
-debug = False
+debug = True
 cluster = "normal"
 if ("basement" in os.getcwd()):
-    cluster = "haswell" # + "d" if debug
+    cluster = "haswell" + "d" * debug
 elif ("fast" in os.getcwd()):
-    cluster = "cascade"
+    cluster = "cascade" + "d" * debug
 reps = 100
-parts = 4 # 10 should work in every case
-run_filter = "full" # sim, full, fm-ba-pc, ba-pc, pc, comp 
+parts = 1 # 10 should work in every case
+run_filter = "comp" # sim, full, fm-ba-pc, ba-pc, pc, comp 
 enable_pip = True
 enable_eval = parts == 1
 compare_picks = True
 
 # mistake?
 if (debug):
-    print("CAUTION: Running in DEBUG mode! Is this intended?")
+    print("CAUTION: Running in DEBUG mode! Is this intended [y,n]?")
+    if input() == "n":
+        debug = False
+        cluster = cluster[:-1]
+        print("Disabeled debug mode")
 if (parts != 1 and run_filter == "comp"):
-    print("CAUTION: Multiple parts while only comparing!")
+    print("CAUTION: Multiple parts while only comparing! Change [n,p,f]?")
+    match input():
+        case 'p':
+            parts = 1
+            print("Set parts to '1'")
+        case 'f':
+            run_filter = "full"
+            print("Set run_filter to 'full'")
 if (enable_pip and enable_eval):
-    print("INFO: Computing and evaluating at the same time.")
+    print("INFO: Computing and evaluating at the same time. Change [n,p,e]?")
+    match input():
+        case 'p':
+            enable_pip = False
+            print("Disabled pipeline")
+        case 'e':
+            enable_eval = False
+            print("Disabled evaluation")
 
 # VALUES
 benchmarks = {"BASE" : [-1],
