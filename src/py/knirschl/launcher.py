@@ -9,7 +9,7 @@ debug = True
 reps = 100
 parts = 1 # 10 should work in every case
 run_filter = "comp" # sim, full, fm-ba-pc, ba-pc, pc, comp 
-enable_pip = True
+enable_pip = False
 enable_eval = parts == 1
 compare_picks = True
 
@@ -31,12 +31,18 @@ if (parts != 1 and run_filter == "comp"):
 if (enable_pip and enable_eval):
     print("INFO: Computing and evaluating at the same time. Change [n,p,e]?")
     match input():
-        case 'p':
+        case 'e':
             enable_pip = False
             print("Disabled pipeline")
-        case 'e':
+        case 'p':
             enable_eval = False
             print("Disabled evaluation")
+if (enable_eval and (parts != 1 or run_filter != "full")):
+    print("INFO: Evaluating only part of benchmark. Is this intended [y,n]?")
+    if input() == 'n':
+        parts = 1
+        run_filter = "full"
+        print("Enabled evaluation of whole benchmark")
 
 cluster = "normal"
 if ("basement" in os.getcwd()):
@@ -80,3 +86,4 @@ for bmark in benchmarks:
             command.append(str(int(compare_picks))) # compare generax picks
             command = " ".join(command)
             utils.submit(os.path.join(paths.output_root, "submit", "run_" + bmark + str(val) + "_part" + str(part) + ".sh"), command, 16, cluster)
+            exit()

@@ -222,7 +222,7 @@ def run_pipeline(start_rep = 0, reps = 50, tag = "DL", val=0, run_filter_str = "
         replicates.append(datadir)
         if enabled:
             pipeline(datadir, run_filter, seed, tag)
-    return root_output, seeds, tag, replicates
+    return root_output, seeds, replicates
 
 if (__name__ == "__main__"):
     if (len(sys.argv) != 9):
@@ -238,9 +238,12 @@ if (__name__ == "__main__"):
     compare_picks = int(sys.argv[8])
 
     start = time.time()
-    root_output, seeds, tag, reps = run_pipeline(start_rep, rep_num, tag, tag_val, run_filter_str, enable_pip)
+    root_output, seeds, reps = run_pipeline(start_rep, rep_num, tag, tag_val, run_filter_str, enable_pip)
     if (run_filter_str != "sim" and enable_eval):
-        tag = tag + tag_val + "_" + str(int(start_rep / rep_num)) # e.g. tag = SPECIES15_part1
+        tag = tag + tag_val
+        if (enable_pip or run_filter_str != "full"):
+            tag  = tag + "_" + str(int(start_rep / rep_num)) # e.g. tag = SPECIES15_part1
+        # else evaluate every part together
         best_avg_tree, _ = evaluate.global_compare(root_output, reps, tag)
         evaluate.collect_generax_picks(root_output, reps, tag, compare_picks)
         evaluate.generax_likelihood_comp(root_output, reps, tag, best_avg_tree, os.path.join("runs", "F81", "generax_eval_run"))
