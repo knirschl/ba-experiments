@@ -107,9 +107,15 @@ class RunFilter():
                 dist_matrix_converter.convert_input(datadir, cores)
                 species_tree = fam.get_true_species_tree_matrix(datadir)
                 # run ba script
+                # APro
                 inferred_trees = launch_ba.run_ba_on_families(datadir, "p", species_tree,
-                                                              mat_out=int(self.ba_fastme),
-                                                              cores=cores)
+                                    algo="APro", mat_out=int(self.ba_fastme), cores=cores)
+                # MAD
+                inferred_trees = launch_ba.run_ba_on_families(datadir, "p", species_tree,
+                                    algo="MAD", mat_out=int(self.ba_fastme), cores=cores)
+                # None
+                inferred_trees = launch_ba.run_ba_on_families(datadir, "p", species_tree,
+                                    algo="", mat_out=int(self.ba_fastme), cores=cores)
                 print("=#=#= BA-Code took {}s per tree =#=#=".format((time.time() - start) / ((int)(simphy.get_param_from_dataset_name("families", datadir)) * inferred_trees)))
             except Exception as exc:
                 utils.printFlush("Failed running bachelor thesis script\n" + str(exc))
@@ -121,7 +127,15 @@ class RunFilter():
                     dist_matrix_converter.convert_input(datadir, cores)
                     species_tree = fam.get_true_species_tree_matrix(datadir)
                     # run ba script
-                    inferred_trees = launch_ba.run_ba_on_families(datadir, "p", species_tree, algo="APro", mat_out=2, cores=cores)
+                    # APro
+                    inferred_trees = launch_ba.run_ba_on_families(datadir, "p", species_tree, 
+                                        algo="APro", mat_out=2, cores=cores)
+                    # MAD
+                    inferred_trees = launch_ba.run_ba_on_families(datadir, "p", species_tree, 
+                                        algo="MAD", mat_out=2, cores=cores)
+                    # None
+                    inferred_trees = launch_ba.run_ba_on_families(datadir, "p", species_tree, 
+                                        algo="", mat_out=2, cores=cores)
                 launch_fastme.run_fastme_on_families_matrices(datadir, "ba.p", algo="B",        use_spr=True, cores=cores)
             except Exception as exc:
                 utils.printFlush("Failed running bachelor thesis matrix correction with FastME\n" + str(exc))
