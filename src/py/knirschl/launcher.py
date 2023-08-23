@@ -5,13 +5,12 @@ import paths
 import utils
 
 # SETTINGS
-debug = True
+debug = False
 reps = 100
-parts = 1 # 10 should work in every case
-run_filter = "comp" # sim, full, fm-ba-pc, ba-pc, pc, comp 
-enable_pip = False
+parts = 10 # 10 should work in every case
+run_filter = "full" # sim, full, fm-ba-pc, ba-pc, pc, comp 
+enable_pip = True
 enable_eval = parts == 1
-compare_picks = True
 
 # mistake?
 if (debug):
@@ -83,7 +82,6 @@ for bmark in benchmarks:
             command.append(run_filter) # run filter (sim, full, fm-ba-pc, ba-pc, pc, comp)
             command.append(str(int(enable_pip))) # enable pipeline
             command.append(str(int(enable_eval))) # enable evaluation
-            command.append(str(int(compare_picks))) # compare generax picks
+            command.append("1") # compare generax pick distances
             command = " ".join(command)
             utils.submit(os.path.join(paths.output_root, "submit", "run_" + bmark + str(val) + "_part" + str(part) + ".sh"), command, 16, cluster)
-            exit()
