@@ -6,11 +6,6 @@ import utils
 
 # SETTINGS
 debug = True
-cluster = "normal"
-if ("basement" in os.getcwd()):
-    cluster = "haswell" + "d" * debug
-elif ("fast" in os.getcwd()):
-    cluster = "cascade" + "d" * debug
 reps = 100
 parts = 1 # 10 should work in every case
 run_filter = "comp" # sim, full, fm-ba-pc, ba-pc, pc, comp 
@@ -23,7 +18,6 @@ if (debug):
     print("CAUTION: Running in DEBUG mode! Is this intended [y,n]?")
     if input() == "n":
         debug = False
-        cluster = cluster[:-1]
         print("Disabeled debug mode")
 if (parts != 1 and run_filter == "comp"):
     print("CAUTION: Multiple parts while only comparing! Change [n,p,f]?")
@@ -43,6 +37,13 @@ if (enable_pip and enable_eval):
         case 'e':
             enable_eval = False
             print("Disabled evaluation")
+
+cluster = "normal"
+if ("basement" in os.getcwd()):
+    cluster = "haswell"
+elif ("fast" in os.getcwd()):
+    cluster = "cascade"
+cluster + 'd' * debug
 
 # VALUES
 benchmarks = {"BASE" : [-1],
