@@ -7,6 +7,7 @@
 #include "io/parse_cli.h"
 #include "io/parse_file.h"
 #include "io/write_file.h"
+#include "io/exec_cmd.h"
 #include "nj/tree.h"
 #include "nj/NJSimple.h"
 #include "nj/metadata.h"
@@ -14,6 +15,9 @@
 static const std::string CORRECTION_IDENT{"S~G"};
 static const std::string MATRX_PHY_FILE{".matrix.phy"};
 static const std::string GTREE_NWK_FILE{".geneTree.newick"};
+static const std::string START_TREE_NWK_FILE{".startGeneTree.newick"};
+static const std::string MADROOT_BIN{"/home/fili/Documents/Programming/bioinformatics/tools/"
+                                     "MADroot/bin/madRoot"};
 
 /**
  * Resets tree to a set of leafs.
@@ -175,7 +179,11 @@ int main(int argc, char *argv[]) {
             out_prefix.append("a.");
             break;
         case 1:
-            tree_tagged->tag_APro(tree_tagged->reroot_MAD());
+            //tree_tagged->tag_APro(tree_tagged->reroot_MAD());
+            write_newick(*tree_tagged, out_prefix + START_TREE_NWK_FILE);
+            std::make_shared<Tree>(
+                    exec((MADROOT_BIN + " " + out_prefix + START_TREE_NWK_FILE).c_str()),
+                    tree_tagged->mdata);
             out_prefix.append("m.");
             break;
         default:
