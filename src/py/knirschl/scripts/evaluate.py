@@ -132,7 +132,7 @@ def collect_generax_picks(root_output, replicates, tag, compare):
     metrics.update_dico(root_output, {"pick_tree_avg": pick_avg_rel_dist}, "misc")
     print("Avg pick distance:", pick_avg_rel_dist)
 
-def generax_likelihood_comp(root_output, replicates, best_avg_tree, generax_run_dir):
+def generax_likelihood_comp(root_output, replicates, tag, best_avg_tree, generax_run_dir):
     stats_out = []
     with open(os.path.join(root_output, "metrics", tag + "_global__generax_picks.txt"), 'r') as reader:
         replicate = ""
@@ -174,6 +174,6 @@ def generax_likelihood_comp(root_output, replicates, best_avg_tree, generax_run_
             stats_out.append(
                 "{} {} {} Stats_best-on-avg: {}\n".format(replicate, family, best_avg_tree,
                                                           stats_best_avg))
-    with open(os.path.join(root_output, "..", "logs", "likelihood_stats.txt"), 'w') as writer:
+    with open(os.path.join(root_output, "..", "logs", tag + "_likelihood_stats.txt"), 'w') as writer:
         for l in stats_out:
             writer.write(l)

@@ -243,6 +243,6 @@ if (__name__ == "__main__"):
         tag = tag + tag_val + "_" + str(int(start_rep / rep_num)) # e.g. tag = SPECIES15_part1
         best_avg_tree, _ = evaluate.global_compare(root_output, reps, tag)
         evaluate.collect_generax_picks(root_output, reps, tag, compare_picks)
-        evaluate.generax_likelihood_comp(root_output, reps, best_avg_tree, os.path.join("runs", "F81", "generax_eval_run"))
+        evaluate.generax_likelihood_comp(root_output, reps, tag, best_avg_tree, os.path.join("runs", "F81", "generax_eval_run"))
     print("seeds =", seeds)
     print("End of pipeline. Elapsed time:", time.time() - start)
