@@ -112,7 +112,7 @@ def collect_generax_picks(root_output, replicates, tag, compare):
                         if (glob_pos):
                             pos = glob_pos[tree_pick.lower()]
                             writer.write("pos=" + str(pos))
-                            poss[pos - 1] += 1
+                            poss[int(pos - 1)] += 1
                         if (compare):
                             dist = rf_distance.raxmlng_rf(
                                 os.path.join(fam.get_gene_tree_dir(rep, family), tree_pick),
