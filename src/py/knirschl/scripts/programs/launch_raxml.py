@@ -38,6 +38,7 @@ def generate_scheduler_commands_file(datadir, subst_model, output_dir):
             command.append(subst_model)
             command.append("--prefix")
             command.append(raxml_output_prefix)
+            command.append("--redo") # ignore checkpoints
             writer.write(" ".join(command) + "\n")
     return scheduler_commands_file
 
