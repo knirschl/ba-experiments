@@ -141,6 +141,8 @@ def pipeline(datadir, run_filter, seed, tag):
         metrics.save_metrics(datadir, "pipeline_" + tag + str(seed), elapsed, "runtimes")
 
 def run_pipeline(start_rep = 0, reps = 50, tag = "DL", val=0, run_filter_str = "bpc", enabled = True):
+    if (run_filter_str == "full"):
+        run_filter_str = "rgfbpc"
     # TOGGLE PIPELINE ELEMENTS
     # ====== ! CAREFUL ! ======
     run_filter = RunFilter()  # all enabled
