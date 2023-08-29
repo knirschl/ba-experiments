@@ -21,43 +21,38 @@ import utils
 
 class RunFilter():
     def __init__(self, generate = True):
-        self.disable_all()
-        self.generate = True
-        self.raxml = True
-        self.generax = True
-        self.fastme = True
-        self.ba = True
-        self.ba_fastme = True
-        self.generax_pick = True
-        self.compare = True
+        self.all(True)
+        self.force_overwrite = False 
+
+    def all(self, t):
+        self.generate = t
+        self.raxml = t
+        self.generax = t
+        self.fastme = t
+        self.ba = t
+        self.ba_fastme = t
+        self.generax_pick = t
+        self.compare = t
     
     def disable_all(self):
-        self.generate = False
-        self.force_overwrite = False
-        self.raxml = False
-        self.generax = False
-        self.fastme = False
-        self.ba = False
-        self.ba_fastme = False
-        self.generax_pick = False
-        self.compare = False
-    
-    def sim(self):
-        self.disable_all()
-        self.generate = True
+        self.all(False)
+
+    def sim(self, t=True):
+        self.all(not t)
+        self.generate = t
         self.force_overwrite = False
 
-    def bacomp_full(self):
-        self.disable_all()
-        self.ba = True
-        self.ba_fastme = True
-        self.generax_pick = True
-        self.compare = True
+    def bacomp_full(self, t=True):
+        self.all(not t)
+        self.ba = t
+        self.ba_fastme = t
+        self.generax_pick = t 
+        self.compare = t
     
-    def pick_comp(self):
-        self.disable_all()
-        self.generax_pick = True
-        self.compare = True
+    def pick_comp(self, t=True):
+        self.all(not t)
+        self.generax_pick = t
+        self.compare = t
 
     def comp(self):
         self.disable_all()
@@ -175,10 +170,12 @@ def run_pipeline(start_rep = 0, reps = 50, tag = "DL", val=0, run_filter_str = "
         run_filter.sim()
     elif (run_filter_str == "full"):
         run_filter.generate = False
-    elif (run_filter_str == "fm-ba-pc"):
+    elif (run_filter_str == "otools"):
+        run_filter.bacomp_full(False)
         run_filter.generate = False
-        run_filter.generax = False
-        run_filter.raxml = False
+    elif (run_filter_str == "fm-ba-pc"):
+        run_filter.bacomp_full()
+        run_filter.fastme = True
     elif (run_filter_str == "ba-pc"):
         run_filter.bacomp_full()
     elif (run_filter_str == "pc"):
@@ -186,9 +183,9 @@ def run_pipeline(start_rep = 0, reps = 50, tag = "DL", val=0, run_filter_str = "
     elif (run_filter_str == "comp"):
         run_filter.comp()
     # DEBUG
+    run_filter.compare = False
+    print("Compare is disabled")
     run_filter.ba = False  # keep this False
-    # run_filter.disable_all() # run selected
-    # run_filter.generax_pick = True
 
     # SEEDS
     seeds100 = [42, 1007, 39104, 45364, 121873, 178811, 254864, 364465, 422868, 592240, 710192, 733230, 785319, 1142238, 1158688, 1230166, 1381421, 1424996, 1472190, 1513197, 1650734, 1656898, 1690222, 1716696, 1886712, 1990093, 1994998, 2073911, 2133265, 2190362, 2289044, 2436736, 2615935, 2620431, 2661376, 2722114, 2895719, 2908180, 3044371, 3072898, 3245068, 3633308, 3799911, 4040147, 4156463, 4257503, 4413346, 4683309, 4788078, 5012216, 5019389, 5087218, 5182115, 5198455, 5287118, 5334140, 5355281, 5398355, 5536663, 5543415, 5574927, 5755677, 5942622, 5966994, 6063401, 6089587, 6317675, 6329094, 6396236, 6503199, 6783683, 6947993, 7132734, 7308089, 7406226, 7425579, 7555193, 7781467, 7966578, 8142353, 8197298, 8199273, 8534020, 8643158, 8726470, 8771421, 8821971, 8846466, 8850161, 9037043, 9133069, 9300400, 9316715, 9376940, 9387366, 9438631, 9481423, 9724682, 9824219, 19732311]

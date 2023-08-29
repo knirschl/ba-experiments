@@ -8,7 +8,7 @@ import utils
 debug = False
 reps = 100
 parts = 10 # 10 should work in every case
-run_filter = "full" # sim, full, fm-ba-pc, ba-pc, pc, comp 
+run_filter = "comp" # sim, full, otools, fm-ba-pc, ba-pc, pc, comp 
 enable_pip = True
 enable_eval = parts == 1
 
