@@ -96,7 +96,7 @@ class RunFilter():
         if (self.ba_fastme):
             utils.printFlush("Run ba matrix with fastme trees...\n**********************************")
             try:
-                if (False): #(not self.ba):
+                if (not self.ba):
                     # convert species tree and alignments to distance matrix
                     dist_matrix_converter.convert_input(datadir, cores)
                     species_tree = fam.get_true_species_tree_matrix(datadir)
