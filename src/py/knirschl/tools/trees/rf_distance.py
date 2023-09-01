@@ -8,7 +8,7 @@ import rescale_bl as ete3conv
 
 
 def ete3_rf_files(tree1, tree2, unrooted = True):
-    return ete3_rf(ete3conv.read_tree(tree1), ete3conv.read_tree(tree2))
+    return ete3_rf(ete3conv.read_tree(tree1), ete3conv.read_tree(tree2))[:2]
 
 def ete3_rf(tree1, tree2, unrooted = True):
     if (len(tree2.children) == 3):
@@ -16,7 +16,7 @@ def ete3_rf(tree1, tree2, unrooted = True):
     if (len(tree1.children) == 3):
         tree1.set_outgroup(tree1.children[0])
     res = tree1.robinson_foulds(tree2, unrooted_trees=unrooted, skip_large_polytomies = True, correct_by_polytomy_size = True) # may throw TreeError
-    return [res[0], res[0] / (len(res[3]) + len(res[4]) - 2 * len(res[2]) - 2) if res[0] != 0.0 else res[0]]
+    return [res[0], res[0] / (len(res[3]) + len(res[4]) - 2 * len(res[2]) - 2) if res[0] != 0.0 else res[0], res[1]]
     
 def raxmlng_rf(tree1, tree2):
     command = []

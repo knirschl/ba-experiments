@@ -18,7 +18,7 @@ def get_discordance_rate(datadir, method = "true", model = "true"):
     for leaf in gene_tree:
       leaf.name = d[leaf.name]
     rf = rf_distance.ete3_rf(species_tree, gene_tree)
-    relative_rf = float(rf[0]) / float(rf[1])
+    relative_rf = float(rf[0]) / float(rf[2])
     sum_average_rf += relative_rf
   average_relative_rf = sum_average_rf / float(len(fam.get_families_list(datadir)))
   return average_relative_rf
