@@ -26,7 +26,6 @@ def check_inputs(strategy):
     exit(1)
 
 
-
 def has_multiple_sample(starting_tree):
   return "ale" in starting_tree.lower() or "multiple" in starting_tree.lower()
 
