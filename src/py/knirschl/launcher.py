@@ -7,9 +7,9 @@ import utils
 # SETTINGS
 debug = False
 reps = 100
-parts = 5 # 10 should work in every case
-run_filter = "pc"  
-enable_pip = True
+parts = 1 # 10 should work in every case
+run_filter = "full"  
+enable_pip = False
 enable_eval = parts == 1
 
 # mistake?

@@ -79,9 +79,8 @@ def generate_scheduler_commands_file_matrices(datadir, mat_prefix, algo, use_spr
   scheduler_commands_file = os.path.join(output_dir, "commands.txt")
   with open(scheduler_commands_file, "w") as writer:
     for family in fam.get_families_list(datadir):
-      # TEMPORARY SKIP OF ALREADY COMPUTED FAMILIES FOR BRALEN0.01_seed1994998
-      if not(list(filter(lambda x: str(x) in family, [32, 49, 72, 82]))):
-        continue
+      #if not(list(filter(lambda x: str(x) in family, [32, 49, 72, 82]))):
+      #  continue
       misc_dir = fam.get_family_misc_dir(datadir, family)
       try:
         os.mkdir(misc_dir)
