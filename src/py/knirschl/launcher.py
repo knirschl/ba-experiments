@@ -8,10 +8,10 @@ import utils
 debug = False
 reps = 100
 parts = 1 # 10 should work in every case
-run_filter = "s"  
-enable_pip = True
+run_filter = "full"  
+enable_pip = False
 enable_eval = run_filter != 's' and parts == 1
-bm_set = 1 # 0: benchmarks, 1: benchmarks_ext, 2: both
+bm_set = 0 # 0: benchmarks, 1: benchmarks_ext, 2: both
 
 # mistake?
 if (debug):
@@ -58,7 +58,7 @@ benchmarks = {"BASE" : [-1],
             "BRALEN" : [0.01, 0.1, 10.0, 100.0],
             "DUPLOS" : [0.0, 0.5, 2.0, 3.0]}
 benchmarks_ext = {"SPECIES" : [],
-            #"FAM" : [10, 50, 250],
+            "FAM" : [10, 50, 250],
             "SITES" : [],
             "BRALEN" : [],
             "DUPLOS" : [],
@@ -79,7 +79,7 @@ elif bm_set == 2:
 reps_per_part = int(reps / parts)
 
 for bmark in bm:
-    for val in benchmarks_ext[bmark]:
+    for val in bm[bmark]:
         for part in range(parts):
             command = []
             if (cluster == "normal"):
