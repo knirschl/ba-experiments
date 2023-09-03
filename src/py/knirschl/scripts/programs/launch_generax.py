@@ -238,9 +238,10 @@ def run(datadir, subst_model, strategy, species_tree, starting_tree, cores, addi
     build_generax_families_file(datadir, starting_tree, subst_model, generax_families_file)
   start = time.time()
   if (not empty):
-    run_generax(datadir, subst_model, strategy, rec_model, species_tree, generax_families_file, mode, cores, resultsdir, additional_arguments)
-    metrics.save_metrics(datadir, run_name, (time.time() - start), "runtimes") 
-    metrics.save_metrics(datadir, run_name, (time.time() - start), "seqtimes")
+    #run_generax(datadir, subst_model, strategy, rec_model, species_tree, generax_families_file, mode, cores, resultsdir, additional_arguments)
+    #metrics.save_metrics(datadir, run_name, (time.time() - start), "runtimes") 
+    #metrics.save_metrics(datadir, run_name, (time.time() - start), "seqtimes")
+    print("Skipping generax evaluation run")
   else:
     print("Skipping generax as no families are provided")
   if (strategy == "EVAL"):
