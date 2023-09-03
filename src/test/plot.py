@@ -158,13 +158,13 @@ def plot_rrf(rrf_file, tag, save):
     fig, ax = plt.subplots()
     for key in vals:
         add_to_scatter(ax, vals, key, "Skalierungswerte", "rRF-Distanz", tag)
-    display(fig)
+    display(fig, filename=os.path.join("/home/fili/Desktop/2023/BA/code/output/benchmark_results/figures", tag + "_all_rf_distance-rel.pdf") if save else None)
     # plot single ba(+fm) variants
     for var in BA_VARIANTS:
         if (var in vals):
             fig, ax = plt.subplots()
             add_to_scatter(ax, vals, var, "Skalierungswerte", "rRF-Distanz", var + " (" + tag + ")")
-            display(fig, makelegend=False, filename=os.path.join("/home/fili/Desktop/2023/BA/code/output/benchmark_results/figures", tag + "_generax_picks.pdf") if save else None)
+            display(fig, makelegend=False, filename=os.path.join("/home/fili/Desktop/2023/BA/code/output/benchmark_results/figures", tag + "_" + var.lower() + "_rf_distance-rel.pdf") if save else None)
 
 def plot_picks(picks_file, tag, save):
     vals = read_picks(picks_file)
@@ -211,4 +211,4 @@ def plot_matching_in_dir(dir, save=False):
     # TODO collect them beforehand somehow ?
 
 if (__name__ == "__main__"):
-    plot_matching_in_dir("/home/fili/Desktop/2023/BA/code/output/benchmark_results/metrics")
+    plot_matching_in_dir("/home/fili/Desktop/2023/BA/code/output/benchmark_results/metrics", save=False)
