@@ -126,7 +126,7 @@ def get_generax_command(generax_families_file, species_tree, strategy, rec_model
 
 def run_generax(datadir,  subst_model,  strategy, rec_model, species_tree, generax_families_file, mode, cores, resultsdir, additional_arguments = ""):
   command = get_generax_command(generax_families_file, species_tree, strategy, rec_model, additional_arguments, resultsdir, mode, cores)
-  print(command)
+  #print(command)
   subprocess.check_call(command.split(" "), stdout = sys.stdout)
 
 
