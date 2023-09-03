@@ -136,9 +136,9 @@ def collect_generax_picks(root_output, replicates, tag, compare):
     # metrics.update_dico(root_output, {"distance-distribution.dist" + str(i + 1): dists[i] for i in range(len(dists))}, "misc")
     with open(os.path.join(root_output, "metrics", tag + "_global__distributions.txt"), "w") as writer:
         writer.write("Rank distribution:")
-        writer.write(poss)
+        write.write(str(poss))
         writer.write("\nDistance distribution:")
-        writer.write(dists)
+        writer.write(str(dists))
     metrics.update_dico(root_output, {"pick_tree_avg": pick_avg_rel_dist}, "misc")
     print("Avg pick distance:", pick_avg_rel_dist)
 
