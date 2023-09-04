@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import numpy as np
 import re
 import os
 
@@ -25,14 +26,33 @@ ALGO_IDS = {
 # subset of trees
 BA_VARIANTS = [build_ba_variant(meth, a) for a in [APRO, MAD, ALL] for meth in [BA, BA_FASTME]]
 
-""" COLORS = {
-    GENERAX: "tab:blue",
-    RAXML: "tab:purple",
-    FASTME: "tab:orange",
-    BA: "tab:red",
-    BA_FASTME: "tab:green",
-    OTHER: "tab:brown"
-    } """
+COLORS = {
+    GENERAX: "mediumblue",
+    RAXML: "deepskyblue",
+    FASTME: "darkviolet",
+    build_ba_variant(BA, APRO): "lightgrey",
+    build_ba_variant(BA, MAD): "darkgrey",
+    build_ba_variant(BA, ALL): "dimgrey",
+    build_ba_variant(BA_FASTME, APRO): "limegreen",
+    build_ba_variant(BA_FASTME, MAD): "darkgreen",
+    build_ba_variant(BA_FASTME, ALL): "yellowgreen",
+    OTHER: "brown",
+    None: None
+}
+
+MARKERS = {
+    GENERAX: "o",
+    RAXML: "x",
+    FASTME: "d",
+    build_ba_variant(BA, APRO): "o",
+    build_ba_variant(BA, MAD): "x",
+    build_ba_variant(BA, ALL): "d",
+    build_ba_variant(BA_FASTME, APRO): "o",
+    build_ba_variant(BA_FASTME, MAD): "x",
+    build_ba_variant(BA_FASTME, ALL): "d",
+    OTHER: "o",
+    None: None
+}
 
 ## HELPERS
 def rrf2xy(vals, key):
@@ -43,13 +63,25 @@ def rrf2xy(vals, key):
         y.append(stat[1])
     return (x, y)
 
-def pick2xy(vals, key):
+def pickC2xy(vals, key, xs):
+    x = []
+    y = []
+    for sc in xs:
+        if (float(sc) <= 10): #zoom
+            x.append(float(sc))
+            if sc in vals[key]:
+                y.append(int(vals[key][sc][0]))
+            else:
+                y.append(0.0)
+    return (x, y)
+
+def pickD2xy(vals, key):
     x = []
     y = []
     for sc in vals[key]:
-        #if (float(sc) <= 10):
-        x.append(float(sc))
-        y.append(int(vals[key][sc][0]))
+        if (float(sc) <= 10): #zoom
+            x.append(float(sc))
+            y.append(float(vals[key][sc][1]))
     return (x, y)
 
 def distdistr2xy(vals):
@@ -60,13 +92,22 @@ def get_filename(tags, save):
         return None
     return os.path.join("/home/fili/Desktop/2023/BA/code/output/benchmark_results/figures", '_'.join(tags) + ".pdf")
 
-def add2plot(plot, xy, ptype="scatter", labels=5 * [None], zoom=''):
+def add2plot(plot, xy, ptype="scatter", labels=5 * [None], bottom=0, zoom=''):
     if (ptype == "scatter"):
-        plot.scatter(xy[0], xy[1], label=labels[0])#, c=COLORS[labels[0]])
+        plot.scatter(xy[0], xy[1], label=labels[0], c=COLORS[labels[0]], marker=MARKERS[labels[0]])
     elif (ptype == "bar"):
-        plot.bar(xy[0], xy[1], width=labels[4])#, color=COLORS[labels[0]]
+        plot.bar(xy[0], xy[1], label=labels[0], width=labels[4], color=COLORS[labels[0]], bottom=bottom)
+    elif (ptype == "violin"):
+        vp = plot.violinplot(xy[1], showmedians=True, showextrema=False, showmeans=False)
+        vp['bodies'][0].set_edgecolor("k")
+        vp['bodies'][0].set_facecolor(COLORS[labels[0]])
+        vp['bodies'][0].set_alpha(0.75)
+        for comp in ['cmedians']: #'cbars', 'cmins', 'cmaxes'
+            vp[comp].set_edgecolor("lightgrey")
+            vp[comp].set_alpha(1)
+        plot.legend([vp['bodies'][0], vp['cmedians']], [labels[0], "median"])
     else:
-        plot.plot(xy[0], xy[1], label=labels[0])#, color=COLORS[labels[0]]
+        plot.plot(xy[0], xy[1], label=labels[0], color=COLORS[labels[0]], marker=MARKERS[labels[0]], markersize=2.5)
     plot.set(title=labels[1], xlabel=labels[2], ylabel=labels[3])
     # TODO better zooming
     if (zoom == "dyn"):
@@ -199,25 +240,39 @@ def plot_rrf(rrf_file, tag, save):
         for key in vals:
             labels[0] = key
             add2plot(ax, rrf2xy(vals, key), labels=labels, zoom=zoom)
-        display(fig, filename=get_filename([tag, "all", zoom, id], save))
+        display(fig, filename=get_filename([tag, "full", zoom, id], save))
         # plot single ba(+fm) variants
         for var in BA_VARIANTS:
             if (var in vals):
-                fig, ax = plt.subplots()
+                #fig, ax = plt.subplots()
                 labels[0:2] = [var, var + " (" + tag + ")"]
                 add2plot(ax, rrf2xy(vals, var), labels=labels, zoom=zoom)
                 display(fig, makelegend=False, filename=get_filename([tag, var.lower(), zoom, id], save))
 
 def plot_picks(picks_file, tag, save):
-    labels = ['', "GeneRax-Picks (" + tag + ")", None, None, 0.05]
+    labels = ['', "GeneRax-Picks (" + tag + ")", "Skalierungswerte", "Häufigkeit", 0.05]
     vals = read_picks(picks_file)
-    fig, ax = plt.subplots()
+    xs = set()
     for key in vals:
+        for s in vals[key]:
+            if (float(s) <= 10): #zoom
+                xs.add(s)
+    xy = {}
+    for key in vals:
+        xy[key] = list(zip(*sorted(zip(*pickC2xy(vals, key, xs)))))
+    fig, ax = plt.subplots()
+    bottoms = np.full(len(xs), 0)
+    for key in xy:
         labels[0] = key
-        # TODO stack, zoom
-        add2plot(ax, pick2xy(vals, key), ptype="bar", labels=labels)
+        # TODO zoom, correct labels
+        add2plot(ax, xy[key], ptype="bar", labels=labels, bottom=bottoms)
+        bottoms += np.array(xy[key][1], dtype='int64')
+        """ labels[1] = None
+        labels[3] = "rRF-Distanz"
+        ax2 = ax.twinx()
+        x, y = zip(*sorted(zip(*pickD2xy(vals, key))))
+        add2plot(ax2, (x, y), ptype="plot", labels=labels) """
     display(fig, filename=get_filename([tag, "generax-picks"], save))
-        
 
 def plot_distr(distr_file, tag, save):
     labels = [None, "Distanzen der von GeneRax ausgewählten Bäume (" + tag + ")", "rRF Distanz", "Anzahl an Bäumen", 0.01]
@@ -248,4 +303,4 @@ def plot_matching_in_dir(dir, save=False):
     # TODO plots with error bars and not scatter
 
 if (__name__ == "__main__"):
-    plot_matching_in_dir("/home/fili/Desktop/2023/BA/code/output/benchmark_results/metrics", save=False)
+    plot_matching_in_dir("/home/fili/Desktop/2023/BA/code/output/benchmark_results/metrics", save=True)
