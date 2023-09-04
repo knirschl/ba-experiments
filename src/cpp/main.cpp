@@ -45,9 +45,9 @@ auto reset(const std::vector<std::string> &alignment_ids, const metadata &mdata)
 dist_matrix_t correct_matrix(const double scale, const dist_matrix_t &species_tree_mat,
                              const dist_matrix_t &alignment_mat, metadata &mdata) {
     const size_t n{alignment_mat.size()};
-    dist_matrix_t corrected_matrix(n, dist_vector_t(n));
+    dist_matrix_t corrected_matrix{alignment_mat};//(n, dist_vector_t(n));
     for (int i{}; i < n; i++) {
-        for (int j{}; j < n; j++) {
+        for (int j{i}; j < n; j++) {
             std::string locus1 = mdata.idx2nodename[i];
             std::string locus2 = mdata.idx2nodename[j];
             int ai = mdata.leafname2matidx[locus1]; // probably always same as i, same for aj
@@ -163,36 +163,42 @@ int main(int argc, char *argv[]) {
         out_prefix.append("u");
     } else {
         tree_tagged = reset(alignment_ids, starting_tree_mdata);
+        //std::cout << "S := " << mat_to_string(species_tree_mat) << "\nG := " << mat_to_string(alignment_mat) << "\n";
         double spec_mat_scale{0.0}; // TODO change to 2.4
         dist_matrix_t start_mat{correct_matrix(spec_mat_scale, species_tree_mat, alignment_mat,
                                                tree_tagged->mdata)};
+        //std::cout << "C := " << mat_to_string(start_mat) << "\n";
         // NJ gene tree with only alignment matrix (0S+G)
         neighborJoining<>(start_mat, tree_tagged, tree_tagged->mdata.leaf_indices);
         std::ostringstream oss;
         oss << std::setprecision(4) << std::noshowpoint << spec_mat_scale;
         out_prefix.append(oss.str());
     }
-    //std::cout << "Start tree : " << tree_tagged->to_newick() << "\n" << tree_tagged->node_info() << "\n";
+    //std::cout << "Start tree := " << tree_tagged->to_newick() << "\n" << tree_tagged->node_info() << "\n";
     switch (get_algo(cli_parser)) {
         case 0:
             tree_tagged->reroot_APro();
             out_prefix.append("a.");
             break;
         case 1:
-            //tree_tagged->tag_APro(tree_tagged->reroot_MAD());
+            // TODO ? tree_tagged->tag_APro(tree_tagged->reroot_MAD());
+            // madRoot reads from file and outputs to std::out
             write_newick(*tree_tagged, out_prefix + START_TREE_NWK_FILE);
-            std::make_shared<Tree>(
+            tree_tagged = std::make_shared<Tree>(
                     exec((MADROOT_BIN + " " + out_prefix + START_TREE_NWK_FILE).c_str()),
                     tree_tagged->mdata);
+            // tag with MAD re-rooted tree with APro
+            tree_tagged->tag_APro(tree_tagged->mdata.root);
             out_prefix.append("m.");
             break;
         default:
-            // as dup is initialized with false this is the same as S+G (just a bit slower)
+            // as dup is initialized with false this is the same as S+G
+            // (just a bit slower because of the lca computations below)
             out_prefix.append("+.");
             break;
     }
     auto speciation_pairs{tree_tagged->get_speciation_pairs()};
-    //std::cout << "Tagged tree: " << tree_tagged->to_newick() << "\n" << tree_tagged->node_info() << "\n";
+    //std::cout << "Tagged tree := " << tree_tagged->to_newick() << "\n" << tree_tagged->node_info() << "\n";
 
     // --- calculate ---
     // NJ gene tree with corrected values

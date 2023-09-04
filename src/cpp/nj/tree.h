@@ -199,11 +199,13 @@ private:
     }
 
     void make_tree_nwk(const std::string &newick) {
+        mdata.idx2nodename.clear();
+        mdata.leaf_indices.clear();
         vector_t<std::string> vec{nwk_split(newick)};
-        std::cout << vec_to_string(vec) << "\n";
+        //std::cout << vec_to_string(vec) << "\n";
         mdata.idx2nodename.resize(vec.size() / 4); // probably enough
         int z{0};
-        nwk_parse(vec, z);
+        mdata.root = nwk_parse(vec, z);
     }
 
 public:
@@ -542,8 +544,8 @@ public:
     }
 
     [[nodiscard]] std::string node_info() const {
-        std::string out{"{}"};
-        for (int i{1}; i < size(tree); i++) {
+        std::string out;
+        for (int i{0}; i < size(tree); i++) {
             if (tree[i].parent_idx < 0) {
                 out += ", {" + node_info(i) + "}";
             }
