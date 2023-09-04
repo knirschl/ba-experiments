@@ -181,20 +181,24 @@ int main(int argc, char *argv[]) {
             out_prefix.append("a.");
             break;
         case 1:
-            //tree_tagged->tag_APro(tree_tagged->reroot_MAD());
+            // TODO ? tree_tagged->tag_APro(tree_tagged->reroot_MAD());
+            // madRoot reads from file and outputs to std::out
             write_newick(*tree_tagged, out_prefix + START_TREE_NWK_FILE);
-            std::make_shared<Tree>(
+            tree_tagged = std::make_shared<Tree>(
                     exec((MADROOT_BIN + " " + out_prefix + START_TREE_NWK_FILE).c_str()),
                     tree_tagged->mdata);
+            // tag with MAD re-rooted tree with APro
+            tree_tagged->tag_APro(tree_tagged->mdata.root);
             out_prefix.append("m.");
             break;
         default:
-            // as dup is initialized with false this is the same as S+G (just a bit slower)
+            // as dup is initialized with false this is the same as S+G
+            // (just a bit slower because of the lca computations below)
             out_prefix.append("+.");
             break;
     }
     auto speciation_pairs{tree_tagged->get_speciation_pairs()};
-    //std::cout << "Tagged tree: " << tree_tagged->to_newick() << "\n" << tree_tagged->node_info() << "\n";
+    //std::cout << "Tagged tree := " << tree_tagged->to_newick() << "\n" << tree_tagged->node_info() << "\n";
 
     // --- calculate ---
     // NJ gene tree with corrected values

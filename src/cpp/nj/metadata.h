@@ -55,7 +55,7 @@ struct metadata {
      * @return the name of the node or {@param node} as string
      */
     std::string get_name_or_idx(int node) const {
-        if (node < 0 || node >= idx2nodename.size()) {
+        if (node < 0 || node >= idx2nodename.size() || idx2nodename[node].empty()) {
             return std::to_string(node);
         }
         return idx2nodename[node];
