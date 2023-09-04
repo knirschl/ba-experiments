@@ -116,7 +116,7 @@ dist_matrix_t correct_matrix(const double scale, const dist_matrix_t &species_tr
 int main(int argc, char *argv[]) {
     // --- parse ---
     // get cli inputs
-    auto cli_parser = build_parser("thesis", "0.2");
+    auto cli_parser = build_parser("thesis", "0.5");
     parse(cli_parser, argc, argv);
 
     // read species tree
