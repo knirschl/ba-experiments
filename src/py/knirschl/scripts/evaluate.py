@@ -136,7 +136,7 @@ def collect_generax_picks(root_output, replicates, tag, compare):
     # metrics.update_dico(root_output, {"distance-distribution.dist" + str(i + 1): dists[i] for i in range(len(dists))}, "misc")
     with open(os.path.join(root_output, "metrics", tag + "_global__distributions.txt"), "w") as writer:
         writer.write("Rank distribution:")
-        write.write(str(poss))
+        writer.write(str(poss))
         writer.write("\nDistance distribution:")
         writer.write(str(dists))
     metrics.update_dico(root_output, {"pick_tree_avg": pick_avg_rel_dist}, "misc")
@@ -164,9 +164,9 @@ def generax_likelihood_comp(root_output, replicates, tag, best_avg_tree, generax
                 dist = re.search(r'dist=(1(?:\.0)|0(?:\.[0-9]+))', m[3])
                 if (dist):
                     dist = dist[1]
-                # stats = [raxmlLogLi, otherLogLi, sumLogLi, dup, loss]
-                stats_picked = launch_generax.eval(os.path.join(replicate, generax_run_dir, "results"), "family_" + family + ">" + tree_id)
                 try:
+                    # stats = [raxmlLogLi, otherLogLi, sumLogLi, dup, loss]
+                    stats_picked = launch_generax.eval(os.path.join(replicate, generax_run_dir, "results"), "family_" + family + ">" + tree_id)
                     stats_best_avg = launch_generax.eval(
                         os.path.join(replicate, generax_run_dir, "results"),
                         "family_" + family + ">" + best_avg_tree.replace("s~g", "S~G").replace(
