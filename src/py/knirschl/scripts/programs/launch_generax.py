@@ -195,17 +195,22 @@ def eval_and_pick(datadir, results_dir):
   best_logL = {}
   for family in os.listdir(results_dir):
     true_family, tree = family.split(">")
+    idx = 0 if "a." in tree else (1 if "m." in tree else 2)
     if (true_family not in best_tree):
-      best_tree[true_family] = ""
-      best_logL[true_family] = float("-inf")
+      best_tree[true_family] = 3 * [""]
+      best_logL[true_family] = 3 * [float("-inf")]
     logL = eval_sumLogL(results_dir, family)
-    if (logL > best_logL[true_family]):
-      best_tree[true_family] = tree
-      best_logL[true_family] = logL
+    if (logL > best_logL[true_family][idx]):
+      best_tree[true_family][idx] = tree
+      best_logL[true_family][idx] = logL
+    elif (logL == best_logL[true_family][idx]):
+      # TODO if same: which one?
+      continue
   with open(os.path.join(fam.get_metrics_dir(datadir), "generax_picks.txt"), "w") as writer:
     for family in best_tree:
       # pick = best_tree[family]
-      writer.write(family + "  " + best_tree[family] + "\n")
+      for bt in best_tree[family]:
+        writer.write(family + "  " + bt + "\n")
       # old_name = [f for f in fam.get_gene_tree_list(datadir, family) if f.startswith(pick)][0]
       # if (not ".generax_pick" in old_name):
       # os.rename(os.path.join(fam.get_gene_tree_dir(datadir, family), old_name), os.path.join(fam.get_gene_tree_dir(datadir, family), pick + ".generax_pick.geneTree.newick"))
