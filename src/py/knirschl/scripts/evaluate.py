@@ -92,9 +92,9 @@ def collect_generax_picks(root_output, replicates, tag, compare):
     except:
         glob_pos = None
     poss = [0 for _ in range(len(glob_pos))]
-    dists = [0 for _ in range(101)]
-    pick_avg_rel_dist = 1.0
-    pick_ctr = 0
+    dists = [3* [0] for _ in range(101)]
+    pick_avg_rel_dist = 3 * [1.0]
+    pick_ctr = 3 * [0]
     with open(os.path.join(root_output, "metrics", tag + "_global__generax_picks.txt"), "w") as writer:
         for rep in replicates:
             seed = re.search(r'.*?seed([0-9]+)', rep)[1]
@@ -106,6 +106,7 @@ def collect_generax_picks(root_output, replicates, tag, compare):
                     split = line.split("  ")
                     family = split[0]
                     tree_pick = split[1] + ".geneTree.newick"
+                    idx = 0 if "a." in split[1] else (1 if "m." in split[1] else 2)
                     true_tree = fam.get_true_tree(rep, family)
                     if (glob_pos or compare):
                         writer.write("  (")
@@ -124,11 +125,10 @@ def collect_generax_picks(root_output, replicates, tag, compare):
                             dist = dist[1]
                             # ", " if glob_pos=True
                             writer.write(", " * (glob_pos != None) + "dist=" + str(dist))
-                            dists[int(dist * 100)] += 1
+                            dists[int(dist * 100)][idx] += 1
                             if (dist <= 1):  # threshold
-                                pick_avg_rel_dist = (pick_avg_rel_dist * pick_ctr + dist) / (
-                                            pick_ctr + 1)
-                                pick_ctr += 1
+                                pick_avg_rel_dist[idx] = (pick_avg_rel_dist[idx] * pick_ctr[idx] + dist) / (pick_ctr[idx] + 1)
+                                pick_ctr[idx] += 1
                         writer.write(")")
                     writer.write('\n')
 
@@ -137,10 +137,16 @@ def collect_generax_picks(root_output, replicates, tag, compare):
     with open(os.path.join(root_output, "metrics", tag + "_global__distributions.txt"), "w") as writer:
         writer.write("Rank distribution:")
         writer.write(str(poss))
-        writer.write("\nDistance distribution:")
-        writer.write(str(dists))
+        writer.write("\nDistance distribution (APro):")
+        writer.write(str([dists[i][0] for i in range(len(dists))]))
+        writer.write("\nDistance distribution (MAD):")
+        writer.write(str([dists[i][1] for i in range(len(dists))]))
+        writer.write("\nDistance distribution (All):")
+        writer.write(str([dists[i][2] for i in range(len(dists))]))
     metrics.update_dico(root_output, {"pick_tree_avg": pick_avg_rel_dist}, "misc")
-    print("Avg pick distance:", pick_avg_rel_dist)
+    print("Avg pick distance (APro):", pick_avg_rel_dist[0])
+    print("Avg pick distance (MAD):", pick_avg_rel_dist[1])
+    print("Avg pick distance (All):", pick_avg_rel_dist[2])
 
 def generax_likelihood_comp(root_output, replicates, tag, best_avg_tree, generax_run_dir):
     glob_picks_name = "_global__generax_picks.txt"

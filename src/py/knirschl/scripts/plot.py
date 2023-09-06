@@ -250,6 +250,8 @@ def plot_rrf(rrf_file, tag, save):
                 display(fig, makelegend=False, filename=get_filename([tag, var.lower(), zoom, id], save))
 
 def plot_picks(picks_file, tag, save):
+    # TODO still working after modifying generax picking ??
+    
     labels = ['', "GeneRax-Picks (" + tag + ")", "Skalierungswerte", "Häufigkeit", 0.05]
     vals = read_picks(picks_file)
     xs = set()
@@ -279,9 +281,11 @@ def plot_distr(distr_file, tag, save):
     vals = read_distr(distr_file)
     # plot distances
     fig, ax = plt.subplots()
-    ds = vals["distances"]
-    add2plot(ax, distdistr2xy(ds[0]), ptype="bar", labels=labels)
-    ax.axvline(ds[1] / 100, color='tab:green', label="avg")
+    for algo in ["APro","MAD", "All"]:
+        labels[0] = algo
+        ds = vals["distances (" + algo + ")"]
+        add2plot(ax, distdistr2xy(ds[0]), ptype="bar", labels=labels)
+        ax.axvline(ds[1] / 100, color='tab:green', label="avg (" + algo + ")")
     display(fig, makegrid=False, filename=get_filename([tag, "dist-distr"], save))
 
 # MAIN
