@@ -4,6 +4,7 @@ import time
 sys.path.insert(0, 'scripts')
 sys.path.insert(0, 'scripts/programs')
 sys.path.insert(0, 'tools/families')
+sys.path.insert(0, 'tools/msa')
 sys.path.insert(0, 'tools/simulation')
 sys.path.insert(0, 'tools/trees')
 import evaluate
