@@ -3,24 +3,32 @@ import sys
 from threading import Thread
 sys.path.insert(0, 'scripts')
 sys.path.insert(0, 'tools/families')
+sys.path.insert(0, 'tools/msa')
 sys.path.insert(0, 'tools/trees')
 import fam
 import metrics
+import analyze_msa
 import rf_distance
 
 
 def ttask(datadir, tree, avg_abs_dico, avg_rel_dico, families_dico):
     fam_counter = 0
     for family in fam.get_families_list(datadir):
+        if (not analyze_msa.has_distinct_seqs(
+                fam.get_alignment_file(fam.get_family_path(datadir, family)))):
+            # not enough distinct sequences
+            # !! -> there shouldn't be any trees except if left over from old runs
+            continue
         true_tree = fam.get_true_tree(datadir, family)
         abs_path_tree = os.path.join(fam.get_gene_tree_dir(datadir, family), tree)
         if (not os.path.isfile(abs_path_tree)):
-            picked_abs_path_tree = abs_path_tree.replace(".geneTree.newick", ".generax_pick.geneTree.newick")
+            picked_abs_path_tree = abs_path_tree.replace(".geneTree.newick",
+                                                         ".generax_pick.geneTree.newick")
             if (not os.path.isfile(picked_abs_path_tree)):
-                #print("Tree file does not exist:", family, tree)
+                # print("Tree file does not exist:", family, tree)
                 continue
             abs_path_tree = picked_abs_path_tree
-            #print("Picked", tree, "  (path", abs_path_tree, ")")
+            # print("Picked", tree, "  (path", abs_path_tree, ")")
         # CALCULATIONS
         try:
             #dist_abs, dist_rel = rf_distance.raxmlng_rf(abs_path_tree, true_tree)

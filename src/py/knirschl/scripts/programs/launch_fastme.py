@@ -1,9 +1,9 @@
 import os
+import re
 import shutil
 import sys
 import time
-import subprocess
-import re
+
 sys.path.insert(0, 'scripts')
 sys.path.insert(0, os.path.join("tools", "families"))
 sys.path.insert(0, os.path.join("tools", "msa"))
@@ -11,6 +11,7 @@ import paths
 import utils
 import fam
 import metrics
+import analyze_msa
 import msa_converter
 
 
@@ -26,6 +27,10 @@ def generate_scheduler_commands_file(datadir, subst_model, is_dna, algo, use_spr
   fastme_model.removeprefix('F8')
   with open(scheduler_commands_file, "w") as writer:
     for family in fam.get_families_list(datadir):
+      if (not analyze_msa.has_distinct_seqs(
+              fam.get_alignment_file(fam.get_family_path(datadir, family)))):
+        # not enough distinct sequences
+        continue
       fastme_dir = fam.get_family_misc_dir(datadir, family)
       try:
         os.mkdir(fastme_dir)
@@ -79,8 +84,11 @@ def generate_scheduler_commands_file_matrices(datadir, mat_prefix, algo, use_spr
   scheduler_commands_file = os.path.join(output_dir, "commands.txt")
   with open(scheduler_commands_file, "w") as writer:
     for family in fam.get_families_list(datadir):
-      #if not(list(filter(lambda x: str(x) in family, [32, 49, 72, 82]))):
-      #  continue
+      if (not analyze_msa.has_distinct_seqs(
+              fam.get_alignment_file(fam.get_family_path(datadir, family)))):
+        # not enough distinct sequences
+        # !! -> there shouldn't be any matrices except if left over from old runs
+        continue
       misc_dir = fam.get_family_misc_dir(datadir, family)
       try:
         os.mkdir(misc_dir)

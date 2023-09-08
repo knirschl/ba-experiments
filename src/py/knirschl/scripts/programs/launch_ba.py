@@ -4,16 +4,22 @@ import sys
 import time
 sys.path.insert(0, 'scripts')
 sys.path.insert(0, os.path.join("tools", "families"))
+sys.path.insert(0, 'tools/msa')
 import paths
 import utils
 import fam
 import metrics
+import analyze_msa
 
 def generate_scheduler_commands_file(datadir, subst_model, species_tree, algo, mat_out, output_dir):
     results_dir = os.path.join(output_dir, "results")
     scheduler_commands_file = os.path.join(output_dir, "commands.txt")
     with open(scheduler_commands_file, "w") as writer:
         for family in fam.get_families_list(datadir):
+            if (not analyze_msa.has_distinct_seqs(
+                    fam.get_alignment_file(fam.get_family_path(datadir, family)))):
+                # not enough distinct sequences
+                continue
             ba_dir = fam.get_family_misc_dir(datadir, family)
             alignment_matrix = fam.get_alignment_matrix(datadir, family)
             try:

@@ -7,11 +7,13 @@ import time
 
 sys.path.insert(0, 'scripts')
 sys.path.insert(0, 'tools/families')
+sys.path.insert(0, 'tools/msa')
 import paths
 import utils
 import fam
 import metrics
 import sequence_model
+import analyze_msa
 #import rf_cells
 #import fast_rf_cells
 #import extract_event_number
@@ -46,12 +48,14 @@ def sample_one_starting_tree(datadir, subst_model, starting_tree):
 def build_generax_families_file(datadir, starting_tree, subst_model, output):
   if (has_multiple_sample(starting_tree)):
     sample_one_starting_tree(datadir, subst_model, starting_tree)
-  families_dir = os.path.join(datadir, "families")
   with open(output, "w") as writer:
     writer.write("[FAMILIES]\n")
     print("starting gene tree " + starting_tree)
-    for family in os.listdir(families_dir):
-      family_path = os.path.join(families_dir, family)
+    for family in fam.get_families_list(datadir):
+      family_path = fam.get_family_path(datadir, family)
+      if (not analyze_msa.has_distinct_seqs(fam.get_alignment_file(family_path))):
+        # not enough distinct sequences
+        continue
       writer.write("- " + family + "\n")
       gene_tree = get_starting_tree_path(datadir, subst_model, family, starting_tree)
       if (starting_tree == "random"):
@@ -75,6 +79,11 @@ def build_generax_families_file_eval(datadir, subst_model, output, tree_prefix="
   with open(output, "w") as writer:
     writer.write("[FAMILIES]\n")
     for family in fam.get_families_list(datadir):
+      if (not analyze_msa.has_distinct_seqs(
+              fam.get_alignment_file(fam.get_family_path(datadir, family)))):
+        # not enough distinct sequences
+        # !! -> there shouldn't be any trees except if left over from old runs
+        continue
       alignment = fam.get_alignment(datadir, family)
       mapping = fam.get_mappings(datadir, family)
       raxml_model = sequence_model.get_raxml_model(subst_model)
@@ -82,7 +91,7 @@ def build_generax_families_file_eval(datadir, subst_model, output, tree_prefix="
         if (not tree.startswith(tree_prefix)):
           continue
         scale = float(re.search(r'(\d+(?:\.\d+)?)S~G', tree)[1])
-        #if (scale < 1 or scale > 4.5):
+        # if (scale < 1 or scale > 4.5):
         #  continue
         treefam = family + ">" + tree.replace(".geneTree.newick", "")
         #if (os.path.isfile(os.path.join(fam.get_run_dir(datadir, subst_model, "generax_eval_run"), "results", treefam, "stats.txt"))):
