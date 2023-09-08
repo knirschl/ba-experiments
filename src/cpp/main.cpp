@@ -16,8 +16,10 @@ static const std::string CORRECTION_IDENT{"S~G"};
 static const std::string MATRX_PHY_FILE{".matrix.phy"};
 static const std::string GTREE_NWK_FILE{".geneTree.newick"};
 static const std::string START_TREE_NWK_FILE{".startGeneTree.newick"};
-static const std::string MADROOT_BIN{"/hits/basement/cme/knirsch/github/"
-                                     "MADroot/bin/madRoot"};
+static const std::string MADROOT_BIN{//"/hits/basement/cme/knirsch/github/"
+        "/home/fili/Documents/Programming/bioinformatics/tools/"
+        "MADroot/bin/madRoot"};
+static const std::string STD_OUT_ERR_MOD{" 2>&1"};
 
 /**
  * Resets tree to a set of leafs.
@@ -95,16 +97,6 @@ dist_matrix_t correct_matrix(const double scale, const dist_matrix_t &species_tr
     return corrected_matrix;
 }
 
-/*
--s
-/home/fili/Documents/KIT/2023/BA/code/output/families/ssim_DL_s100_f100_sites200_GTR_bl1.0_d1.0_l1.0_t0.0_gc0.0_p0.0_pop10_ms0.0_mf0.0_seed1650734/species_trees/speciesTree.matrix.phy
--a
-/home/fili/Documents/KIT/2023/BA/code/output/families/ssim_DL_s100_f100_sites200_GTR_bl1.0_d1.0_l1.0_t0.0_gc0.0_p0.0_pop10_ms0.0_mf0.0_seed1650734/families/family_042/alignment.msa.matrix.phy
--p
-/home/fili/Documents/KIT/2023/BA/code/src/test/output/ba.exp.
--m
-/home/fili/Documents/KIT/2023/BA/code/output/families/ssim_DL_s100_f100_sites200_GTR_bl1.0_d1.0_l1.0_t0.0_gc0.0_p0.0_pop10_ms0.0_mf0.0_seed1650734/families/family_042/mappings/mapping.link
- */
 /**
  * Main entry point of this project. Reads the input in and computes either a corrected
  * gene alignment distance matrix or a neighbor-joined gene tree.
@@ -180,17 +172,25 @@ int main(int argc, char *argv[]) {
             tree_tagged->reroot_APro();
             out_prefix.append("a.");
             break;
-        case 1:
-            // TODO ? tree_tagged->tag_APro(tree_tagged->reroot_MAD());
-            // madRoot reads from file and outputs to std::out
+        case 1: {
+            // TODO? tree_tagged->tag_APro(tree_tagged->reroot_MAD());
+            // MADroot reads from file and outputs to std::out
             write_newick(*tree_tagged, out_prefix + START_TREE_NWK_FILE);
-            tree_tagged = std::make_shared<Tree>(
-                    exec((MADROOT_BIN + " " + out_prefix + START_TREE_NWK_FILE).c_str()),
-                    tree_tagged->mdata);
+            std::string output;
+            if (int code{
+                    exec(MADROOT_BIN + " " + out_prefix + START_TREE_NWK_FILE + STD_OUT_ERR_MOD,
+                         output)}) {
+                // MADroot crashed, exit
+                std::cout << "MADroot finished with exit code " << code << " and the message:\n"
+                          << output;
+                return 0;
+            }
+            tree_tagged = std::make_shared<Tree>(output, tree_tagged->mdata);
             // tag with MAD re-rooted tree with APro
             tree_tagged->tag_APro(tree_tagged->mdata.root);
             out_prefix.append("m.");
             break;
+        }
         default:
             // as dup is initialized with false this is the same as S+G
             // (just a bit slower because of the lca computations below)
