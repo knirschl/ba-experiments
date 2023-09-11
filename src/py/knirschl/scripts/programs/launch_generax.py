@@ -204,7 +204,8 @@ def eval_and_pick(datadir, results_dir):
   best_logL = {}
   for family in os.listdir(results_dir):
     true_family, tree = family.split(">")
-    idx = 0 if "a." in tree else (1 if "m." in tree else 2)
+    cleaned = tree.replace("ba.", "").replace("fastme.", "")
+    idx = 0 if "a." in cleaned else (1 if "m." in cleaned else 2)
     if (true_family not in best_tree):
       best_tree[true_family] = 3 * [""]
       best_logL[true_family] = 3 * [float("-inf")]
