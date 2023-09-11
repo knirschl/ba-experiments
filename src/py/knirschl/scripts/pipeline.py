@@ -108,7 +108,7 @@ class RunFilter():
                     # MAD
                     inferred_trees = launch_ba.run_ba_on_families(datadir, "p", species_tree, 
                                         algo="MAD", mat_out=2, cores=cores)
-                    # None
+                    # No Algorithm
                     inferred_trees = launch_ba.run_ba_on_families(datadir, "p", species_tree, 
                                         algo="", mat_out=2, cores=cores)
                 launch_fastme.run_fastme_on_families_matrices(datadir, "ba.p", algo="B",        use_spr=True, cores=cores)
@@ -135,7 +135,7 @@ def pipeline(datadir, run_filter, seed, tag):
     # RUN PIPELINE
     rep_start = time.time()
     try:
-        run_filter.run_methods(datadir, "F81", 8)
+        run_filter.run_methods(datadir, "F81", 16)
     finally:
         elapsed = time.time() - rep_start
         print("End of single experiment. Elapsed time: " + str(elapsed) + "s")
@@ -209,6 +209,12 @@ def run_pipeline(start_rep = 0, reps = 50, tag = "DL", val=0, run_filter_str = "
         datadir = simphy.get_output_dir(simphy_parameters, root_output)
         replicates.append(datadir)
         if enabled:
+            # Let generax not skip if it already run
+            try:
+                os.remove(os.path.join(datadir, "runs", "F81", "generax_eval_run", "gene_optimization_0", "checkpoint_commands.txt"))
+                os.remove(os.path.join(datadir, "runs", "F81", "generax_eval_run", "gene_optimization_0", "statistics.svg"))
+            except:
+                print("Failed to rm in", datadir)
             pipeline(datadir, run_filter, seed, tag)
     return root_output, seeds, replicates
 
