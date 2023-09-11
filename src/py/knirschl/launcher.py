@@ -43,6 +43,10 @@ if (enable_eval and (parts != 1 or run_filter != "full")):
         parts = 1
         run_filter = "full"
         print("Enabled evaluation of whole benchmark")
+if (enable_eval):
+    print("INFO: Everything else finished? [y, n]?")
+    if input() == 'n':
+        exit()
 
 cluster = "normal"
 if ("basement" in os.getcwd()):
