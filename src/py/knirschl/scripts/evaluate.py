@@ -106,6 +106,9 @@ def collect_generax_picks(root_output, replicates, tag, compare):
                     split = line.split("  ")
                     family = split[0]
                     tree_pick = split[1] + ".geneTree.newick"
+                    if (tree_pick == ".geneTree.newick"):
+                        print("Missing tree in", rep, family)
+                        continue
                     cleaned = split[1].replace("ba.", "").replace("fastme.", "")
                     idx = 0 if "a." in cleaned else (1 if "m." in cleaned else 2)
                     true_tree = fam.get_true_tree(rep, family)
