@@ -5,7 +5,7 @@
 #ifndef BA_PARSE_CLI_H
 #define BA_PARSE_CLI_H
 
-#include <argparse/argparse.hpp>
+#include "/hits/basement/cme/knirsch/github/argparse/include/argparse/argparse.hpp"
 
 // ./thesis --speciestree "species_tree.matrix.phy" --alignmat "alignment.msa.matrix.phy" -p "output-dir/"
 

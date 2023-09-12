@@ -20,32 +20,31 @@ scripts_root = os.path.join(root, "scripts")
 tools_root = os.path.join(root, "tools")
 
 # github
-ba_github_root = "/home/fili/Documents/KIT/2023/BA"
-code_github_root = os.path.join(ba_github_root, "code")
+ba_github_root = "/hits/basement/cme/knirsch/github/"
+code_github_root = os.path.join(ba_github_root, "BA-Code")
 
 # results
 output_root = os.path.join(code_github_root, "output")
 families_datasets_root = os.path.join(output_root, "families")
 
 # ---- EXTERNAL PROGRAMS ----
-programs_root = os.path.join(ba_github_root, "resources", "tools")
+programs_root = ba_github_root #os.path.join(ba_github_root, "resources", "tools")
 # SimPhy
 simphy_root = os.path.join(programs_root, "SimPhy")
 simphy_exec = os.path.join(simphy_root, "simphy")
 simphy_indelible_wrapper_exec = os.path.join(simphy_root, "INDELIble_wrapper.pl")
 # RAxML-NG
 raxml_root = os.path.join(programs_root, "RAxML-NG")
-raxml_exec = os.path.join(raxml_root, "raxml-ng")
-raxml_mpi_exec = ""
+raxml_exec = os.path.join(raxml_root, "bin", "raxml-ng")
+raxml_mpi_exec = os.path.join(raxml_root, "bin", "raxml-ng-mpi")
 # GeneRax
 generax_exec = os.path.join(programs_root, "GeneRax", "build", "bin", "generax")
 # FastME
-fastme_exec = os.path.join(programs_root, "FastME", "fastme-2.1.6.4", "binaries", "fastme-2.1.6.2-linux64")
+fastme_exec = os.path.join(programs_root, "FastME", "bin",  "fastme-2.1.6.2-linux64")
 # Bachelor thesis
-# TODO this is a temporary path
-ba_exec = os.path.join(code_github_root, "cmake-build-debug", "BA")
+ba_exec = os.path.join(code_github_root, "build", "BA")
 # MPI
-mpischeduler_exec = os.path.join(programs_root, "MPIScheduler", "build", "mpi-scheduler")
+mpischeduler_exec = os.path.join(programs_root, "MPIScheduler", "bin", "mpi-scheduler")
 # constants
 mpi_scheduler_heuristic = "--split-scheduler"
 historic = os.path.join(root, "historic.txt")

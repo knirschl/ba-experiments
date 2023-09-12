@@ -16,9 +16,9 @@ static const std::string CORRECTION_IDENT{"S~G"};
 static const std::string MATRX_PHY_FILE{".matrix.phy"};
 static const std::string GTREE_NWK_FILE{".geneTree.newick"};
 static const std::string START_TREE_NWK_FILE{".startGeneTree.newick"};
-static const std::string MADROOT_BIN{//"/hits/basement/cme/knirsch/github/"
-                                     "/home/fili/Documents/Programming/bioinformatics/tools/"
-                                     "MADroot/bin/madRoot"};
+static const std::string MADROOT_BIN{"/hits/basement/cme/knirsch/github/"
+                                     //"/home/fili/Documents/Programming/bioinformatics/tools/"
+                                     "MADroot/bin/madRoot-fix"};
 static const std::string STD_OUT_ERR_MOD{" 2>&1"};
 
 /**
@@ -108,7 +108,7 @@ dist_matrix_t correct_matrix(const double scale, const dist_matrix_t &species_tr
 int main(int argc, char *argv[]) {
     // --- parse ---
     // get cli inputs
-    auto cli_parser = build_parser("thesis", "0.5");
+    auto cli_parser = build_parser("spearfish", "0.6");
     parse(cli_parser, argc, argv);
 
     // read species tree
