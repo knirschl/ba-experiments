@@ -20,3 +20,13 @@ ALGO_IDS = {
 }
 # subset of trees
 BA_VARIANTS = [build_ba_variant(meth, a) for a in [APRO, MAD, ALL] for meth in [BA, BA_FASTME]]
+# Name : BASE
+BASE = "BASE-1"
+DATASETS = {"SPECIES" : 25,
+            "SITES" : 100,
+            "BRALEN" : 1.0,
+            "DUPLOS" : 1.0,
+            #"TRA" : 0.0,
+            #"DUPLOSTRA" : "1.0,0.0",
+            #"POP" : 10
+            }

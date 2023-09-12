@@ -10,6 +10,10 @@ COLORS = {
     build_ba_variant(BA_FASTME, APRO): "limegreen",
     build_ba_variant(BA_FASTME, MAD): "darkgreen",
     build_ba_variant(BA_FASTME, ALL): "yellowgreen",
+    BA_FASTME: "darkgreen",
+    APRO: "limegreen",
+    MAD: "darkgreen",
+    ALL: "yellowgreen",
     OTHER: "brown",
     None: None
 }
@@ -24,6 +28,10 @@ MARKERS = {
     build_ba_variant(BA_FASTME, APRO): "o",
     build_ba_variant(BA_FASTME, MAD): "x",
     build_ba_variant(BA_FASTME, ALL): "d",
+    BA_FASTME: "o",
+    APRO: "o",
+    MAD: "x",
+    ALL: "d",
     OTHER: "o",
     None: None
 }

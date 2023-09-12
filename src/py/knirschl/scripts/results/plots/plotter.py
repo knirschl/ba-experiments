@@ -4,8 +4,9 @@ import matplotlib.pyplot as plt
 def subplots(nrows=1, ncols=1, *, sharex=False, sharey=False, squeeze=True, width_ratios=None, height_ratios=None, subplot_kw=None, gridspec_kw=None, **fig_kw):
     return plt.subplots(nrows=nrows, ncols=ncols, sharex=sharex, sharey=sharey, squeeze=squeeze, width_ratios=width_ratios, height_ratios=height_ratios, subplot_kw=subplot_kw, gridspec_kw=gridspec_kw, **fig_kw)
 
-def make_plot(plot, x, y, label):
-    plot.plot(x, y, label=label, color=COLORS[label], marker=MARKERS[label], markersize=2.5)
+def make_plot(plot, x, y, label, logscale=False):
+    plot.plot(x, y, label=label, color=COLORS[label], marker=MARKERS[label])#, markersize=2.5)
+    plt.xscale(("linear", "log")[logscale])
 
 def make_scatter(plot, x, y, label):
     plot.scatter(x, y, label=label, c=COLORS[label], marker=MARKERS[label])
