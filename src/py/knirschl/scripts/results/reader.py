@@ -49,7 +49,7 @@ def read_picks(picks_file):
     Returns a dict containing dicts per used scale.
     Keys = {'ba' + algo, 'ba+fastme' + algo}
     Values = {scaling values}
-    Sec. Valuies = [no. occurences, average distance, [dists], [trees]]
+    Sec. Valuies = [no. occurences, average distance, ([dists], [trees])]
     '''
     trees = {}
     for var in BA_VARIANTS:
@@ -74,12 +74,13 @@ def read_picks(picks_file):
                 trees[build_ba_variant(var, ALGO_IDS[reroot_algo])][scale] = [0, -1, [], []]
             trees[build_ba_variant(var, ALGO_IDS[reroot_algo])][scale][0] += 1
             trees[build_ba_variant(var, ALGO_IDS[reroot_algo])][scale][2].append(current_dist)
-            trees[build_ba_variant(var, ALGO_IDS[reroot_algo])][scale][3].append(current_tree)
+            #trees[build_ba_variant(var, ALGO_IDS[reroot_algo])][scale][3].append(current_tree)
     trees = {key: val for key, val in trees.items() if val != {}}
     for key in trees:
         for scale in trees[key]:
             curr = trees[key][scale]
             curr[1] = sum(curr[2]) / len(curr[2])
+            curr[2] = []
     #print(trees)
     return trees
 
