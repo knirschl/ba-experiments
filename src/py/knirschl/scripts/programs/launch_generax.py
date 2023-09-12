@@ -243,7 +243,7 @@ def run(datadir, subst_model, strategy, species_tree, starting_tree, cores, addi
     shutil.rmtree(resultsdir, True)
     os.makedirs(resultsdir)
   sys.stdout.flush()
-  mode = get_mode_from_additional_arguments(additional_arguments)
+  """mode = get_mode_from_additional_arguments(additional_arguments)
   rec_model = utils.getArg("--rec-model", additional_arguments, "UndatedDTL")
   generax_families_file = os.path.join(resultsdir, "families-generax.txt")
   empty = False
@@ -258,6 +258,7 @@ def run(datadir, subst_model, strategy, species_tree, starting_tree, cores, addi
     metrics.save_metrics(datadir, run_name, (time.time() - start), "seqtimes")
   else:
     print("Skipping generax as no families are provided")
+  """
   if (strategy == "EVAL"):
     eval_and_pick(datadir, os.path.join(resultsdir, "results"))
   if (do_extract):
