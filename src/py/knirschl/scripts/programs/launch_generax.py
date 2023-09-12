@@ -196,7 +196,11 @@ def eval(results_dir, family):
   return stats
 
 def eval_sumLogL(results_dir, family):
-  logls = open(os.path.join(results_dir, family, "stats.txt")).readlines()[0].split()
+  lines = open(os.path.join(results_dir, family, "stats.txt")).readlines()
+  if (lines == []):
+    print("Empty stats:", results_dir, family)
+    return float("-inf")
+  logls = lines[0].split()
   return (float)(logls[0]) + (float)(logls[1])
 
 def eval_and_pick(datadir, results_dir):
