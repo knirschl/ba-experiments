@@ -25,7 +25,7 @@ def raxmlng_rf(tree1, tree2):
     command.append(tree1 + "," + tree2)
     try:
         out = subprocess.check_output(command).decode("utf-8")
-    except CalledProcessError as e:
+    except subprocess.CalledProcessError as e:
         print("RAxML failed to compute the rf distance:", e)
         return ["abort", -1]
     lines = out.split("\n")
