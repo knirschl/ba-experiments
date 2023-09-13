@@ -1,20 +1,20 @@
 from constants import *
 
 COLORS = {
-    GENERAX: "mediumblue",
-    RAXML: "deepskyblue",
-    FASTME: "darkviolet",
+    GENERAX: "#e6194B",
+    RAXML: "#800000",
+    FASTME: "#f58231",
     build_ba_variant(BA, APRO): "lightgrey",
     build_ba_variant(BA, MAD): "darkgrey",
     build_ba_variant(BA, ALL): "dimgrey",
-    build_ba_variant(BA_FASTME, APRO): "limegreen",
-    build_ba_variant(BA_FASTME, MAD): "darkgreen",
-    build_ba_variant(BA_FASTME, ALL): "yellowgreen",
-    BA_FASTME: "darkgreen",
-    APRO: "limegreen",
-    MAD: "darkgreen",
-    ALL: "yellowgreen",
-    OTHER: "brown",
+    build_ba_variant(BA_FASTME, APRO): "#000075",
+    build_ba_variant(BA_FASTME, MAD): "#469990",
+    build_ba_variant(BA_FASTME, ALL): "#4363d8",
+    BA_FASTME: "#000075",
+    APRO: "#000075",
+    MAD: "#469990",
+    ALL: "#4363d8",
+    OTHER: "#542788",
     None: None
 }
 
