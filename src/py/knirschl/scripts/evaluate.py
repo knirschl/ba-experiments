@@ -149,7 +149,7 @@ def collect_generax_picks(root_output, replicates, tag, compare):
         writer.write(str([dists[i][1] for i in range(len(dists))]))
         writer.write("\nDistance distribution (All):")
         writer.write(str([dists[i][2] for i in range(len(dists))]))
-    metrics.update_dico(root_output, {"pick_tree_avg": pick_avg_rel_dist}, "misc")
+    metrics.update_dico(root_output, {"pick_tree_avg_apro": pick_avg_rel_dist[0], "pick_tree_avg_mad": pick_avg_rel_dist[1], "pick_tree_avg_all": pick_avg_rel_dist[2]}, "misc")
     print("Avg pick distance (APro):", pick_avg_rel_dist[0])
     print("Avg pick distance (MAD):", pick_avg_rel_dist[1])
     print("Avg pick distance (All):", pick_avg_rel_dist[2])
