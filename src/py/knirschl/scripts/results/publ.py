@@ -35,6 +35,14 @@ def pickD2xy(vals, key):
             y.append(float(vals[key][sc][1]))
     return (x, y)
 
+def extract_xy(vals, tool, idx):
+    xs = []
+    ys = []
+    for x in vals:
+        xs.append(float(x))
+        ys.append(sum(vals[x][tool][idx]) / ([1, len(vals[x][tool][idx])][idx == 1]))
+    return (xs, ys)
+
 def distdistr2xy(vals):
     return ([i / 100 for i in range(len(vals))], vals)
 
@@ -58,10 +66,9 @@ def add2plot(plot, xy, ptype="scatter", labels=5 * [None], bottom=0, zoom=''):
     elif (ptype == "violin"):
         plt.make_violin(plot, xy[1], labels[0])
     else:
-        xy = tuple((zip(*sorted(zip(*(xy))))))
-        plt.make_plot(plot, xy[0], xy[1], label=labels[0], logscale=(labels[1] == "BRALEN"))
+        xy = tuple((zip(*sorted(zip(*xy)))))
+        plt.make_plot(plot, xy[0], xy[1], label=labels[0], logscale=(labels[1] == "BRALEN" and "Skalier" not in labels[2]))
     plt.set_titles(plot, title=labels[1], xAxis=labels[2], yAxis=labels[3])
-    # TODO better zooming
     plt.cutoff(plot, xy[0], xy[1], zoom, THRESHOLD)
     
 def plot_rrf_single(vals, tag, save):
@@ -83,21 +90,25 @@ def plot_rrf_single(vals, tag, save):
                 plt.display(fig, makelegend=False, filename=get_filename([tag, var.lower(), zoom, id], save))
 
 def plot_rrf(bm, tag, save):
-    id = "rrf-dist"
+    id = "rrf-distance"
     labels = ['', tag, "Varianten", "rRF-Distanz"]
     fig, ax = plt.subplots()
+    ticks = set()
     for tool in bm:
         labels[0] = tool
         x = []
         y = []
         for var in bm[tool]:
+            ticks.add(float(var))
             x.append(float(var))
             y.append(bm[tool][var])
         add2plot(ax, (x, y), labels=labels, ptype="plot")
-    plt.display(fig, filename=get_filename([tag, "full", "auto", id], save))
+    ax.set_xticks(sorted(list(ticks)))
+    plt.display(fig, filename=get_filename([tag, tag.lower(), id], save))
 
 def plot_rt(bm, tag, save):
-    labels = [None, tag, "Varianten", "Laufzeit"]
+    id = "runtimes"
+    labels = [None, tag, "Varianten", "Laufzeit in Sekunden"]
     fig, ax = plt.subplots()
     for tool in bm:
         labels[0] = tool
@@ -107,7 +118,44 @@ def plot_rt(bm, tag, save):
             x.append(float(var))
             y.append(bm[tool][var])
         add2plot(ax, (x, y), labels=labels, ptype="plot")
-    plt.display(fig, filename=get_filename([tag, "full", "auto", id], save))
+    plt.display(fig, filename=get_filename([tag, tag.lower(), id], save))
+
+def plot_pick(bm, tag, save):
+    vals = {}
+    xs = set()
+    # pre-compute
+    for tool in bm:
+        for var in bm[tool]:
+            btv = bm[tool][var]
+            for scale in btv:
+                if (float(scale) > THRESHOLD): # "zoom"
+                    continue
+                if scale not in vals:
+                    xs.add(scale)
+                    vals[scale] = {}
+                if tool not in vals[scale]:
+                    vals[scale][tool] = [[], []] # [occurences, avg distance]
+                vals[scale][tool][0].append(btv[scale][0])
+                vals[scale][tool][1].append(btv[scale][1])
+    # plot occurences
+    id = "picks_occurences"
+    labels = [None, tag, "Skalierungswerte", "Häufigkeit", 0.05]
+    fig, ax = plt.subplots()
+    bottoms = np.full(len(xs), 0)
+    for tool in bm:
+        labels[0] = tool
+        xy = extract_xy(vals, tool, 0)
+        add2plot(ax, xy, labels=labels, ptype="bar", bottom=bottoms)
+        bottoms += np.array(xy[1], dtype='int64')
+    plt.display(fig, filename=get_filename([tag, tag.lower(), id], save))
+    # plot average distances
+    id = "picks_avg_dist"
+    labels = [None, tag, "Skalierungswerte", "rRF-Distanz"]
+    fig, ax = plt.subplots()
+    for tool in bm:
+        labels[0] = tool
+        add2plot(ax, extract_xy(vals, tool, 1), labels=labels, ptype="plot")
+    plt.display(fig, filename=get_filename([tag, tag.lower(), id], save))
 
 def plot_picks_single(vals, tag, save):
     # TODO still working after modifying generax picking ??
@@ -176,19 +224,23 @@ def plot_bm(dir, save=False):
     save == True -> don't show
     '''
     # benchmark : {variation : vals}
-    ds_rf = {k: {} for k in DATASETS} # rf distance
+    ds_rrf = {k: {} for k in DATASETS} # rf distance
     ds_rt = {k: {} for k in DATASETS} # runtimes
+    ds_pick = {k: {} for k in DATASETS} # picks
     for f in os.listdir(dir):
         rem = re.match(r"([A-Z]+)(-?[0-9.]+)_global__([a-z_-]+).txt", f)
         ds_name = rem[1]
         ds_var = rem[2]
         metric = rem[3]
         if metric == "rf_distance_avg-rel":
-            ds_results = ds_rf
+            ds_results = ds_rrf
             read = reader.read_arf_pick(os.path.join(dir, f), os.path.join(dir, f.replace("rf_distance_avg-rel", "generax_picks")))
         elif metric == "runtimes_avg":
             ds_results = ds_rt
-            read = reader.read_rt(os.path.join(dir, f), scaling="30")
+            read = reader.read_rt(os.path.join(dir, f), scaling="240")
+        elif metric == "generax_picks":# and not "DUPLOS3.0" in f:
+            ds_results = ds_pick
+            read = reader.read_picks(os.path.join(dir, f))
         else:
             continue
         if (ds_name != "BASE"):
@@ -197,9 +249,10 @@ def plot_bm(dir, save=False):
             for k in DATASETS:
                 ds_results[k][DATASETS[k]] = read
     # plot
-    for benchmark in ds_rf:
-        #plot_rrf(reader.map_bm(ds_rf[benchmark]), benchmark, save)
+    for benchmark in ds_rrf:
+        plot_rrf(reader.map_bm(ds_rrf[benchmark]), benchmark, save)
         plot_rt(reader.map_bm(ds_rt[benchmark]), benchmark, save)
+        plot_pick(reader.map_bm(ds_pick[benchmark]), benchmark, save)
 
 if (__name__ == "__main__"):
     #plot_single("/home/fili/Desktop/2023/BA/code/output/benchmark_results/metrics", save=True) # plots look broken?

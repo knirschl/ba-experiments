@@ -19,7 +19,7 @@ def global_compare(root_output, replicates, tag):
     abs_avgs_dico = metrics.get_metrics(replicates[0], abs_name)
     rel_avgs_dico = metrics.get_metrics(replicates[0], rel_name)
     rt_avgs_dico = metrics.get_metrics(replicates[0], rt_name)
-    rep_counter = 1
+    rep_counter = {}
     best_tree_avg = 0
     best_tree_counter = 0
     for rep in replicates[1:]:
@@ -28,24 +28,26 @@ def global_compare(root_output, replicates, tag):
         cur_rel = metrics.get_metrics(rep, rel_name)
         cur_rt = metrics.get_metrics(rep, rt_name)
         for x in set(abs_avgs_dico).union(cur_abs):
+            if not x in rep_counter:
+                rep_counter[x] = 0
             if not x in abs_avgs_dico:
                 abs_avgs_dico[x] = 0
                 rel_avgs_dico[x] = 0
             if not x in cur_abs:
                 cur_abs[x] = 0
                 cur_rel[x] = 0
-            abs_avgs_dico[x] = (float(abs_avgs_dico[x]) * rep_counter + float(cur_abs[x])) / (
-                        rep_counter + 1)
-            rel_avgs_dico[x] = (float(rel_avgs_dico[x]) * rep_counter + float(cur_rel[x])) / (
-                        rep_counter + 1)
+            abs_avgs_dico[x] = (float(abs_avgs_dico[x]) * rep_counter[x] + float(cur_abs[x])) / (
+                        rep_counter[x] + 1)
+            rel_avgs_dico[x] = (float(rel_avgs_dico[x]) * rep_counter[x] + float(cur_rel[x])) / (
+                        rep_counter[x] + 1)
         for x in set(rt_avgs_dico).union(cur_rt):
             if not x in rt_avgs_dico:
                 rt_avgs_dico[x] = 0
             if not x in cur_rt:
                 cur_rt[x] = 0
-            rt_avgs_dico[x] = (float(rt_avgs_dico[x]) * rep_counter + float(cur_rt[x])) / (
-                        rep_counter + 1)
-        rep_counter += 1
+            rt_avgs_dico[x] = (float(rt_avgs_dico[x]) * rep_counter[x] + float(cur_rt[x])) / (
+                        rep_counter[x] + 1)
+        rep_counter[x] += 1
         # get best tree distance per family and compute average over this
         for family in fam.get_families_list(rep):
             with open(os.path.join(fam.get_family_path(rep, family), "metrics",
@@ -147,7 +149,7 @@ def collect_generax_picks(root_output, replicates, tag, compare):
         writer.write(str([dists[i][1] for i in range(len(dists))]))
         writer.write("\nDistance distribution (All):")
         writer.write(str([dists[i][2] for i in range(len(dists))]))
-    metrics.update_dico(root_output, {"pick_tree_avg": pick_avg_rel_dist}, "misc")
+    metrics.update_dico(root_output, {"pick_tree_avg_apro": pick_avg_rel_dist[0], "pick_tree_avg_mad": pick_avg_rel_dist[1], "pick_tree_avg_all": pick_avg_rel_dist[2]}, "misc")
     print("Avg pick distance (APro):", pick_avg_rel_dist[0])
     print("Avg pick distance (MAD):", pick_avg_rel_dist[1])
     print("Avg pick distance (All):", pick_avg_rel_dist[2])
