@@ -12,7 +12,6 @@ import rf_distance
 
 
 def ttask(datadir, tree, avg_abs_dico, avg_rel_dico, families_dico):
-    fam_counter = 0
     for family in fam.get_families_list(datadir):
         if (not analyze_msa.has_distinct_seqs(
                 fam.get_alignment_file(fam.get_family_path(datadir, family)))):
@@ -45,11 +44,10 @@ def ttask(datadir, tree, avg_abs_dico, avg_rel_dico, families_dico):
         # method average
         if not tree in avg_abs_dico:
             # if tree (= method) not in dico, add
-            avg_abs_dico[tree] = 0
-            avg_rel_dico[tree] = 0
-        avg_abs_dico[tree] = (avg_abs_dico[tree] * fam_counter + dist_abs) / (fam_counter + 1)
-        avg_rel_dico[tree] = (avg_rel_dico[tree] * fam_counter + dist_rel) / (fam_counter + 1)
-        fam_counter += 1
+            avg_abs_dico[tree] = []
+            avg_rel_dico[tree] = []
+        avg_abs_dico[tree].append(dist_abs)
+        avg_rel_dico[tree].append(dist_rel)
 
 def compare_all(datadir):
     avg_abs_dico = {}
@@ -70,6 +68,9 @@ def compare_all(datadir):
     for t in threads:
         t.join()
     # save method average distance
+    for tree in avg_abs_dico:
+        avg_abs_dico[tree] = sum(avg_abs_dico[tree]) / len(avg_abs_dico[tree])
+        avg_rel_dico[tree] = sum(avg_rel_dico[tree]) / len(avg_rel_dico[tree])
     metrics.save_dico(datadir, avg_abs_dico, "rf_distance_avg-abs")
     metrics.save_dico(datadir, avg_rel_dico, "rf_distance_avg-rel")
     for family in fam.get_families_list(datadir):

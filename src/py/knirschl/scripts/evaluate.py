@@ -16,38 +16,26 @@ def global_compare(root_output, replicates, tag):
     abs_name = "rf_distance_avg-abs"
     rel_name = "rf_distance_avg-rel"
     rt_name = "runtimes"
-    abs_avgs_dico = metrics.get_metrics(replicates[0], abs_name)
-    rel_avgs_dico = metrics.get_metrics(replicates[0], rel_name)
-    rt_avgs_dico = metrics.get_metrics(replicates[0], rt_name)
-    rep_counter = {}
+    abs_avgs_dico = {}
+    rel_avgs_dico = {}
+    rt_avgs_dico = {}
     best_tree_avg = 0
     best_tree_counter = 0
-    for rep in replicates[1:]:
+    for rep in replicates:
         # compute global averages
         cur_abs = metrics.get_metrics(rep, abs_name)
         cur_rel = metrics.get_metrics(rep, rel_name)
         cur_rt = metrics.get_metrics(rep, rt_name)
-        for x in set(abs_avgs_dico).union(cur_abs):
-            if not x in rep_counter:
-                rep_counter[x] = 0
+        for x in cur_abs:
             if not x in abs_avgs_dico:
-                abs_avgs_dico[x] = 0
-                rel_avgs_dico[x] = 0
-            if not x in cur_abs:
-                cur_abs[x] = 0
-                cur_rel[x] = 0
-            abs_avgs_dico[x] = (float(abs_avgs_dico[x]) * rep_counter[x] + float(cur_abs[x])) / (
-                        rep_counter[x] + 1)
-            rel_avgs_dico[x] = (float(rel_avgs_dico[x]) * rep_counter[x] + float(cur_rel[x])) / (
-                        rep_counter[x] + 1)
-        for x in set(rt_avgs_dico).union(cur_rt):
+                abs_avgs_dico[x] = []
+                rel_avgs_dico[x] = []
+            abs_avgs_dico[x].append(float(cur_abs[x]))
+            rel_avgs_dico[x].append(float(cur_rel[x]))
+        for x in cur_rt:
             if not x in rt_avgs_dico:
-                rt_avgs_dico[x] = 0
-            if not x in cur_rt:
-                cur_rt[x] = 0
-            rt_avgs_dico[x] = (float(rt_avgs_dico[x]) * rep_counter[x] + float(cur_rt[x])) / (
-                        rep_counter[x] + 1)
-        rep_counter[x] += 1
+                rt_avgs_dico[x] = []
+            rt_avgs_dico[x].append(float(cur_rt[x]))
         # get best tree distance per family and compute average over this
         for family in fam.get_families_list(rep):
             with open(os.path.join(fam.get_family_path(rep, family), "metrics",
@@ -59,6 +47,13 @@ def global_compare(root_output, replicates, tag):
                 best_tree_avg = (best_tree_avg * best_tree_counter + best_dist) / (
                             best_tree_counter + 1)
                 best_tree_counter += 1
+    # compute averages
+    for x in abs_avgs_dico:
+        abs_avgs_dico[x] = sum(abs_avgs_dico[x]) / len(abs_avgs_dico[x])
+        rel_avgs_dico[x] = sum(rel_avgs_dico[x]) / len(rel_avgs_dico[x])
+    for x in rt_avgs_dico:
+        rt_avgs_dico[x] = sum(rt_avgs_dico[x]) / len(rt_avgs_dico[x])
+    # write out
     rt_avgs_dico = {k: v for k, v in rt_avgs_dico.items() if not 'pipeline' in k}
     metrics.save_dico(root_output, abs_avgs_dico, tag + "_global__" + abs_name)
     metrics.save_dico(root_output, rel_avgs_dico, tag + "_global__" + rel_name)
