@@ -97,21 +97,26 @@ class RunFilter():
         if (self.ba_fastme):
             utils.printFlush("Run ba matrix with fastme trees...\n**********************************")
             try:
+                start_bafm = time.time()
                 if (not self.ba):
                     # convert species tree and alignments to distance matrix
                     dist_matrix_converter.convert_input(datadir, cores)
                     species_tree = fam.get_true_species_tree_matrix(datadir)
                     # run ba script
                     # APro
-                    inferred_trees = launch_ba.run_ba_on_families(datadir, "p", species_tree, 
-                                        algo="APro", mat_out=2, cores=cores)
+                    #inferred_trees = launch_ba.run_ba_on_families(datadir, "p", species_tree, 
+                    #                    algo="APro", mat_out=2, cores=cores)
                     # MAD
-                    inferred_trees = launch_ba.run_ba_on_families(datadir, "p", species_tree, 
-                                        algo="MAD", mat_out=2, cores=cores)
+                    #inferred_trees = launch_ba.run_ba_on_families(datadir, "p", species_tree, 
+                    #                    algo="MAD", mat_out=2, cores=cores)
                     # No Algorithm
                     inferred_trees = launch_ba.run_ba_on_families(datadir, "p", species_tree, 
                                         algo="", mat_out=2, cores=cores)
                 launch_fastme.run_fastme_on_families_matrices(datadir, "ba.p", algo="B",        use_spr=True, cores=cores)
+                elapsed = time.time() - start_bafm
+                print("End of ba+fm experiment. Elapsed time: " + str(elapsed) + "s")
+                metrics.save_metrics(datadir, "ba+fm_full", elapsed, "runtimes")
+
             except Exception as exc:
                 utils.printFlush("Failed running bachelor thesis matrix correction with FastME\n" + str(exc))
         if (self.generax_pick):
