@@ -218,6 +218,7 @@ def run_pipeline(start_rep = 0, reps = 50, tag = "DL", val=0, run_filter_str = "
             try:
                 os.remove(os.path.join(datadir, "runs", "F81", "generax_eval_run", "gene_optimization_0", "checkpoint_commands.txt"))
                 os.remove(os.path.join(datadir, "runs", "F81", "generax_eval_run", "gene_optimization_0", "statistics.svg"))
+                print("Removed generax checkpoints")
             except:
                 print("Failed to rm in", datadir)
             pipeline(datadir, run_filter, seed, tag)

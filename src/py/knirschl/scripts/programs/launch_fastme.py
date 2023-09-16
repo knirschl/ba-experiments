@@ -170,8 +170,8 @@ def extract_fastme_mats(datadir, subst_model):
         os.remove(fastme_matrix)
       except:
         pass
-    os.remove(fastme_matrix)
     try:
+      os.remove(fastme_matrix)
       os.remove(fastme_matrix + "_fastme_stat.txt")
     except:
       pass
@@ -191,6 +191,7 @@ def run_fastme_on_families(datadir, subst_model, is_dna, algo, use_spr, only_mat
   metrics.save_metrics(datadir, fam.get_run_name(fastme_name, subst_model), (time.time() - start), "runtimes") 
   lb = fam.get_lb_from_run(output_dir)
   metrics.save_metrics(datadir, fam.get_run_name(fastme_name, subst_model), (time.time() - start) * lb, "seqtimes")
+  utils.printFlush("Finished FastME, now extracting")
   if not only_mat:
     extract_fastme_trees(datadir, subst_model)
   else:
