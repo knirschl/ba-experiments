@@ -52,6 +52,7 @@ def read_picks(picks_file):
     Sec. Valuies = [no. occurences, average distance, ([dists], [trees])]
     '''
     trees = {}
+    ctr = 0
     for var in BA_VARIANTS:
         trees[var] = {}
     with open(picks_file, 'r') as reader:
@@ -65,15 +66,18 @@ def read_picks(picks_file):
             current_dist = float(re.match(r".*dist=([0-9.]+).*", stats)[1])
             groups = re.match(r"ba\.(\S+)_(\S+)([am+])\.(?:fastme\.)?([0-9.]+)\S+", current_tree)
             reroot_algo = groups[3]
+            if reroot_algo != "+": 
+                ctr += 1
             scale = groups[4]
             if (FASTME.lower() in current_tree):
                 var = BA_FASTME
             else:
                 var = BA
-            if scale not in trees[build_ba_variant(var, ALGO_IDS[reroot_algo])]:
-                trees[build_ba_variant(var, ALGO_IDS[reroot_algo])][scale] = [0, -1, [], []]
-            trees[build_ba_variant(var, ALGO_IDS[reroot_algo])][scale][0] += 1
-            trees[build_ba_variant(var, ALGO_IDS[reroot_algo])][scale][2].append(current_dist)
+            ba_var = build_ba_variant(var, ALGO_IDS[reroot_algo])
+            if scale not in trees[ba_var]:
+                trees[ba_var][scale] = [0, -1, [], []]
+            trees[ba_var][scale][0] += 1
+            trees[ba_var][scale][2].append(current_dist)
             #trees[build_ba_variant(var, ALGO_IDS[reroot_algo])][scale][3].append(current_tree)
     trees = {key: val for key, val in trees.items() if val != {}}
     for key in trees:
@@ -81,7 +85,10 @@ def read_picks(picks_file):
             curr = trees[key][scale]
             curr[1] = sum(curr[2]) / len(curr[2])
             curr[2] = []
+    trees = {k:v for k,v in trees.items() if v != []}
     #print(trees)
+    if  ctr > 0:
+        print(picks_file, ctr / 2)
     return trees
 
 def read_distr(distr_file):
