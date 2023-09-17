@@ -206,10 +206,10 @@ def plot_single(dir, save=False):
             tag = f.split("_")[0]
             if "rf_distance" in f and "rel" in f:
                 vals = reader.read_rrf(os.path.join(dir, test_setup, f))
-                plot_rrf_single(vals, tag, save)
+                plot_rrf_single(vals, test_setup, tag, save)
             elif "generax_picks" in f:
                 vals = reader.read_picks(os.path.join(dir, test_setup, f))
-                plot_picks_single(vals, tag, save)
+                plot_picks_single(vals, test_setup, tag, save)
             elif "distributions" in f:
                 vals = reader.read_distr(os.path.join(dir, test_setup, f))
                 plot_distr_single(vals, test_setup, tag, save)
