@@ -118,6 +118,7 @@ int main(int argc, char *argv[]) {
     int s_cnt{};
     for_each(species_tree_ids.begin(), species_tree_ids.end(),
              [&s_cnt](auto &s) { glob_mdata.groupname2matidx.emplace(s, s_cnt++); });
+    std::cout << "Checkpoint: Read S";
 
     // read alignment
     auto alignment_pair = parse_phylip_mat_from_file<dist_t>(get_alignment_matrix(cli_parser));
@@ -133,7 +134,7 @@ int main(int argc, char *argv[]) {
              [&a_cnt, &starting_tree_mdata](auto &s) {
                  starting_tree_mdata.leafname2matidx.emplace(s, a_cnt++);
              });
-
+    std::cout << "Checkpoint: Read G";
     // read mapping
     auto map_config{get_mapping_config(cli_parser)};
     std::string out_prefix{get_output_prefix(cli_parser)};
@@ -146,7 +147,7 @@ int main(int argc, char *argv[]) {
     } else {
         starting_tree_mdata.leafname2groupname = parse_mapping_from_cfg(map_config);
     }
-
+    std::cout << "Checkpoint: Read M";
     // --- pre-calculate ---
     // get starting tree
     std::shared_ptr<Tree> tree_tagged;
@@ -166,6 +167,7 @@ int main(int argc, char *argv[]) {
         oss << std::setprecision(4) << std::noshowpoint << spec_mat_scale;
         out_prefix.append(oss.str());
     }
+    std::cout << "Checkpoint: Starting tree";
     //std::cout << "Start tree := " << tree_tagged->to_newick() << "\n" << tree_tagged->node_info() << "\n";
     switch (get_algo(cli_parser)) {
         case 0:
@@ -197,6 +199,7 @@ int main(int argc, char *argv[]) {
             out_prefix.append("+.");
             break;
     }
+    std::cout << "Checkpoint: Marked";
     auto speciation_pairs{tree_tagged->get_speciation_pairs()};
     //std::cout << "Tagged tree := " << tree_tagged->to_newick() << "\n" << tree_tagged->node_info() << "\n";
 
@@ -208,7 +211,8 @@ int main(int argc, char *argv[]) {
             1.6, 1.65, 1.7, 1.75, 1.8, 1.85, 1.9, 1.95, 2.0, 2.05, 2.1, 2.15, 2.2, 2.25, 2.3, 2.35,
             2.4, 2.45, 2.5, 2.55, 2.6, 2.65, 2.7, 2.75, 2.8, 2.9, 3.0, 3.1, 3.2, 3.3, 3.4, 3.5, 3.6,
             3.8, 4, 4.25, 4.5, 4.75, 5, 5.5, 6, 7, 8, 9, 10, 25, 50, 100*/
-            0, 0.05, 0.15, 0.25, 0.6, 1.15, 1.75, 2.35, 3.8, 8};
+            //0, 0.05, 0.15, 0.25, 0.6, 1.15, 1.75, 2.35, 3.8,
+            8};
     int c{get_c(cli_parser)};
 //#pragma omp parallel for default(shared)
     for (double scale: scales) {
