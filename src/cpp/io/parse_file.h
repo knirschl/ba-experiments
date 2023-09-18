@@ -56,9 +56,8 @@ std::pair<matrix_t<T>, vector_t<std::string>> parse_phylip(std::ifstream &reader
     */
   
     size_t outer_counter{};
-    while (reader) {
+    while (std::getline(reader, line)) {
         size_t inner_counter{};
-        std::getline(reader, line);
         // match regex
         /*
         if (std::regex_match(line, results, line_regex)) {
