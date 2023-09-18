@@ -7,9 +7,9 @@ import utils
 # SETTINGS
 debug = False
 reps = 100
-parts = 5 # 10 should work in every case
-run_filter = "c" # s,g,r,f,b,p,c  
-enable_pip = True
+parts = 1 # 10 should work in every case
+run_filter = "full" # s,g,r,f,b,p,c  
+enable_pip = False
 enable_eval = run_filter != 's' and parts == 1
 bm_set = 0 # 0: benchmarks, 1: benchmarks_ext, 2: both
 
@@ -61,7 +61,6 @@ benchmarks = {"BASE" : [-1],
             "SITES" : [50, 250, 500],
             "BRALEN" : [0.01, 0.1, 10.0, 100.0],
             "DUPLOS" : [0.0, 0.5, 2.0, 3.0]}
-benchmarks = {"BRALEN" : [100.0]}
 benchmarks_ext = {"SPECIES" : [250, 500],
             "SITES" : [1000],
             "BRALEN" : [100.0],
