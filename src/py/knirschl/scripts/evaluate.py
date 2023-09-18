@@ -52,6 +52,9 @@ def global_compare(root_output, replicates, tag):
         abs_avgs_dico[x] = sum(abs_avgs_dico[x]) / len(abs_avgs_dico[x])
         rel_avgs_dico[x] = sum(rel_avgs_dico[x]) / len(rel_avgs_dico[x])
     for x in rt_avgs_dico:
+        if (len(rt_avgs_dico[x]) > 2):
+            rt_avgs_dico[x].remove(max(rt_avgs_dico[x]))
+            rt_avgs_dico[x].remove(min(rt_avgs_dico[x]))
         rt_avgs_dico[x] = sum(rt_avgs_dico[x]) / len(rt_avgs_dico[x])
     # write out
     rt_avgs_dico = {k: v for k, v in rt_avgs_dico.items() if not 'pipeline' in k}
@@ -99,13 +102,13 @@ def collect_generax_picks(root_output, replicates, tag, compare):
             with open(os.path.join(fam.get_metrics_dir(rep), "generax_picks.txt"), "r") as reader:
                 for line in reader.readlines():
                     line = line[:-1]
-                    writer.write(line)
                     split = line.split("  ")
                     family = split[0]
                     tree_pick = split[1] + ".geneTree.newick"
                     if (tree_pick == ".geneTree.newick" or tree_pick == ''):
                         print("Missing tree in", rep, family)
                         continue
+                    writer.write(line)
                     cleaned = split[1].replace("ba.", "").replace("fastme.", "")
                     idx = 0 if "a." in cleaned else (1 if "m." in cleaned else 2)
                     true_tree = fam.get_true_tree(rep, family)
