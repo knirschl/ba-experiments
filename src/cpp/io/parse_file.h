@@ -47,19 +47,16 @@ std::pair<matrix_t<T>, vector_t<std::string>> parse_phylip(std::ifstream &reader
         ids.resize(seq_count);
     }
     // build regex depending on seq_count
-    /*
     std::stringstream line_regex_stream;
     line_regex_stream << IDENT_REGEX_STR << "(?:"s << WHITESPACE_MAT_ELEMENT_REGEX_STR << ")"s << "{"s << seq_count << "}"s << "\\s*"s;
     std::regex line_regex{line_regex_stream.str()};
     std::regex whitespace_mat_element_regex{WHITESPACE_MAT_ELEMENT_REGEX_STR};
     std::smatch results;
-    */
-  
+
     size_t outer_counter{};
     while (std::getline(reader, line)) {
         size_t inner_counter{};
         // match regex
-        /*
         if (std::regex_match(line, results, line_regex)) {
             ids[outer_counter] = results[1]; // first group := id
             line.erase(line.begin(), line.begin() + 10); // remove id
@@ -73,22 +70,23 @@ std::pair<matrix_t<T>, vector_t<std::string>> parse_phylip(std::ifstream &reader
                 }
                 line = results.suffix();
             }
-        */
-        // just split on space
-        inner_counter = -1;
-        std::stringstream ss{line};
-        std::string item;
-        while (std::getline(ss, item, ' ')) {
-            if (item.empty()) {
-                 continue; // skip multiple whitespaces
+            /*
+            // just split on space
+            inner_counter = -1;
+            std::stringstream ss{line};
+            std::string item;
+            while (std::getline(ss, item, ' ')) {
+                if (item.empty()) {
+                     continue; // skip multiple whitespaces
+                }
+                if (inner_counter == -1) {
+                    ids[outer_counter] = item; // first entry:= id
+                } else {
+                    matrix[outer_counter][inner_counter] = std::stold(item);
+                }
+                inner_counter++;
             }
-            if (inner_counter == -1) {
-                ids[outer_counter] = item; // first entry:= id
-            } else {
-                matrix[outer_counter][inner_counter] = std::stold(item);
-            }
-            inner_counter++;
-        }
+            */
         outer_counter++;
     }
 

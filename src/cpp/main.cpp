@@ -118,6 +118,7 @@ int main(int argc, char *argv[]) {
     int s_cnt{};
     for_each(species_tree_ids.begin(), species_tree_ids.end(),
              [&s_cnt](auto &s) { glob_mdata.groupname2matidx.emplace(s, s_cnt++); });
+    std::cout << "Checkpoint: Read S";
 
     // read alignment
     auto alignment_pair = parse_phylip_mat_from_file<dist_t>(get_alignment_matrix(cli_parser));
@@ -133,7 +134,7 @@ int main(int argc, char *argv[]) {
              [&a_cnt, &starting_tree_mdata](auto &s) {
                  starting_tree_mdata.leafname2matidx.emplace(s, a_cnt++);
              });
-
+    std::cout << "Checkpoint: Read G";
     // read mapping
     auto map_config{get_mapping_config(cli_parser)};
     std::string out_prefix{get_output_prefix(cli_parser)};
@@ -146,7 +147,7 @@ int main(int argc, char *argv[]) {
     } else {
         starting_tree_mdata.leafname2groupname = parse_mapping_from_cfg(map_config);
     }
-
+    std::cout << "Checkpoint: Read M";
     // --- pre-calculate ---
     // get starting tree
     std::shared_ptr<Tree> tree_tagged;
@@ -166,6 +167,7 @@ int main(int argc, char *argv[]) {
         oss << std::setprecision(4) << std::noshowpoint << spec_mat_scale;
         out_prefix.append(oss.str());
     }
+    std::cout << "Checkpoint: Starting tree";
     //std::cout << "Start tree := " << tree_tagged->to_newick() << "\n" << tree_tagged->node_info() << "\n";
     switch (get_algo(cli_parser)) {
         case 0:
@@ -197,6 +199,7 @@ int main(int argc, char *argv[]) {
             out_prefix.append("+.");
             break;
     }
+    std::cout << "Checkpoint: Marked";
     auto speciation_pairs{tree_tagged->get_speciation_pairs()};
     //std::cout << "Tagged tree := " << tree_tagged->to_newick() << "\n" << tree_tagged->node_info() << "\n";
 
