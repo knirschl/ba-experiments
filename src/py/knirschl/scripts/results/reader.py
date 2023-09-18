@@ -66,7 +66,7 @@ def read_picks(picks_file):
             current_dist = float(re.match(r".*dist=([0-9.]+).*", stats)[1])
             groups = re.match(r"ba\.(\S+)_(\S+)([am+])\.(?:fastme\.)?([0-9.]+)\S+", current_tree)
             reroot_algo = groups[3]
-            if reroot_algo != "+": 
+            if reroot_algo != "+":
                 ctr += 1
             scale = groups[4]
             if (FASTME.lower() in current_tree):
@@ -87,8 +87,8 @@ def read_picks(picks_file):
             curr[2] = []
     trees = {k:v for k,v in trees.items() if v != []}
     #print(trees)
-    if  ctr > 0:
-        print(picks_file, ctr / 2)
+    #if  ctr > 0:
+    #    print(picks_file, ctr / 2)
     return trees
 
 def read_distr(distr_file):
@@ -235,8 +235,8 @@ def read_rt(rt_file, scaling=''):
                 rts[RAXML] = float(time)
             elif (tool == "fastme.f81"):
                 rts[FASTME] = float(time)
-            elif (tool != "ba.p"):
-                rts[BA_FASTME] += float(time) # fastme_mat, fastme.ba, generax_eval
+            elif (tool in ["ba.p", "fastme_mat.p", "fastme.ba..p", "generax-eval-undateddl-r5-famrates.f81"]):
+                rts[BA_FASTME] += float(time)
     if ("tree" in scaling):
         rts[BA_FASTME] /= 240 # per tree
     elif ("algo" in scaling):
