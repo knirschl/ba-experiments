@@ -55,10 +55,20 @@ def get_filename(tags, save):
         os.makedirs(resultsdir, exist_ok=True)
     except:
         pass
-    return os.path.join(resultsdir, '_'.join(tags[2:]) + ".pdf")
+    return os.path.join(resultsdir, tags[0] + '_' + '_'.join(tags[2:]) + ".pdf")
 
 # PLOTTER
 def add2plot(plot, xy, ptype="scatter", labels=5 * [None], bottom=0, zoom=''):
+    '''
+    labels[0] := legend entry
+    labels[1] := title
+    labels[2] := x axis
+    labels[3] := y axis
+    labels[4] := width of bar plot
+    '''
+    logscale = labels[1] == "BRALEN" and "Skalier" not in labels[2]
+    #labels[1] = None
+
     if (ptype == "scatter"):
         plt.make_scatter(plot, xy[0], xy[1], labels[0])
     elif (ptype == "bar"):
@@ -67,7 +77,7 @@ def add2plot(plot, xy, ptype="scatter", labels=5 * [None], bottom=0, zoom=''):
         plt.make_violin(plot, xy[1], labels[0])
     else:
         xy = tuple((zip(*sorted(zip(*xy)))))
-        plt.make_plot(plot, xy[0], xy[1], label=labels[0], logscale=(labels[1] == "BRALEN" and "Skalier" not in labels[2]))
+        plt.make_plot(plot, xy[0], xy[1], label=labels[0], logscale=logscale)
     plt.set_titles(plot, title=labels[1], xAxis=labels[2], yAxis=labels[3])
     plt.cutoff(plot, xy[0], xy[1], zoom, THRESHOLD)
     
@@ -95,7 +105,7 @@ def plot_rrf(bm, setup, tag, save):
     fig, ax = plt.subplots()
     ticks = set()
     for tool in bm:
-        labels[0] = tool
+        labels[0] = SPEARFISH_MAP[tool] + ("$_{" + setup.split('x')[1].split('_')[0] + "}$") * (tool in BA_VARIANTS)
         x = []
         y = []
         for var in bm[tool]:
@@ -111,7 +121,7 @@ def plot_rt(bm, setup, tag, save):
     labels = [None, tag, "Varianten", "Laufzeit in Sekunden"]
     fig, ax = plt.subplots()
     for tool in bm:
-        labels[0] = tool
+        labels[0] = SPEARFISH_MAP[tool] + ("$_{" + setup.split('x')[1].split('_')[0] + "}$") * (tool in BA_VARIANTS)
         x = []
         y = []
         for var in bm[tool]:
@@ -143,7 +153,7 @@ def plot_pick(bm, setup, tag, save):
     fig, ax = plt.subplots()
     bottoms = np.full(len(xs), 0)
     for tool in bm:
-        labels[0] = tool
+        labels[0] = SPEARFISH_MAP[tool] + ("$_{" + setup.split('x')[1].split('_')[0] + "}$") * (tool in BA_VARIANTS)
         xy = extract_xy(vals, tool, 0)
         add2plot(ax, xy, labels=labels, ptype="bar", bottom=bottoms)
         bottoms += np.array(xy[1], dtype='int64')
@@ -153,7 +163,7 @@ def plot_pick(bm, setup, tag, save):
     labels = [None, tag, "Skalierungswerte", "rRF-Distanz"]
     fig, ax = plt.subplots()
     for tool in bm:
-        labels[0] = tool
+        labels[0] = SPEARFISH_MAP[tool] + ("$_{" + setup.split('x')[1].split('_')[0] + "}$") * (tool in BA_VARIANTS)
         add2plot(ax, extract_xy(vals, tool, 1), labels=labels, ptype="plot")
     plt.display(fig, filename=get_filename([setup, tag, tag.lower(), id], save))
 
@@ -256,4 +266,4 @@ def plot_bm(dir, save=False):
 
 if (__name__ == "__main__"):
     #plot_single("/home/fili/Desktop/2023/BA/code/output/benchmark_results/metrics", save=True) # plots look broken?
-    plot_bm("/home/fili/Desktop/2023/BA/code/output/benchmark_results/metrics", save=True)
+    plot_bm("/home/fili/Desktop/2023/BA/code/output/benchmark_results/metrics", save=False)

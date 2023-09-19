@@ -5,14 +5,17 @@ def subplots(nrows=1, ncols=1, *, sharex=False, sharey=False, squeeze=True, widt
     return plt.subplots(nrows=nrows, ncols=ncols, sharex=sharex, sharey=sharey, squeeze=squeeze, width_ratios=width_ratios, height_ratios=height_ratios, subplot_kw=subplot_kw, gridspec_kw=gridspec_kw, **fig_kw)
 
 def make_plot(plot, x, y, label, logscale=False):
-    plot.plot(x, y, label=label, color=COLORS[label], marker=MARKERS[label])#, markersize=2.5)
+    raw_label = label.split('$')[0]
+    plot.plot(x, y, label=label, color=COLORS[raw_label], marker=MARKERS[raw_label])#, markersize=2.5)
     plt.xscale(("linear", "log")[logscale])
 
 def make_scatter(plot, x, y, label):
-    plot.scatter(x, y, label=label, c=COLORS[label], marker=MARKERS[label])
+    raw_label = label.split('$')[0]
+    plot.scatter(x, y, label=label, c=COLORS[raw_label], marker=MARKERS[raw_label])
 
 def make_bar(plot, x, y, label, width, bottom):
-    plot.bar(x, y, label=label, color=COLORS[label], width=width, bottom=bottom)
+    raw_label = label.split('$')[0]
+    plot.bar(x, y, label=label, color=COLORS[raw_label], width=width, bottom=bottom)
 
 def make_violin(plot, y, label):
     vp = plot.violinplot(y, showmedians=True, showextrema=False, showmeans=False)
@@ -27,7 +30,7 @@ def make_violin(plot, y, label):
 def display(figure, makegrid=True, makelegend=True, filename=None):
     plt.grid(makegrid)
     if makelegend:
-        plt.legend()
+        plt.legend()#loc='upper right')
     if (filename):
         figure.savefig(filename, bbox_inches='tight')
     else:

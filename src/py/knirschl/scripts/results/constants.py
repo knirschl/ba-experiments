@@ -25,8 +25,11 @@ BASE = "BASE-1"
 DATASETS = {"SPECIES" : 25,
             "SITES" : 100,
             "BRALEN" : 1.0,
-            "DUPLOS" : 1.0,
-            #"TRA" : 0.0,
-            #"DUPLOSTRA" : "1.0,0.0",
-            #"POP" : 10
+            "DUPLOS" : 1.0
             }
+
+SPEARFISH_MAP = {build_ba_variant(m, a): a.lower() + ["FM", "NJ"][m == BA] for a in [APRO, MAD, ALL] for m in [BA, BA_FASTME]}
+SPEARFISH_MAP["BA+FM"] = "Spearfish"
+SPEARFISH_MAP[GENERAX] = GENERAX
+SPEARFISH_MAP[RAXML] = RAXML
+SPEARFISH_MAP[FASTME] = FASTME
