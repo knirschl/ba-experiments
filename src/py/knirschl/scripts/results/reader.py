@@ -9,7 +9,7 @@ def read_rrf(rrf_file):
     '''
     trees = {
         GENERAX: [],
-        RAXML: [],
+        RAXMLNG: [],
         FASTME: []
     }
     for var in BA_VARIANTS:
@@ -21,8 +21,8 @@ def read_rrf(rrf_file):
             current_dist = float(current_dist)
             if (GENERAX.lower() in current_tree):
                 trees[GENERAX].append((current_tree, current_dist, [0.0]))
-            elif (RAXML.lower() in current_tree):
-                trees[RAXML].append((current_tree, current_dist, [0.0]))
+            elif ("raxml" in current_tree):
+                trees[RAXMLNG].append((current_tree, current_dist, [0.0]))
             elif (BA.lower() in current_tree):
                 groups = re.match(r"ba\.(\S+)_(\S+)([am+])\.(?:fastme\.)?([0-9.]+)\S+", current_tree)
                 fastme_model = groups[1]
@@ -75,16 +75,15 @@ def read_picks(picks_file):
                 var = BA
             ba_var = build_ba_variant(var, ALGO_IDS[reroot_algo])
             if scale not in trees[ba_var]:
-                trees[ba_var][scale] = [0, -1, [], []]
+                trees[ba_var][scale] = [0, []]
             trees[ba_var][scale][0] += 1
-            trees[ba_var][scale][2].append(current_dist)
+            trees[ba_var][scale][1].append(current_dist)
             #trees[build_ba_variant(var, ALGO_IDS[reroot_algo])][scale][3].append(current_tree)
     trees = {key: val for key, val in trees.items() if val != {}}
     for key in trees:
         for scale in trees[key]:
             curr = trees[key][scale]
-            curr[1] = sum(curr[2]) / len(curr[2])
-            curr[2] = []
+            curr[1] = sum(curr[1]) / len(curr[1])
     trees = {k:v for k,v in trees.items() if v != []}
     #print(trees)
     #if  ctr > 0:
@@ -123,8 +122,8 @@ def read_arf_pick(rrf_file, picks_file):
                 continue         
             elif (GENERAX.lower() in current_tree):
                 trees[GENERAX] = current_dist
-            elif (RAXML.lower() in current_tree):
-                trees[RAXML] = current_dist
+            elif ("raxml" in current_tree):
+                trees[RAXMLNG] = current_dist
             elif (FASTME.lower() in current_tree):
                 trees[FASTME] = current_dist
     dist = {}
@@ -194,8 +193,8 @@ def read_arf_all(rrf_file, picks_file):
                 dist[var][1] += 1
             elif (GENERAX.lower() in current_tree):
                 trees[GENERAX] = current_dist
-            elif (RAXML.lower() in current_tree):
-                trees[RAXML] = current_dist
+            elif ("raxml" in current_tree):
+                trees[RAXMLNG] = current_dist
             elif (FASTME.lower() in current_tree):
                 trees[FASTME] = current_dist
     for var in dist:
@@ -232,11 +231,12 @@ def read_rt(rt_file, scaling=''):
             if ("generax" in tool and not "eval" in tool):
                 rts[GENERAX] = float(time)
             elif (tool == "raxml.f81"):
-                rts[RAXML] = float(time)
+                rts[RAXMLNG] = float(time)
             elif (tool == "fastme.f81"):
                 rts[FASTME] = float(time)
             elif (tool in ["ba.p", "fastme_mat.p", "fastme.ba..p", "generax-eval-undateddl-r5-famrates.f81"]):
                 rts[BA_FASTME] += float(time)
+                #print(rt_file, tool, float(time))
     if ("tree" in scaling):
         rts[BA_FASTME] /= 240 # per tree
     elif ("algo" in scaling):

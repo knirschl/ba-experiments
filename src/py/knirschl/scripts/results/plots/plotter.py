@@ -29,8 +29,9 @@ def make_violin(plot, y, label):
 
 def display(figure, makegrid=True, makelegend=True, filename=None):
     plt.grid(makegrid)
+    plt.ylim(ymin=0)
     if makelegend:
-        plt.legend()#loc='upper right')
+        plt.legend(framealpha=1)#, loc='lower right')
     if (filename):
         figure.savefig(filename, bbox_inches='tight')
     else:

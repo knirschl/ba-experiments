@@ -66,8 +66,8 @@ def add2plot(plot, xy, ptype="scatter", labels=5 * [None], bottom=0, zoom=''):
     labels[3] := y axis
     labels[4] := width of bar plot
     '''
-    logscale = labels[1] == "BRALEN" and "Skalier" not in labels[2]
-    #labels[1] = None
+    logscale = (labels[1] == "BRALEN" and "Skalier" not in labels[2])
+    title = None #TITLE[labels[1]]
 
     if (ptype == "scatter"):
         plt.make_scatter(plot, xy[0], xy[1], labels[0])
@@ -78,8 +78,9 @@ def add2plot(plot, xy, ptype="scatter", labels=5 * [None], bottom=0, zoom=''):
     else:
         xy = tuple((zip(*sorted(zip(*xy)))))
         plt.make_plot(plot, xy[0], xy[1], label=labels[0], logscale=logscale)
-    plt.set_titles(plot, title=labels[1], xAxis=labels[2], yAxis=labels[3])
+    plt.set_titles(plot, title=title, xAxis=labels[2], yAxis=labels[3])
     plt.cutoff(plot, xy[0], xy[1], zoom, THRESHOLD)
+    #plot.set_ylim(bottom=0)
     
 def plot_rrf_single(vals, setup, tag, save):
     id = "rrf-dist"
@@ -105,7 +106,9 @@ def plot_rrf(bm, setup, tag, save):
     fig, ax = plt.subplots()
     ticks = set()
     for tool in bm:
-        labels[0] = SPEARFISH_MAP[tool] + ("$_{" + setup.split('x')[1].split('_')[0] + "}$") * (tool in BA_VARIANTS)
+        #if "rax" in tool.lower() or "fast" in tool.lower():
+        #    continue
+        labels[0] = SPEARFISH_MAP[tool]# + ("$_{" + setup.split('x')[1].split('_')[0] + "}$") * (tool in BA_VARIANTS)
         x = []
         y = []
         for var in bm[tool]:
@@ -120,14 +123,17 @@ def plot_rt(bm, setup, tag, save):
     id = "runtimes"
     labels = [None, tag, "Varianten", "Laufzeit in Sekunden"]
     fig, ax = plt.subplots()
+    ticks = set()
     for tool in bm:
-        labels[0] = SPEARFISH_MAP[tool] + ("$_{" + setup.split('x')[1].split('_')[0] + "}$") * (tool in BA_VARIANTS)
+        labels[0] = SPEARFISH_MAP[tool]# + ("$_{" + setup.split('x')[1].split('_')[0] + "}$") * (tool in BA_VARIANTS)
         x = []
         y = []
         for var in bm[tool]:
+            ticks.add(float(var))
             x.append(float(var))
             y.append(bm[tool][var])
         add2plot(ax, (x, y), labels=labels, ptype="plot")
+    ax.set_xticks(sorted(list(ticks)))
     plt.display(fig, filename=get_filename([setup, tag, tag.lower(), id], save))
 
 def plot_pick(bm, setup, tag, save):
@@ -153,7 +159,7 @@ def plot_pick(bm, setup, tag, save):
     fig, ax = plt.subplots()
     bottoms = np.full(len(xs), 0)
     for tool in bm:
-        labels[0] = SPEARFISH_MAP[tool] + ("$_{" + setup.split('x')[1].split('_')[0] + "}$") * (tool in BA_VARIANTS)
+        labels[0] = SPEARFISH_MAP[tool]# + ("$_{" + setup.split('x')[1].split('_')[0] + "}$") * (tool in BA_VARIANTS)
         xy = extract_xy(vals, tool, 0)
         add2plot(ax, xy, labels=labels, ptype="bar", bottom=bottoms)
         bottoms += np.array(xy[1], dtype='int64')
@@ -163,7 +169,7 @@ def plot_pick(bm, setup, tag, save):
     labels = [None, tag, "Skalierungswerte", "rRF-Distanz"]
     fig, ax = plt.subplots()
     for tool in bm:
-        labels[0] = SPEARFISH_MAP[tool] + ("$_{" + setup.split('x')[1].split('_')[0] + "}$") * (tool in BA_VARIANTS)
+        labels[0] = SPEARFISH_MAP[tool]# + ("$_{" + setup.split('x')[1].split('_')[0] + "}$") * (tool in BA_VARIANTS)
         add2plot(ax, extract_xy(vals, tool, 1), labels=labels, ptype="plot")
     plt.display(fig, filename=get_filename([setup, tag, tag.lower(), id], save))
 
@@ -230,6 +236,8 @@ def plot_bm(dir, save=False):
     save == True -> don't show
     '''
     for test_setup in os.listdir(dir):
+        if "3" in test_setup:
+            continue
         # benchmark : {variation : vals}
         ds_rrf = {k: {} for k in DATASETS} # rf distance
         ds_rt = {k: {} for k in DATASETS} # runtimes
@@ -255,15 +263,20 @@ def plot_bm(dir, save=False):
             else:
                 for k in DATASETS:
                     ds_results[k][DATASETS[k]] = read
+        
         # plot
+        benchmark = "SPECIES"
+        plot_rrf(reader.map_bm(ds_rrf[benchmark]), test_setup, benchmark, save)
+        exit()
         for benchmark in ds_rrf:
             plot_rrf(reader.map_bm(ds_rrf[benchmark]), test_setup, benchmark, save)
         for benchmark in ds_rt:
             plot_rt(reader.map_bm(ds_rt[benchmark]), test_setup, benchmark, save)
         for benchmark in ds_pick:
-            #print(benchmark, reader.map_bm(ds_pick[benchmark]))
             plot_pick(reader.map_bm(ds_pick[benchmark]), test_setup, benchmark, save)
+        
 
 if (__name__ == "__main__"):
     #plot_single("/home/fili/Desktop/2023/BA/code/output/benchmark_results/metrics", save=True) # plots look broken?
     plot_bm("/home/fili/Desktop/2023/BA/code/output/benchmark_results/metrics", save=False)
+    #plot_bm("/home/fili/Documents/bwSyncShare/Documents/KIT/BA_Datasets_Backups")
