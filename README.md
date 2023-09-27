@@ -3,3 +3,6 @@ This repository contains all code for the conducted experiments as well as the i
 
 # Spearfish
 Spearfish is a distance-based tree inference algorithm that respects the species tree and can infer gene family trees.
+<p align="center">
+  <img src="https://github.com/knirschl/ba-code/blob/master/resources/spearfish.png?raw=true" alt="Spearfish logo"/>
+</p>
