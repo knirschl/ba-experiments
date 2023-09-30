@@ -4,7 +4,7 @@ def build_ba_variant(method, algorithm):
 THRESHOLD = 10 # "zoom"
 # trees
 GENERAX = "GeneRax"
-RAXML = "RAxML"
+RAXMLNG = "RAxML-NG"
 FASTME = "FastME"
 BA = "BA"
 BA_FASTME = "BA+FM"
@@ -22,11 +22,22 @@ ALGO_IDS = {
 BA_VARIANTS = [build_ba_variant(meth, a) for a in [APRO, MAD, ALL] for meth in [BA, BA_FASTME]]
 # Name : BASE
 BASE = "BASE-1"
-DATASETS = {"SPECIES" : 25,
-            "SITES" : 100,
-            "BRALEN" : 1.0,
-            "DUPLOS" : 1.0,
-            #"TRA" : 0.0,
-            #"DUPLOSTRA" : "1.0,0.0",
-            #"POP" : 10
+DATASETS = {"SPECIES" : '25',
+            "SITES" : '100',
+            "BRALEN" : '1.0',
+            "DUPLOS" : '1.0'
             }
+
+SPEARFISH_MAP = {build_ba_variant(m, a): a.lower() + ["FM", "NJ"][m == BA] for a in [APRO, MAD, ALL] for m in [BA, BA_FASTME]}
+SPEARFISH_MAP["BA+FM"] = "Spearfish"
+SPEARFISH_MAP[GENERAX] = GENERAX
+SPEARFISH_MAP[RAXMLNG] = "RAxML-NG"
+SPEARFISH_MAP[FASTME] = FASTME
+#SPEARFISH_MAP["BA+FM (All)"] = "Spearfish"
+
+TITLE = {
+    "BRALEN": "Varying branch length",
+    "DUPLOS": "Varying duplication & loss rates",
+    "SITES": "Varying sequence length",
+    "SPECIES": "Varying amount of species"
+}

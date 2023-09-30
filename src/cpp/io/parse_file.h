@@ -14,7 +14,6 @@
 #include <sstream>
 #include "../misc/common_types.h"
 #include "../nj/tree.h"
-
 using namespace std::literals;
 
 // anything but whitespace, capturing
@@ -55,9 +54,8 @@ std::pair<matrix_t<T>, vector_t<std::string>> parse_phylip(std::ifstream &reader
     std::smatch results;
 
     size_t outer_counter{};
-    while (reader) {
+    while (std::getline(reader, line)) {
         size_t inner_counter{};
-        std::getline(reader, line);
         // match regex
         if (std::regex_match(line, results, line_regex)) {
             ids[outer_counter] = results[1]; // first group := id
@@ -72,7 +70,23 @@ std::pair<matrix_t<T>, vector_t<std::string>> parse_phylip(std::ifstream &reader
                 }
                 line = results.suffix();
             }
-        }
+            /*
+            // just split on space
+            inner_counter = -1;
+            std::stringstream ss{line};
+            std::string item;
+            while (std::getline(ss, item, ' ')) {
+                if (item.empty()) {
+                     continue; // skip multiple whitespaces
+                }
+                if (inner_counter == -1) {
+                    ids[outer_counter] = item; // first entry:= id
+                } else {
+                    matrix[outer_counter][inner_counter] = std::stold(item);
+                }
+                inner_counter++;
+            }
+            */
         outer_counter++;
     }
 
