@@ -239,7 +239,7 @@ if (__name__ == "__main__"):
 
     start = time.time()
     root_output, seeds, reps = run_pipeline(start_rep, rep_num, tag, tag_val, run_filter_str, enable_pip)
-    if (run_filter_str != "sim" and enable_eval):
+    if (run_filter_str != "s" and enable_eval):
         tag = tag + tag_val
         if (enable_pip or run_filter_str != "full"):
             tag  = tag + "_" + str(int(start_rep / rep_num)) # e.g. tag = SPECIES15_part1
