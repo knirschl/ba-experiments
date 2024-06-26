@@ -5,10 +5,10 @@ import paths
 import utils
 
 # SETTINGS
-debug = False
-reps = 100
-parts = 1 # 10 should work in every case
-run_filter = "full" # s,g,r,f,b,p,c  
+debug = False # Give debug priority to all runs
+reps = 100 # Number of datasets to work on
+parts = 1 # Divide each dataset in `parts` parts ## 10 should work in every case
+run_filter = "full" # s,r, g,f,b,p,c  
 enable_pip = False
 enable_eval = run_filter != 's' and parts == 1
 bm_set = 0 # 0: benchmarks, 1: benchmarks_ext, 2: both
