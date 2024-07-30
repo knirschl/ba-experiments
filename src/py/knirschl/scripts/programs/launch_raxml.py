@@ -70,7 +70,7 @@ def extract_raxml_trees(datadir, subst_model):
     if (invalid > 0):
         print("WARNING! " + str(invalid) + " trees were skipped")
 
-def run_raxmlng_on_families(datadir, subst_model, cores, mpi = False):
+def run_raxmlng_on_families(datadir, subst_model, cores, mpi = True):
     output_dir = fam.get_run_dir(datadir, subst_model, "raxml_run")
     shutil.rmtree(output_dir, True)
     os.makedirs(output_dir)
