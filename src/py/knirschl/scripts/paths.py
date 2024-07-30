@@ -38,7 +38,6 @@ datasets_root = os.path.join(root, "datasets")
 families_datasets_root = os.path.join(datasets_root, "families")
 
 # ---- EXTERNAL PROGRAMS ----
-programs_root = ba_github_root #os.path.join(ba_github_root, "resources", "tools")
 # SimPhy
 simphy_root = os.path.join(programs_root, "SimPhy")
 simphy_exec = os.path.join(simphy_root, "simphy")
