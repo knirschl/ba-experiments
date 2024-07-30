@@ -21,7 +21,7 @@ import paths
 import utils
 
 class RunFilter():
-    def __init__(self, generate = True):
+    def __init__(self):
         self.all(True)
         self.force_overwrite = False 
 
@@ -32,6 +32,7 @@ class RunFilter():
         self.fastme = t
         self.ba = t
         self.ba_fastme = t
+        self.spearfish = t
         self.generax_pick = t
         self.compare = t
     
@@ -74,60 +75,14 @@ class RunFilter():
                 launch_fastme.run_fastme_on_families(datadir, subst_model, is_dna=True, algo="B", use_spr=True, only_mat=False, cores=cores)
             except Exception as exc:
                 utils.printFlush("Failed running FastME\n" + str(exc))
-        if (self.ba):
-            utils.printFlush("Run ba...\n*********")
+        if (self.spearfish):
+            utils.printFlush("Run Spearfish benchmarking...\n*****************************")
             try:
-                start = time.time()
-                # convert species tree and alignments to distance matrix
-                dist_matrix_converter.convert_input(datadir, cores)
-                species_tree = fam.get_true_species_tree_matrix(datadir)
-                # run ba script
-                # APro
-                inferred_trees = launch_ba.run_ba_on_families(datadir, "p", species_tree,
-                                    algo="APro", mat_out=int(self.ba_fastme), cores=cores)
-                # MAD
-                inferred_trees = launch_ba.run_ba_on_families(datadir, "p", species_tree,
-                                    algo="MAD", mat_out=int(self.ba_fastme), cores=cores)
-                # None
-                inferred_trees = launch_ba.run_ba_on_families(datadir, "p", species_tree,
-                                    algo="", mat_out=int(self.ba_fastme), cores=cores)
-                print("=#=#= BA-Code took {}s per tree =#=#=".format((time.time() - start) / ((int)(simphy.get_param_from_dataset_name("families", datadir)) * inferred_trees)))
+                # wrapper dataset subst_model cores compute algo
+                command = [paths.python3, paths.spearfish_wrapper_py, datadir, subst_model, cores, "test"]
+                subprocess.check_call(command, stdout = sys.stdout)
             except Exception as exc:
-                utils.printFlush("Failed running bachelor thesis script\n" + str(exc))
-        if (self.ba_fastme):
-            utils.printFlush("Run ba matrix with fastme trees...\n**********************************")
-            try:
-                start_bafm = time.time()
-                if (not self.ba):
-                    # convert species tree and alignments to distance matrix
-                    dist_matrix_converter.convert_input(datadir, cores)
-                    species_tree = fam.get_true_species_tree_matrix(datadir)
-                    # run ba script
-                    # APro
-                    #inferred_trees = launch_ba.run_ba_on_families(datadir, "p", species_tree, 
-                    #                    algo="APro", mat_out=2, cores=cores)
-                    # MAD
-                    #inferred_trees = launch_ba.run_ba_on_families(datadir, "p", species_tree, 
-                    #                    algo="MAD", mat_out=2, cores=cores)
-                    # No Algorithm
-                    inferred_trees = launch_ba.run_ba_on_families(datadir, "p", species_tree, 
-                                        algo="", mat_out=2, cores=cores)
-                launch_fastme.run_fastme_on_families_matrices(datadir, "ba.p", algo="B",        use_spr=True, cores=cores)
-                elapsed = time.time() - start_bafm
-                print("End of ba+fm experiment. Elapsed time: " + str(elapsed) + "s")
-                metrics.save_metrics(datadir, "ba+fm_full", elapsed, "runtimes")
-
-            except Exception as exc:
-                utils.printFlush("Failed running bachelor thesis matrix correction with FastME\n" + str(exc))
-        if (self.generax_pick):
-            utils.printFlush("Run picking...\n**************")
-            try:
-                # run generax evaluation and select best tree
-                species_tree = fam.get_species_tree(datadir)
-                resultsdir = fam.get_run_dir(datadir, subst_model, "generax_eval_run")
-                launch_generax.run(datadir, subst_model, "EVAL", species_tree, "ba", cores, ["--rec-model", "UndatedDL", "--per-family-rates"], resultsdir, False)
-            except Exception as exc:
-                utils.printFlush("Failed running pick\n" + str(exc))
+                utils.printFlush("Failed running Spearfish benchmarking\n" + str(exc))
         # COMPARE INFERRED TREES WITH TRUE TREE
         if (self.compare):
             utils.printFlush("Run compare...\n**************")
@@ -136,17 +91,8 @@ class RunFilter():
             except Exception as exc:
                 utils.printFlush("Failed running compare\n" + str(exc))
 
-def pipeline(datadir, run_filter, seed, tag):
-    # RUN PIPELINE
-    rep_start = time.time()
-    try:
-        run_filter.run_methods(datadir, "F81", 16)
-    finally:
-        elapsed = time.time() - rep_start
-        print("End of single experiment. Elapsed time: " + str(elapsed) + "s")
-        metrics.save_metrics(datadir, "pipeline_" + tag + str(seed), elapsed, "runtimes")
 
-def run_pipeline(start_rep = 0, reps = 50, tag = "DL", val=0, run_filter_str = "bpc", enabled = True):
+def get_run_filter(run_filter_str):
     if (run_filter_str == "full"):
         run_filter_str = "rgfbpc"
     # TOGGLE PIPELINE ELEMENTS
@@ -163,20 +109,74 @@ def run_pipeline(start_rep = 0, reps = 50, tag = "DL", val=0, run_filter_str = "
     if ("f" in run_filter_str):
         run_filter.fastme = True
     if ("b" in run_filter_str):
-        run_filter.ba = False # keep this False as it's worse than ba+fm
-        run_filter.ba_fastme = True
-    if ("p" in run_filter_str):
-        run_filter.generax_pick = True
+    #    run_filter.ba = False # keep this False as it's worse than ba+fm
+    #    run_filter.ba_fastme = True
+        run_filter.spearfish = True
+    #if ("p" in run_filter_str):
+    #    run_filter.generax_pick = True
     if ("c" in run_filter_str):
         run_filter.compare = True
-    # SEEDS
-    seeds100 = [42, 1007, 39104, 45364, 121873, 178811, 254864, 364465, 422868, 592240, 710192, 733230, 785319, 1142238, 1158688, 1230166, 1381421, 1424996, 1472190, 1513197, 1650734, 1656898, 1690222, 1716696, 1886712, 1990093, 1994998, 2073911, 2133265, 2190362, 2289044, 2436736, 2615935, 2620431, 2661376, 2722114, 2895719, 2908180, 3044371, 3072898, 3245068, 3633308, 3799911, 4040147, 4156463, 4257503, 4413346, 4683309, 4788078, 5012216, 5019389, 5087218, 5182115, 5198455, 5287118, 5334140, 5355281, 5398355, 5536663, 5543415, 5574927, 5755677, 5942622, 5966994, 6063401, 6089587, 6317675, 6329094, 6396236, 6503199, 6783683, 6947993, 7132734, 7308089, 7406226, 7425579, 7555193, 7781467, 7966578, 8142353, 8197298, 8199273, 8534020, 8643158, 8726470, 8771421, 8821971, 8846466, 8850161, 9037043, 9133069, 9300400, 9316715, 9376940, 9387366, 9438631, 9481423, 9724682, 9824219, 19732311]
-    seeds = seeds100[start_rep:start_rep + reps]
-    while (len(seeds) < reps):
-       seeds.append(random.randrange(0, 9999999))
-    
-    # DATASET PARAMETERS
-    # base
+    return run_filter
+
+
+def get_seeds(rank, n_families):
+    seeds100 = [42, 1007, 39104, 45364, 121873, 178811, 254864, 364465, 422868,
+                592240, 710192, 733230, 785319, 1142238, 1158688, 1230166,
+                1381421, 1424996, 1472190, 1513197, 1650734, 1656898, 1690222,
+                1716696, 1886712, 1990093, 1994998, 2073911, 2133265, 2190362,
+                2289044, 2436736, 2615935, 2620431, 2661376, 2722114, 2895719,
+                2908180, 3044371, 3072898, 3245068, 3633308, 3799911, 4040147,
+                4156463, 4257503, 4413346, 4683309, 4788078, 5012216, 5019389,
+                5087218, 5182115, 5198455, 5287118, 5334140, 5355281, 5398355,
+                5536663, 5543415, 5574927, 5755677, 5942622, 5966994, 6063401,
+                6089587, 6317675, 6329094, 6396236, 6503199, 6783683, 6947993,
+                7132734, 7308089, 7406226, 7425579, 7555193, 7781467, 7966578,
+                8142353, 8197298, 8199273, 8534020, 8643158, 8726470, 8771421,
+                8821971, 8846466, 8850161, 9037043, 9133069, 9300400, 9316715,
+                9376940, 9387366, 9438631, 9481423, 9724682, 9824219, 19732311]
+    start_rep = rank * n_families
+    seeds = seeds100[start_rep:start_rep + n_families]
+    while (len(seeds) << n_families):
+        seeds.append(random.randrange(0, 9999999))
+    return seeds
+
+
+def run(datadir, run_filter):
+    if (run_filter.spearfish):
+        # Let GeneRax eval not skip if it already run
+        try:
+            os.remove(os.path.join(datadir, "runs", "F81", "generax_eval_run", "gene_optimization_0", "checkpoint_commands.txt"))
+            os.remove(os.path.join(datadir, "runs", "F81", "generax_eval_run", "gene_optimization_0", "statistics.svg"))
+            print("Removed generax checkpoints")
+        except:
+            print("Failed to rm in", datadir)
+    # RUN PIPELINE
+    rep_start = time.time()
+    try:
+        run_filter.run_methods(datadir, "F81", cores=1) # 16 on cluster
+    finally:
+        elapsed = time.time() - rep_start
+        print("End of single experiment. Elapsed time: " + str(elapsed) + "s")
+        metrics.save_metrics(datadir, "pipeline_" + tag + str(seed), elapsed, "runtimes")
+
+
+def pipeline_sim_data(argv):
+    # ((exec "sim")) tag tag_val rank n_families run_filter
+    if (len(argv) != 6):
+        print("Syntax: python scripts/pipeline.py \"sim\" tag tag_val rank n_families run_filter")
+        sys.exit(1)
+    tag = argv[0] # e.g. SPECIES
+    tag_val = argv[1] # e.g. 75
+    rank = int(argv[2]) # rank-th pipeline running on this tag-tag_val combination
+    n_families = int(argv[3]) # families resolved in this pipeline
+
+    start = time.time()
+    # Prepare for run
+    run_filter = get_run_filter(argv[4])
+    seeds = get_seeds(rank, n_families)
+    root_output = paths.families_datasets_root
+    # SimPhy parameters
+    # BASE dataset
     s = 25
     f = 100
     sites = 100
@@ -185,67 +185,132 @@ def run_pipeline(start_rep = 0, reps = 50, tag = "DL", val=0, run_filter_str = "
     l = 1.0
     t = 0.0
     pop = 10
-    if (tag == "SPECIES"):
-        s = int(val)
-    elif (tag == "FAM"):
-        f = int(val)
-    elif (tag == "SITES"):
-        sites = int(val)
-    elif (tag == "BRALEN"):
-        bl = float(val)
-    elif (tag == "DUPLOS" or tag == "DL"):
-        d = l = float(val)
-    elif (tag == "TRA" or tag == "T"):
-        t = float(val)
-    elif (tag == "DUPLOSTRA" or tag == "DTL"):
-        val = val.split(',')
-        d = l = float(val[0])
-        t = float(val[1])
-    elif (tag == "POP"): # ils
-        pop = int(val)
-    
-    root_output = paths.families_datasets_root  # output/families/
-    replicates = []
+    # Specialized datasets
+    match (tag):
+        case "SPECIES":
+            s = int(val)
+        case "FAM":
+            f = int(val)
+        case "SITES":
+            sites = int(val)
+        case "BRALEN":
+            bl = float(val)
+        case "DUPLOS":
+            d = l = float(val)
+        case "DL":
+            d = l = float(val)
+        case "TRA":
+            t = float(val)
+        case "T":
+            t = float(val)
+        case "DUPLOSTRA":
+            val = val.split(',')
+            d = l = float(val[0])
+            t = float(val[1])
+        case "DTL":
+            val = val.split(',')
+            d = l = float(val[0])
+            t = float(val[1])
+        case"POP": # ils
+            pop = int(val)
     # Run multiple replicates
     for seed in seeds:
-        # SET simphy PARAMETERS 
+        # Set SimPhy parameters
         simphy_parameters = simphy.SimphyParameters(tag=tag, species_taxa=s, families_number=f, 
             sites=sites, bl=bl, dup_rate=d, loss_rate=l, transfer_rate=t, population=pop, seed=seed)
         datadir = simphy.get_output_dir(simphy_parameters, root_output)
-        replicates.append(datadir)
-        if enabled:
-            # Let generax not skip if it already run
-            try:
-                os.remove(os.path.join(datadir, "runs", "F81", "generax_eval_run", "gene_optimization_0", "checkpoint_commands.txt"))
-                os.remove(os.path.join(datadir, "runs", "F81", "generax_eval_run", "gene_optimization_0", "statistics.svg"))
-                print("Removed generax checkpoints")
-            except:
-                print("Failed to rm in", datadir)
-            pipeline(datadir, run_filter, seed, tag)
-    return root_output, seeds, replicates
+        run(datadir, run_filter)
+    print("seeds =", seeds)
+    print(f"End of pipeline ({tag + tag_val}). Elapsed time: {time.time() - start}")
 
-if (__name__ == "__main__"):
-    if (len(sys.argv) != 9):
-        print("Syntax: python scripts/pipeline.py start_rep reps tag tag_val run_filter enable_pip enable_eval compare_picks")
+
+def pipeline_real_data(argv):
+    # ((exec "real")) tag rank n_families run_filter
+    if (len(argv) != 5):
+        print("Syntax: python scripts/pipeline.py \"real\" tag rank n_families run_filter")
         sys.exit(1)
-    start_rep = int(sys.argv[1])
-    rep_num = int(sys.argv[2])
-    tag = sys.argv[3]
-    tag_val = sys.argv[4]
-    run_filter_str = sys.argv[5]
-    enable_pip = int(sys.argv[6])
-    enable_eval = int(sys.argv[7])
-    compare_picks = int(sys.argv[8])
+    tag = argv[0] # full directory qualifier
+    rank = int(argv[1]) # unused, could be used for family splitting
+    n_families = int(argv[2]) # unused, could be used for family splitting
 
     start = time.time()
-    root_output, seeds, reps = run_pipeline(start_rep, rep_num, tag, tag_val, run_filter_str, enable_pip)
-    if (run_filter_str != "s" and enable_eval):
-        tag = tag + tag_val
-        if (enable_pip or run_filter_str != "full"):
-            tag  = tag + "_" + str(int(start_rep / rep_num)) # e.g. tag = SPECIES15_part1
-        # else evaluate every part together
-        best_avg_tree, _ = evaluate.global_compare(root_output, reps, tag)
-        evaluate.collect_generax_picks(root_output, reps, tag, compare_picks)
-        #evaluate.generax_likelihood_comp(root_output, reps, tag, best_avg_tree, os.path.join("runs", "F81", "generax_eval_run"))
-    print("seeds =", seeds)
-    print("End of pipeline. Elapsed time:", time.time() - start)
+    # Prepare for run
+    run_filter = get_run_filter(argv[3])
+    datadir = fam.get_datadir(tag)
+    run(datadir, run_filter)
+    print("dataset =", tag)
+    print(f"End of pipeline ({tag}). Elapsed time: {elapsed}")
+
+
+def tagval_in_string(string, tag, tag_val):
+    match(tag):
+        case "SPECIES":
+            return "_s" + tag_val in string
+        case "FAM":
+            return "_f" + tag_val in string
+        case "SITES":
+            return "_sites" + tag_val in string
+        case "BRALEN":
+            return "_bl" + tag_val in string
+        case "DUP":
+            return "_d" + tag_val in string
+        case "LOS":
+            return "_l" + tag_val in string
+        case "LOSS":
+            return "_l" + tag_val in string
+        case "DUPLOS":
+            return "_d" + tag_val in string and "_l" + tag_val in string
+        case "DL":
+            return "_d" + tag_val in string and "_l" + tag_val in string
+        case "TRA":
+            return "_t" + tag_val in string
+        case "T":
+            return "_t" + tag_val in string
+        case "DUPLOSTRA":
+            tag_val = tag_val.split(",")
+            return "_d" + tag_val[0] in string and "_l" + tag_val[0] in string and "_t" + tag_val[1] in string
+        case "POP":
+            return "pop" + tag_val in string
+
+
+def pipeline_eval_data(argv):
+    # ((exec "eval")) tag
+    if (len(argv) < 1 or len(argv) > 2):
+        print("Syntax: python scripts/pipeline.py \"eval\" tag [tag_val]")
+        sys.exit(1)
+    tag = argv[0]
+    root_output = paths.families_datasets_root
+
+    start = time.time()
+    # Collect datasets
+    replicates = [] # datasets with same tag & tag_val (probably differ only in seed)
+    for dataset in os.listdir(root_output):
+        if (not tag in dataset):
+            continue
+        if (len(argv) == 2):
+            if (not (tag == "BASE" or tagval_in_string(dataset, tag, argv[1]))):
+                continue
+        replicates.append(dataset)
+    if (len(argv) == 2):
+        tag += argv[1]
+    # Evaluate datasets
+    # is best_avg_dist really best avg dist or something else?
+    best_avg_tree, best_avg_dist = evaluate.global_compare(root_output, replicates, tag)
+    print("Best global results:", best_avg_tree, best_avg_dist)
+    evaluate.collect_generax_picks(root_output, replicates, tag, compare_picks=True)
+    #evaluate.generax_likelihood_comp(root_output, replicates, tag, best_avg_tree, os.path.join("runs", "F81", "generax_eval_run"))
+    print(f"End of evaluation of {tag} datasets. Elapsed time: {time.time() - start}") 
+
+if (__name__ == "__main__"):
+    match (sys.argv[1]):
+        case "sim":
+            pipeline_sim_data(sys.argv[2:])
+            break
+        case "real":
+            pipeline_real_data(sys.argv[2:])
+            break
+        case "eval":
+            pipeline_real_data(sys.argv[2:])
+        case _:
+            print("Syntax: python scripts/pipeline.py \"<sim/real/eval>\" [args...]")
+            sys.exit(1)
