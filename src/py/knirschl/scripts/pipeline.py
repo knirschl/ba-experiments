@@ -80,7 +80,7 @@ class RunFilter():
             try:
                 # wrapper dataset subst_model cores compute algo
                 command = [paths.python3, paths.spearfish_wrapper_py, datadir, subst_model, cores, "test"]
-                subprocess.check_call(command, stdout = sys.stdout)
+                subprocess.check_call(command, stdout = sys.stdout, cwd=os.path.join(paths.programs_root, "Spearfish", "src", "py"))
             except Exception as exc:
                 utils.printFlush("Failed running Spearfish benchmarking\n" + str(exc))
         # COMPARE INFERRED TREES WITH TRUE TREE
