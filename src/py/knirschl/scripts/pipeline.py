@@ -1,6 +1,7 @@
 import os
 import sys
 import time
+import random
 sys.path.insert(0, 'scripts')
 sys.path.insert(0, 'scripts/programs')
 sys.path.insert(0, 'tools/families')
@@ -136,12 +137,12 @@ def get_seeds(rank, n_families):
                 9376940, 9387366, 9438631, 9481423, 9724682, 9824219, 19732311]
     start_rep = rank * n_families
     seeds = seeds100[start_rep:start_rep + n_families]
-    while (len(seeds) << n_families):
+    while (len(seeds) < n_families):
         seeds.append(random.randrange(0, 9999999))
     return seeds
 
 
-def run(datadir, run_filter):
+def run(datadir, run_filter, tag, seed=-1):
     if (run_filter.spearfish):
         # Let GeneRax eval not skip if it already run
         try:
@@ -157,12 +158,12 @@ def run(datadir, run_filter):
     finally:
         elapsed = time.time() - rep_start
         print("End of single experiment. Elapsed time: " + str(elapsed) + "s")
-        metrics.save_metrics(datadir, "pipeline_" + tag + str(seed), elapsed, "runtimes")
+        metrics.save_metrics(datadir, "pipeline_" + tag + str(seed) * (seed > -1), elapsed, "runtimes")
 
 
 def pipeline_sim_data(argv):
     # ((exec "sim")) tag tag_val rank n_families run_filter
-    if (len(argv) != 6):
+    if (len(argv) != 5):
         print("Syntax: python scripts/pipeline.py \"sim\" tag tag_val rank n_families run_filter")
         sys.exit(1)
     tag = argv[0] # e.g. SPECIES
@@ -219,14 +220,14 @@ def pipeline_sim_data(argv):
         simphy_parameters = simphy.SimphyParameters(tag=tag, species_taxa=s, families_number=f, 
             sites=sites, bl=bl, dup_rate=d, loss_rate=l, transfer_rate=t, population=pop, seed=seed)
         datadir = simphy.get_output_dir(simphy_parameters, root_output)
-        run(datadir, run_filter)
+        run(datadir, run_filter, tag, seed)
     print("seeds =", seeds)
     print(f"End of pipeline ({tag + tag_val}). Elapsed time: {time.time() - start}")
 
 
 def pipeline_real_data(argv):
     # ((exec "real")) tag rank n_families run_filter
-    if (len(argv) != 5):
+    if (len(argv) != 4):
         print("Syntax: python scripts/pipeline.py \"real\" tag rank n_families run_filter")
         sys.exit(1)
     tag = argv[0] # full directory qualifier
@@ -237,7 +238,7 @@ def pipeline_real_data(argv):
     # Prepare for run
     run_filter = get_run_filter(argv[3])
     datadir = fam.get_datadir(tag)
-    run(datadir, run_filter)
+    run(datadir, run_filter, tag)
     print("dataset =", tag)
     print(f"End of pipeline ({tag}). Elapsed time: {elapsed}")
 
