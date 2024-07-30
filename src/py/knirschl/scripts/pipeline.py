@@ -305,10 +305,8 @@ if (__name__ == "__main__"):
     match (sys.argv[1]):
         case "sim":
             pipeline_sim_data(sys.argv[2:])
-            break
         case "real":
             pipeline_real_data(sys.argv[2:])
-            break
         case "eval":
             pipeline_real_data(sys.argv[2:])
         case _:
