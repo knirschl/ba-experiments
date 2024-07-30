@@ -76,10 +76,10 @@ if datasets == "sim":
             for part in range(parts):
                 command = []
                 if (cluster == "normal"):
-                    command.append(os.path.join(paths.code_github_root, ".venv", "bin", "python"))
+                    command.append(os.path.join(paths.root, "ba-experiments", ".venv", "bin", "python"))
                 else:
                     command.append(paths.python())
-                command.append(os.path.join(paths.scripts_root, "pipeline.py"))
+                command.append(os.path.join(paths.programs_root, "ba-experiments", "src", "py", "knirschl", "scripts", "pipeline.py"))
                 command.append(["sim", "eval"][evaluate])
                 command.append(bmark) # tag / dataset
                 command.append(str(val)) # value to change
@@ -93,10 +93,10 @@ elif datasets == "real":
     for bmark in benchmarks_real:
         command = []
         if (cluster == "normal"):
-            command.append(os.path.join(paths.code_github_root, ".venv", "bin", "python"))
+            command.append(os.path.join(paths.root, "ba-experiments", ".venv", "bin", "python"))
         else:
             command.append(paths.python())
-        command.append(os.path.join(paths.scripts_root, "pipeline.py"))
+        command.append(os.path.join(paths.programs_root, "ba-experiments", "src", "py", "knirschl", "scripts", "pipeline.py"))
         command.append(["real", "eval"][evaluate])
         command.append(bmark)
         if not evaluate:
