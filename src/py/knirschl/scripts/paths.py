@@ -11,21 +11,31 @@ def python():
 def python3():
   return "python3"
 
-## ---- DIRECTORIES ---- 
-root = get_parent_path(get_parent_path(os.path.realpath(__file__)))
-
-# scripts
-scripts_root = os.path.join(root, "scripts")
-# tools
-tools_root = os.path.join(root, "tools")
+## ---- DIRECTORIES ----
+# local
+balin_root = "/home/balin/Documents/Programming/HITS"
+fili_root = "/home/fili/Documents/Programming/HITS"
 
 # github
-ba_github_root = "/hits/basement/cme/knirsch/github/"
-code_github_root = os.path.join(ba_github_root, "BA-Code")
+cluster_basement_root = "/hits/basement/cme/knirsch/github/"
+
+cwd = os.getcwd()
+if (cwd.startswith("/hits")):
+    root = cluster_basement_root
+    programs_root = root
+elif (cwd.startswith("/home/balin")):
+    root = balin_root
+    programs_root = os.path.join(root, "Bioinformatics")
+elif (cwd.startswith("/home/fili")):
+    root = fili_root
+    programs_root = os.path.join(root, "Bioinformatics")
+else:
+    root = cwd
+    programs_root = root
 
 # results
-output_root = os.path.join(code_github_root, "output")
-families_datasets_root = os.path.join(output_root, "families")
+datasets_root = os.path.join(root, "datasets")
+families_datasets_root = os.path.join(datasets_root, "families")
 
 # ---- EXTERNAL PROGRAMS ----
 programs_root = ba_github_root #os.path.join(ba_github_root, "resources", "tools")
@@ -40,11 +50,11 @@ raxml_mpi_exec = os.path.join(raxml_root, "bin", "raxml-ng-mpi")
 # GeneRax
 generax_exec = os.path.join(programs_root, "GeneRax", "build", "bin", "generax")
 # FastME
-fastme_exec = os.path.join(programs_root, "FastME", "bin",  "fastme-2.1.6.2-linux64")
+fastme_exec = os.path.join(programs_root, "FastME", "bin",  "fastme")
 # Bachelor thesis
-ba_exec = os.path.join(code_github_root, "build", "BA")
+ba_exec = os.path.join(root, "Spearfish", "build", "spearfish")
 # MPI
 mpischeduler_exec = os.path.join(programs_root, "MPIScheduler", "bin", "mpi-scheduler")
 # constants
-mpi_scheduler_heuristic = "--split-scheduler"
+mpi_scheduler_heuristic = "fork"  # "split"
 historic = os.path.join(root, "historic.txt")
