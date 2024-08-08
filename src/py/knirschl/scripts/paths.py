@@ -18,10 +18,9 @@ fili_root = "/home/fili/Documents/Programming/HITS"
 
 # github
 cluster_basement_root = "/hits/basement/cme/knirsch/github/"
-code_github_root = os.path.join(cluster_basement_root, "BA-Code")
 
 cwd = os.getcwd()
-if (cwd.startswith("/hits/basement")):
+if (cwd.startswith("/hits")):
     root = cluster_basement_root
     programs_root = root
 elif (cwd.startswith("/home/balin")):
@@ -35,8 +34,8 @@ else:
     programs_root = root
 
 # results
-output_root = os.path.join(root, "datasets", "output")
-families_datasets_root = os.path.join(output_root, "families")
+datasets_root = os.path.join(root, "datasets")
+families_datasets_root = os.path.join(datasets_root, "families")
 
 # ---- EXTERNAL PROGRAMS ----
 # SimPhy
@@ -56,5 +55,5 @@ ba_exec = os.path.join(root, "Spearfish", "build", "spearfish")
 # MPI
 mpischeduler_exec = os.path.join(programs_root, "MPIScheduler", "bin", "mpi-scheduler")
 # constants
-mpi_scheduler_heuristic = "--split-scheduler"
+mpi_scheduler_heuristic = "fork"  # "split"
 historic = os.path.join(root, "historic.txt")

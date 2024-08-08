@@ -90,10 +90,10 @@ def build_generax_families_file_eval(datadir, subst_model, output, tree_prefix="
       for tree in fam.get_gene_tree_list(datadir, family):
         if (not tree.startswith(tree_prefix)):
           continue
-        scale = float(re.search(r'(\d+(?:\.\d+)?)S~G', tree)[1])
+        #scale = float(re.search(r'(\d+(?:\.\d+)?)S~G', tree)[1])
         # if (scale < 1 or scale > 4.5):
         #  continue
-        treefam = family + ">" + tree.replace(".geneTree.newick", "")
+        treefam = family + "::" + tree.replace(".geneTree.newick", "")
         #if (os.path.isfile(os.path.join(fam.get_run_dir(datadir, subst_model, "generax_eval_run"), "results", treefam, "stats.txt"))):
           # already evaluated
         #  skip += 1
