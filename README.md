@@ -6,18 +6,6 @@ well as the implementation of Spearfish.
 
 ## TODO
 
-- [ ] README
-  - [X] Spearfish full name
-  - [X] TODOs
-  - [X] Usage
-    - [X] Dependencies
-- [ ] Spearfish
-  - [ ] Extract Spearfish into own repository
-  - [ ] Clean up
-  - [ ] Optimize
-  - [ ] Own README
-    - [ ] Python dependencies
-  - License
 - [ ] src/
   - [ ] Clean up
     - [ ] Use less 3rd party 

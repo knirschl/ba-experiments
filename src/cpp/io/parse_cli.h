@@ -5,11 +5,12 @@
 #ifndef BA_PARSE_CLI_H
 #define BA_PARSE_CLI_H
 
-#include "/hits/basement/cme/knirsch/github/argparse/include/argparse/argparse.hpp"
+//#include "/hits/basement/cme/knirsch/github/argparse/include/argparse/argparse.hpp"
+#include "argparse/argparse.hpp"
 
 // ./thesis --speciestree "species_tree.matrix.phy" --alignmat "alignment.msa.matrix.phy" -p "output-dir/"
 
-auto build_parser(std::string const& name, std::string const& version) {
+argparse::ArgumentParser build_parser(std::string const& name, std::string const& version) {
     argparse::ArgumentParser program{name, version};
 
     program.add_description("");
