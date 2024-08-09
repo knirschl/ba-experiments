@@ -10,7 +10,7 @@ reps = 100 # Number of datasets to work on
 parts = 20 # Divide each dataset in `parts` parts ## 10 should work in every case
 run_filter = "full_PLG" # s,r,g,f,b,p,c
 bm_sim_set = 0 # 0: benchmarks_sim, 1: benchmarks_sim_ext, 2: both
-datasets = "sim" # sim: simulated datasets, real: real datasets
+datasets = "real" # sim: simulated datasets, real: real datasets
 evaluate = False # False: infer trees, True: evaluate tree distances
 
 # DATASETS
@@ -100,8 +100,9 @@ elif datasets == "real":
         command.append(["real", "eval"][evaluate])
         command.append(bmark)
         if not evaluate:
-            command.append(0) # unused rank
-            command.append(0) # unused n_families
+            command.append("0") # unused rank
+            command.append("0") # unused n_families
             command.append(run_filter) # run filter
         command = " ".join(command)
-        utils.submit(os.path.join(paths.datasets_root, "submit", "run_" + bmark + str(val) + "_part" + str(part) + ".sh"), command, 16, cluster)
+        utils.submit(os.path.join(paths.datasets_root, "submit", "run_" + bmark + ".sh"), command, 16, cluster)
+
