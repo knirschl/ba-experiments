@@ -8,7 +8,7 @@ import utils
 debug = False # Give debug priority to all runs
 reps = 100 # Number of datasets to work on
 parts = 20 # Divide each dataset in `parts` parts ## 10 should work in every case
-run_filter = "full" # s,r,g,f,b,p,c
+run_filter = "full_PLG" # s,r,g,f,b,p,c
 bm_sim_set = 0 # 0: benchmarks_sim, 1: benchmarks_sim_ext, 2: both
 datasets = "sim" # sim: simulated datasets, real: real datasets
 evaluate = False # False: infer trees, True: evaluate tree distances
@@ -41,7 +41,7 @@ elif bm_sim_set == 2:
 reps_per_part = int(reps / parts)
 
 # real
-benchmarks_real = {"cyano_empirical": "protein"}
+benchmarks_real = ["cyano_empirical"]
 
 # mistake?
 if (debug):

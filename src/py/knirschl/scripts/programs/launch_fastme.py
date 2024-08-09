@@ -24,7 +24,8 @@ def generate_scheduler_commands_file(datadir, subst_model, is_dna, algo, use_spr
   if (len(sp) > 1 and sp[1] == "G"):
     fastme_model = sp[0]
     gamma = True
-  fastme_model.removeprefix('F8')
+  if is_dna:
+    fastme_model.removeprefix('F8')
   with open(scheduler_commands_file, "w") as writer:
     for family in fam.get_families_list(datadir):
       if (not analyze_msa.has_distinct_seqs(

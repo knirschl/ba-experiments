@@ -82,7 +82,7 @@ class RunFilter():
             utils.printFlush("Run Spearfish benchmarking...\n*****************************")
             try:
                 # wrapper dataset dna subst_model cores compute algo
-                subst_model = "p" # self.subst_model
+                subst_model = "p/" + self.subst_model # self.subst_model
                 command = [paths.python3, paths.spearfish_wrapper_py, datadir, subst_model, self.is_dna, cores, "test"]
                 subprocess.check_call(command, stdout = sys.stdout, cwd=os.path.join(paths.programs_root, "Spearfish", "src", "py"))
             except Exception as exc:
@@ -97,8 +97,7 @@ class RunFilter():
 
 
 def get_run_filter(run_filter_str):
-    if (run_filter_str == "full"):
-        run_filter_str = "rgfbpc"
+    run_filter_str.replace("full", "rgfbpc")
     # TOGGLE PIPELINE ELEMENTS
     # ====== ! CAREFUL ! ======
     run_filter = RunFilter()  # all enabled
