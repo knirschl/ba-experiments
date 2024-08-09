@@ -10,10 +10,8 @@ sys.path.insert(0, 'tools/simulation')
 sys.path.insert(0, 'tools/trees')
 import evaluate
 import compare_trees
-import dist_matrix_converter
 import fam
 import generate_with_simphy as simphy
-import launch_ba
 import launch_fastme
 import launch_generax
 import launch_raxml
@@ -97,7 +95,7 @@ class RunFilter():
 
 
 def get_run_filter(run_filter_str):
-    run_filter_str.replace("full", "rgfbpc")
+    run_filter_str = run_filter_str.replace("full", "rgfbpc")
     # TOGGLE PIPELINE ELEMENTS
     # ====== ! CAREFUL ! ======
     run_filter = RunFilter()  # all enabled
@@ -246,7 +244,7 @@ def pipeline_real_data(argv):
     datadir = fam.get_datadir(tag)
     run(datadir, run_filter, tag)
     print("dataset =", tag)
-    print(f"End of pipeline ({tag}). Elapsed time: {elapsed}")
+    print(f"End of pipeline ({tag}). Elapsed time: {time.time() - start}")
 
 
 def tagval_in_string(string, tag, tag_val):
