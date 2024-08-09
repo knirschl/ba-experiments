@@ -25,6 +25,8 @@ class RunFilter():
     def __init__(self):
         self.all(True)
         self.force_overwrite = False 
+        self.is_dna = True
+        self.subst_model = "F81"
 
     def all(self, t):
         self.generate = t
@@ -40,7 +42,7 @@ class RunFilter():
     def disable_all(self):
         self.all(False)
 
-    def run_methods(self, datadir, subst_model, cores):
+    def run_methods(self, datadir, cores):
         if (self.generate):
             if (not os.path.isdir(datadir) or self.force_overwrite):
                 utils.printFlush("Run simphy...")
@@ -52,35 +54,36 @@ class RunFilter():
         if (len(datadir.split("/")) == 1):
           datadir = fam.get_datadir(datadir) 
         save_stdout = sys.stdout
-        #redirected_file = os.path.join(datadir, "runs", "logs_run_all_genes." + subst_model + ".txt")
+        #redirected_file = os.path.join(datadir, "runs", "logs_run_all_genes." + self.subst_model + ".txt")
         #print("Redirected logs to " + redirected_file)
         sys.stdout.flush()
         # RUN
         if(self.raxml):
             utils.printFlush("Run raxml-ng...\n***************")
             try:
-                launch_raxml.run_raxmlng_on_families(datadir, subst_model, cores)
+                launch_raxml.run_raxmlng_on_families(datadir, self.subst_model, cores)
             except Exception as exc:
                 utils.printFlush("Failed running RAxML-NG\n" + str(exc))
         if (self.generax):
             utils.printFlush("Run generax...\n**************")
             try:
                 species_tree = fam.get_species_tree(datadir)
-                resultsdir = fam.get_run_dir(datadir, subst_model, "generax_run")
-                launch_generax.run(datadir, subst_model, "SPR", species_tree, "random", cores, ["--rec-model UndatedDL"], resultsdir)
+                resultsdir = fam.get_run_dir(datadir, self.subst_model, "generax_run")
+                launch_generax.run(datadir, self.subst_model, "SPR", species_tree, "random", cores, ["--rec-model UndatedDL"], resultsdir)
             except Exception as exc:
                 utils.printFlush("Failed running GeneRax\n" + str(exc))
         if (self.fastme):
             utils.printFlush("Run fastme...\n*************")
             try:
-                launch_fastme.run_fastme_on_families(datadir, subst_model, is_dna=True, algo="B", use_spr=True, only_mat=False, cores=cores)
+                launch_fastme.run_fastme_on_families(datadir, self.subst_model, is_dna=self.is_dna, algo="B", use_spr=True, only_mat=False, cores=cores)
             except Exception as exc:
                 utils.printFlush("Failed running FastME\n" + str(exc))
         if (self.spearfish):
             utils.printFlush("Run Spearfish benchmarking...\n*****************************")
             try:
-                # wrapper dataset subst_model cores compute algo
-                command = [paths.python3, paths.spearfish_wrapper_py, datadir, subst_model, cores, "test"]
+                # wrapper dataset dna subst_model cores compute algo
+                subst_model = "p" # self.subst_model
+                command = [paths.python3, paths.spearfish_wrapper_py, datadir, subst_model, self.is_dna, cores, "test"]
                 subprocess.check_call(command, stdout = sys.stdout, cwd=os.path.join(paths.programs_root, "Spearfish", "src", "py"))
             except Exception as exc:
                 utils.printFlush("Failed running Spearfish benchmarking\n" + str(exc))
@@ -117,6 +120,10 @@ def get_run_filter(run_filter_str):
     #    run_filter.generax_pick = True
     if ("c" in run_filter_str):
         run_filter.compare = True
+    subst_model_start = run_filter_str.find("_")
+    if (subst_model_start != -1):
+        run_filter.is_dna = run_filter_str[subst_model_start + 1] == "D"
+        run_filter.subst_model = run_filter_str[subst_model_start + 2:]
     return run_filter
 
 
@@ -154,7 +161,7 @@ def run(datadir, run_filter, tag, seed=-1):
     # RUN PIPELINE
     rep_start = time.time()
     try:
-        run_filter.run_methods(datadir, "F81", cores=1) # 16 on cluster
+        run_filter.run_methods(datadir, cores=16)
     finally:
         elapsed = time.time() - rep_start
         print("End of single experiment. Elapsed time: " + str(elapsed) + "s")
