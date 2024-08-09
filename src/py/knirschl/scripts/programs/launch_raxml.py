@@ -17,7 +17,6 @@ def generate_scheduler_commands_file(datadir, subst_model, output_dir):
     scheduler_commands_file = os.path.join(output_dir, "commands.txt")
     #gamma = False
     #sp = subst_model.split("+")
-    #fastme_model = subst_model
     #if (len(sp) > 1 and sp[1] == "G"):
         #fastme_model = sp[0]
         #gamma = True

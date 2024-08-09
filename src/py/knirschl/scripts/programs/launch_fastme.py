@@ -24,7 +24,8 @@ def generate_scheduler_commands_file(datadir, subst_model, is_dna, algo, use_spr
   if (len(sp) > 1 and sp[1] == "G"):
     fastme_model = sp[0]
     gamma = True
-  fastme_model.removeprefix('F8')
+  if is_dna:
+    fastme_model.removeprefix('F8')
   with open(scheduler_commands_file, "w") as writer:
     for family in fam.get_families_list(datadir):
       if (not analyze_msa.has_distinct_seqs(
@@ -77,46 +78,6 @@ def generate_scheduler_commands_file(datadir, subst_model, is_dna, algo, use_spr
         command.append("-f") # precision (max=17)
         command.append("17")
       writer.write(" ".join(command) + "\n")
-  return scheduler_commands_file
-
-def generate_scheduler_commands_file_matrices(datadir, mat_prefix, algo, use_spr, output_dir):
-  results_dir = os.path.join(output_dir, "results")
-  scheduler_commands_file = os.path.join(output_dir, "commands.txt")
-  with open(scheduler_commands_file, "w") as writer:
-    for family in fam.get_families_list(datadir):
-      if (not analyze_msa.has_distinct_seqs(
-              fam.get_alignment_file(fam.get_family_path(datadir, family)))):
-        # not enough distinct sequences
-        # !! -> there shouldn't be any matrices except if left over from old runs
-        continue
-      misc_dir = fam.get_family_misc_dir(datadir, family)
-      try:
-        os.mkdir(misc_dir)
-      except:
-        pass
-      glob_command = []
-      glob_command.append(family)
-      glob_command.append("1")
-      glob_command.append("1")
-      # distance algorithm (B: BME, I: BIONJ (def), N: NJ)
-      glob_command.append("-m")
-      glob_command.append(algo)
-      glob_command.append("-n")
-      glob_command.append("B")
-      if (use_spr):
-        # use spr moves
-        glob_command.append("--spr")
-      # write every single matrix into own command 
-      for miscfile in os.listdir(misc_dir):
-        command = glob_command[:8]
-        if (not (miscfile.startswith(mat_prefix) and miscfile.endswith("matrix.phy"))):
-          continue
-        output_prefix = re.search(mat_prefix + "_.*[am+]\\.", miscfile)[0]
-        command.append("-i")
-        command.append(os.path.join(misc_dir, miscfile))
-        command.append("-o")
-        command.append(os.path.join(misc_dir, miscfile.replace(output_prefix, output_prefix + "fastme.").replace("matrix.phy", "geneTree.newick")))
-        writer.write(" ".join(command) + "\n")
   return scheduler_commands_file
 
 
@@ -196,23 +157,6 @@ def run_fastme_on_families(datadir, subst_model, is_dna, algo, use_spr, only_mat
     extract_fastme_trees(datadir, subst_model)
   else:
     extract_fastme_mats(datadir, subst_model)
-
-def run_fastme_matrix(datadir, subst_model="p", is_dna=True, cores=1):
-  run_fastme_on_families(datadir, subst_model, is_dna, "I", False, True, cores)
-
-def run_fastme_on_families_matrices(datadir, mat_prefix, algo, use_spr, cores):
-  fastme_name = "fastme." + mat_prefix[:-1]
-  subst_model = mat_prefix.replace("ba", "").replace(".", "")
-  output_dir = fam.get_run_dir(datadir, subst_model, fastme_name + "_run")
-  shutil.rmtree(output_dir, True)
-  os.makedirs(output_dir)
-  scheduler_commands_file = generate_scheduler_commands_file_matrices(datadir, mat_prefix, algo, use_spr, output_dir)
-  start = time.time()
-  utils.run_with_scheduler(paths.fastme_exec, scheduler_commands_file, "fork", cores, output_dir, "logs.txt")
-  metrics.save_metrics(datadir, fam.get_run_name(fastme_name, subst_model), (time.time() - start), "runtimes") 
-  lb = fam.get_lb_from_run(output_dir)
-  metrics.save_metrics(datadir, fam.get_run_name(fastme_name, subst_model), (time.time() - start) * lb, "seqtimes")
-  extract_fastme_trees(datadir, subst_model)
 
 if (__name__== "__main__"):
   max_args_number = 5
