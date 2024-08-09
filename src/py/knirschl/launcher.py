@@ -41,7 +41,7 @@ elif bm_sim_set == 2:
 reps_per_part = int(reps / parts)
 
 # real
-benchmarks_real = ["cyano_empirical"]
+benchmarks_real = {"cyano_empirical": "protein"}
 
 # mistake?
 if (debug):
