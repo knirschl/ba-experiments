@@ -1,5 +1,6 @@
 import os
 import sys
+import subprocess
 import time
 import random
 sys.path.insert(0, 'scripts')
@@ -81,8 +82,8 @@ class RunFilter():
             try:
                 # wrapper dataset dna subst_model cores compute algo
                 subst_model = "p/" + self.subst_model # self.subst_model
-                command = [paths.python3, paths.spearfish_wrapper_py, datadir, subst_model, self.is_dna, cores, "test"]
-                subprocess.check_call(command, stdout = sys.stdout, cwd=os.path.join(paths.programs_root, "Spearfish", "src", "py"))
+                command = [paths.python3(), paths.spearfish_wrapper_py, datadir, subst_model, str(self.is_dna), str(cores), "test"]
+                subprocess.check_call(command, stdout=sys.stdout, cwd=os.path.join(paths.root, "Spearfish", "src", "py"))
             except Exception as exc:
                 utils.printFlush("Failed running Spearfish benchmarking\n" + str(exc))
         # COMPARE INFERRED TREES WITH TRUE TREE

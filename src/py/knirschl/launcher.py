@@ -8,7 +8,7 @@ import utils
 debug = False # Give debug priority to all runs
 reps = 100 # Number of datasets to work on
 parts = 20 # Divide each dataset in `parts` parts ## 10 should work in every case
-run_filter = "full_PLG" # s,r,g,f,b,p,c
+run_filter = "b_PLG" # s,r,g,f,b,p,c
 bm_sim_set = 0 # 0: benchmarks_sim, 1: benchmarks_sim_ext, 2: both
 datasets = "real" # sim: simulated datasets, real: real datasets
 evaluate = False # False: infer trees, True: evaluate tree distances
@@ -93,10 +93,10 @@ elif datasets == "real":
     for bmark in benchmarks_real:
         command = []
         if (cluster == "normal"):
-            command.append(os.path.join(paths.root, "ba-experiments", ".venv", "bin", "python"))
+            command.append(os.path.join(paths.root, "Spearfish", ".venv", "bin", "python"))
         else:
             command.append(paths.python())
-        command.append(os.path.join(paths.programs_root, "ba-experiments", "src", "py", "knirschl", "scripts", "pipeline.py"))
+        command.append(os.path.join(paths.root, "ba-experiments", "src", "py", "knirschl", "scripts", "pipeline.py"))
         command.append(["real", "eval"][evaluate])
         command.append(bmark)
         if not evaluate:
