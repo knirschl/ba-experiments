@@ -290,20 +290,20 @@ def pipeline_eval_data(argv):
     start = time.time()
     # Collect datasets
     replicates = [] # datasets with same tag & tag_val (probably differ only in seed)
+    #replicates.append(os.path.join(root_output, "generax_data/cyano_empirical"))
     for dataset in os.listdir(root_output):
         if (not tag in dataset):
             continue
         if (len(argv) == 2):
             if (not (tag == "BASE" or tagval_in_string(dataset, tag, argv[1]))):
                 continue
-        replicates.append(dataset)
+        replicates.append(os.path.join(root_output, dataset))
     if (len(argv) == 2):
         tag += argv[1]
     # Evaluate datasets
-    # is best_avg_dist really best avg dist or something else?
     best_avg_tree, best_avg_dist = evaluate.global_compare(root_output, replicates, tag)
     print("Best global results:", best_avg_tree, best_avg_dist)
-    evaluate.collect_generax_picks(root_output, replicates, tag, compare_picks=True)
+    evaluate.collect_generax_picks(root_output, replicates, tag, compare=True)
     #evaluate.generax_likelihood_comp(root_output, replicates, tag, best_avg_tree, os.path.join("runs", "F81", "generax_eval_run"))
     print(f"End of evaluation of {tag} datasets. Elapsed time: {time.time() - start}") 
 
@@ -314,7 +314,7 @@ if (__name__ == "__main__"):
         case "real":
             pipeline_real_data(sys.argv[2:])
         case "eval":
-            pipeline_real_data(sys.argv[2:])
+            pipeline_eval_data(sys.argv[2:])
         case _:
             print("Syntax: python scripts/pipeline.py \"<sim/real/eval>\" [args...]")
             sys.exit(1)
