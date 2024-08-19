@@ -142,6 +142,7 @@ def submit_cascade(submit_file_path, submit_id, command, threads, debug):
 def submit(submit_file_path, command, threads, cluster):
   submit_id = os.path.basename(submit_file_path).replace("run_", '').replace(".sh", '')
   if (cluster == "normal"):
+    print("No cluster detected")
     submit_normal(submit_file_path, submit_id, command, False)
   elif (cluster == "normald"):
     submit_normal(submit_file_path, submit_id, command, True)
