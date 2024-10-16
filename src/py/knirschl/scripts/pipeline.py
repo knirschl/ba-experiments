@@ -81,7 +81,7 @@ class RunFilter():
             utils.printFlush("Run Spearfish benchmarking...\n*****************************")
             try:
                 # wrapper dataset dna subst_model cores compute algo
-                subst_model = "p/" + self.subst_model # TODO for testing, later: self.subst_model
+                subst_model = self.subst_model # "p/" + self.subst_model # TODO for testing, later: self.subst_model
                 command = [paths.python3(), paths.spearfish_wrapper_py, datadir, subst_model, str(int(self.is_dna)), str(cores), "test"]
                 subprocess.check_call(command, stdout=sys.stdout, cwd=os.path.join(paths.root, "Spearfish", "src", "py"))
             except Exception as exc:
