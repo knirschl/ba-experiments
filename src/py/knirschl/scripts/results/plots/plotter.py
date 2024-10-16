@@ -11,11 +11,13 @@ def make_plot(plot, x, y, label, logscale=False):
 
 def make_scatter(plot, x, y, label):
     raw_label = label.split('$')[0]
-    plot.scatter(x, y, label=label, c=COLORS[raw_label], marker=MARKERS[raw_label])
+    #plot.scatter(x, y, label=label, c=COLORS[raw_label], marker=MARKERS[raw_label])
+    plot.scatter(x, y, label=label)
 
 def make_bar(plot, x, y, label, width, bottom):
     raw_label = label.split('$')[0]
-    plot.bar(x, y, label=label, color=COLORS[raw_label], width=width, bottom=bottom)
+    #plot.bar(x, y, label=label, color=COLORS[raw_label], width=width, bottom=bottom)
+    plot.bar(x, y, label=label, width=width, bottom=bottom)
 
 def make_violin(plot, y, label):
     vp = plot.violinplot(y, showmedians=True, showextrema=False, showmeans=False)

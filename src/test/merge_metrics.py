@@ -67,7 +67,7 @@ def merge():
         for f in merged_dicos:
             pops = []
             for k in merged_dicos[f]:
-                if k in ["ba+fm_full"]: # skip list
+                if k in ["spearfish+fm_full"]: # skip list
                     pops.append(k)
                     continue
                 merged_dicos[f][k] = sum([float(e) for e in merged_dicos[f][k]]) / len(merged_dicos[f][k])
@@ -99,7 +99,7 @@ def write_over():
         dico_src_dist = get_metrics(src_dist, f)
         dico = {}
         for k in dico_src:
-            if "ba.p_" in k:
+            if "spearfish.p_" in k:
                 dico[k] = dico_src[k]
             else:
                 dico[k] = dico_src_dist[k]

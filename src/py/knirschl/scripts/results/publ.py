@@ -50,7 +50,7 @@ def get_filename(tags, save):
     if not save:
         return None
     split = re.match(r"([A-Z]+)(.?[0-9.]+)?", tags[1])
-    resultsdir = os.path.join("/home/fili/Desktop/2023/BA/code/output/benchmark_results/figures", tags[0], ("bm", "single")[split[2] != None], tags[1])
+    resultsdir = os.path.join("/home/fili/Documents/Programming/HITS/datasets/output/benchmark_results/figures", tags[0], ("bm", "single")[split[2] != None], tags[1])
     try:
         os.makedirs(resultsdir, exist_ok=True)
     except:
@@ -67,7 +67,7 @@ def add2plot(plot, xy, ptype="scatter", labels=5 * [None], bottom=0, zoom=''):
     labels[4] := width of bar plot
     '''
     logscale = (labels[1] == "BRALEN" and "Skalier" not in labels[2])
-    title = None #TITLE[labels[1]]
+    title = labels[1] #TITLE[labels[1]]
 
     if (ptype == "scatter"):
         plt.make_scatter(plot, xy[0], xy[1], labels[0])
@@ -210,25 +210,30 @@ def plot_distr_single(vals, setup, tag, save):
         ax.axvline(ds[1] / 100, color='tab:green', label="avg (" + algo + ")")
     plt.display(fig, makegrid=False, filename=get_filename([setup, tag, "dist-distr"], save))
 
+
 # MAIN
 def plot_single(dir, save=False):
     '''
     save == False -> show
     save == True -> don't show
     '''
-    for test_setup in os.listdir(dir):
-        for f in os.listdir(os.path.join(dir, test_setup)):
-            print(f)
-            tag = f.split("_")[0]
-            if "rf_distance" in f and "rel" in f:
-                vals = reader.read_rrf(os.path.join(dir, test_setup, f))
-                plot_rrf_single(vals, test_setup, tag, save)
-            elif "generax_picks" in f:
-                vals = reader.read_picks(os.path.join(dir, test_setup, f))
-                plot_picks_single(vals, test_setup, tag, save)
-            elif "distributions" in f:
-                vals = reader.read_distr(os.path.join(dir, test_setup, f))
-                plot_distr_single(vals, test_setup, tag, save)
+    #for test_setup in os.listdir(dir):
+    test_setup = "local"
+    for f in os.listdir(dir): #os.path.join(dir, test_setup)):
+        print(f)
+        tag = f.split("_")[0]
+        if "rf_distance" in f and "rel" in f:
+            vals = reader.read_rrf(os.path.join(dir, f)) #test_setup, f))
+            plot_rrf_single(vals, test_setup, tag, save)
+        elif "generax_picks" in f:
+            vals = reader.read_picks(os.path.join(dir, f)) #test_setup, f))
+            plot_picks_single(vals, test_setup, tag, save)
+        elif "distributions" in f:
+            vals = reader.read_distr(os.path.join(dir, f)) #test_setup, f))
+            plot_distr_single(vals, test_setup, tag, save)
+        elif "runtimes" in f:
+            vals = reader.read_rt(os.path.join(dir, f))
+            plot_rt_single(vals, test_setup, tag, save)
 
 def plot_bm(dir, save=False):
     '''
@@ -278,5 +283,6 @@ def plot_bm(dir, save=False):
 
 if (__name__ == "__main__"):
     #plot_single("/home/fili/Desktop/2023/BA/code/output/benchmark_results/metrics", save=True) # plots look broken?
-    plot_bm("/home/fili/Desktop/2023/BA/code/output/benchmark_results/metrics", save=False)
+    #plot_bm("/home/fili/Desktop/2023/BA/code/output/benchmark_results/metrics", save=False)
     #plot_bm("/home/fili/Documents/bwSyncShare/Documents/KIT/BA_Datasets_Backups")
+    plot_single("/home/fili/Documents/Programming/HITS/datasets/families/metrics", save=False)

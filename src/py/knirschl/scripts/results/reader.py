@@ -24,7 +24,9 @@ def read_rrf(rrf_file):
             elif ("raxml" in current_tree):
                 trees[RAXMLNG].append((current_tree, current_dist, [0.0]))
             elif (BA.lower() in current_tree):
-                groups = re.match(r"ba\.(\S+)_(\S+)([am+])\.(?:fastme\.)?([0-9.]+)\S+", current_tree)
+                if ("start" in current_tree):
+                    continue
+                groups = re.match(r"spearfish\.(\S+)_(\S+)([am+])\.(?:fastme\.)?([0-9.]+)\S+", current_tree)
                 fastme_model = groups[1]
                 starting_tree = groups[2]
                 reroot_algo = groups[3]
@@ -64,7 +66,7 @@ def read_picks(picks_file):
             if not "dist" in stats:
                 continue
             current_dist = float(re.match(r".*dist=([0-9.]+).*", stats)[1])
-            groups = re.match(r"ba\.(\S+)_(\S+)([am+])\.(?:fastme\.)?([0-9.]+)\S+", current_tree)
+            groups = re.match(r"spearfish\.(\S+)_(\S+)([am+])\.(?:fastme\.)?([0-9.]+)\S+", current_tree)
             reroot_algo = groups[3]
             if reroot_algo != "+":
                 ctr += 1
@@ -130,7 +132,7 @@ def read_arf_pick(rrf_file, picks_file):
     with open(picks_file, 'r') as reader:
         for line in reader.readlines():
             if (rem := re.match(r"\S+  (\S+)  (?:\S+ )?dist=([.0-9]+)\)", line)):
-                groups = re.match(r"ba\.(\S+)_(\S+)([am+])\.(?:fastme\.)?([0-9.]+)\S+", rem[1])
+                groups = re.match(r"spearfish\.(\S+)_(\S+)([am+])\.(?:fastme\.)?([0-9.]+)\S+", rem[1])
                 #fastme_model = groups[1]
                 #starting_tree = groups[2]
                 reroot_algo = groups[3]
@@ -176,7 +178,7 @@ def read_arf_all(rrf_file, picks_file):
             current_tree = current_tree.replace(".genetree", '').replace(".newick", '') # fastme trees doesn't contain '.geneTree'
             current_dist = float(current_dist)
             if (BA.lower() in current_tree):
-                groups = re.match(r"ba\.(\S+)_(\S+)([am+])\.(?:fastme\.)?([0-9.]+)\S+", current_tree)
+                groups = re.match(r"spearfish\.(\S+)_(\S+)([am+])\.(?:fastme\.)?([0-9.]+)\S+", current_tree)
                 #fastme_model = groups[1]
                 #starting_tree = groups[2]
                 reroot_algo = groups[3]
@@ -234,14 +236,16 @@ def read_rt(rt_file, scaling=''):
                 rts[RAXMLNG] = float(time)
             elif (tool == "fastme.f81"):
                 rts[FASTME] = float(time)
-            elif (tool in ["ba.p", "fastme_mat.p", "fastme.ba..p", "generax-eval-undateddl-r5-famrates.f81"]):
-                rts[BA_FASTME] += float(time)
-                #print(rt_file, tool, float(time))
+            #elif (tool in ["spearfish.", "fastme_mat.", "fastme.spearfish", "generax-eval"]):
+            #    rts[BA_FASTME] += float(time)
+            #    #print(rt_file, tool, float(time))
+            elif (tool == "spearfish+fastme+notag_full"):
+                rts[BA_FASTME] = float(time)
     if ("tree" in scaling):
         rts[BA_FASTME] /= 240 # per tree
-    elif ("algo" in scaling):
-        rts[BA_FASTME] /= 3 # per method
-    elif (scaling != ''):
-        rts[BA_FASTME] /= int(scaling)
+    #elif ("algo" in scaling):
+    #    rts[BA_FASTME] /= 3 # per method
+    #elif (scaling != ''):
+    #    rts[BA_FASTME] /= int(scaling)
     #print(rts)
     return rts

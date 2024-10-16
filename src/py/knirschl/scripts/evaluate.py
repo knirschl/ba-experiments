@@ -97,8 +97,8 @@ def collect_generax_picks(root_output, replicates, tag, compare):
     pick_ctr = 3 * [0]
     with open(os.path.join(root_output, "metrics", tag + "_global__generax_picks.txt"), "w") as writer:
         for rep in replicates:
-            seed = re.search(r'.*?seed([0-9]+)', rep)[1]
-            writer.write(seed + '\n')
+            #seed = re.search(r'.*?seed([0-9]+)', rep)[1]
+            #writer.write(seed + '\n')
             with open(os.path.join(fam.get_metrics_dir(rep), "generax_picks.txt"), "r") as reader:
                 for line in reader.readlines():
                     line = line[:-1]

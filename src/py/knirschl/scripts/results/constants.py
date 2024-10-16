@@ -6,8 +6,8 @@ THRESHOLD = 10 # "zoom"
 GENERAX = "GeneRax"
 RAXMLNG = "RAxML-NG"
 FASTME = "FastME"
-BA = "BA"
-BA_FASTME = "BA+FM"
+BA = "Spearfish"
+BA_FASTME = "SF+FM"
 OTHER = "other"
 # algos
 APRO = "APro" 
@@ -29,7 +29,7 @@ DATASETS = {"SPECIES" : '25',
             }
 
 SPEARFISH_MAP = {build_ba_variant(m, a): a.lower() + ["FM", "NJ"][m == BA] for a in [APRO, MAD, ALL] for m in [BA, BA_FASTME]}
-SPEARFISH_MAP["BA+FM"] = "Spearfish"
+SPEARFISH_MAP["SF+FM"] = "Spearfish"
 SPEARFISH_MAP[GENERAX] = GENERAX
 SPEARFISH_MAP[RAXMLNG] = "RAxML-NG"
 SPEARFISH_MAP[FASTME] = FASTME
